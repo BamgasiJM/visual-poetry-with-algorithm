@@ -1,23 +1,23 @@
-프롬프트 예시(영어):
+# 프롬프트 예시(영어):
 "Write a p5.js sketch that draws a smooth, flowing line across the canvas using Perlin noise. 
 The line should be animated, moving horizontally over time, and have a teal color. 
 The canvas size should be 1600x900 pixels, and the animation should run at 60 frames per second. 
 The line should be thick and continuous, filling the entire width of the canvas."
 
-프롬프트 예시(한글):
-"p5.js를 사용하여 페를린 노이즈(noise)를 기반으로 부드럽고 흐르는 선을 그리는 스케치를 작성해줘.
-선은 애니메이션으로 시간의 흐름에 따라 가로 방향으로 이동해야 하고, 티얼 색상을 가져야 해.
-캔버스 크기는 1600x900 픽셀이고, 애니메이션은 초당 60프레임으로 실행되어야 해.
+# 프롬프트 예시(한글):
+"p5.js를 사용하여 퍼린 노이즈(perlin noise)를 기반으로 부드럽고 흐르는 선을 그리는 스케치를 작성해줘.
+선은 애니메이션으로 시간의 흐름에 따라 가로 방향으로 이동해야 하고, 민트 색상을 가져야 해.
+캔버스 크기는 1600x900 픽셀이고, 애니메이션은 초당 60프레임으로 실행.
 선은 두껍고 연속적으로 캔버스의 전체 너비를 채워야 해."
 
-1. 내 마음 속 감정
-사랑 (Love)
+### 1. 내 마음 속 감정
+**사랑 (Love)**
 두 개의 입자가 서로를 끌어당기고 합쳐져 하나의 새로운 형태를 만듦.
 
-기쁨 (Joy)
+**기쁨 (Joy)**
 사용자의 클릭이나 움직임에 따라 색종이처럼 다채로운 조각들이 화면 가득 날아다님.
 
-평온 (Peace)
+**평온 (Peace)**
 호수의 잔물결처럼, 사용자의 상호작용이 중심에서부터 부드럽게 천천히 퍼져나감.
 
 희망 (Hope)

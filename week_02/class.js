@@ -1,3 +1,4 @@
+// perlin noise를 사용하여 자연스러운 굴곡 생성하기
 let start = 0;
 
 function setup() {

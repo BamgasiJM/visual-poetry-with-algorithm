@@ -62,8 +62,8 @@ header {
 }
 
 .logo-title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 500;
   letter-spacing: -0.02em;
 }
 
@@ -174,8 +174,8 @@ main {
   color: rgb(30, 190, 180);
   padding: 2px 8px;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .page-header {
@@ -258,9 +258,9 @@ main {
 }
 
 .theme-label {
-  color: rgb(30, 190, 180);
-  font-size: 12px;
-  font-weight: 700;
+  color: rgb(227, 196, 69);
+  font-size: 14px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 4px;
@@ -652,20 +652,20 @@ main {
 }
 
 /* Syntax Highlighting */
-.keyword { color: #569cd6; }
-.function { color: #dcdcaa; }
-.number { color: #b5cea8; }
-.string { color: #ce9178; }
-.comment { color: #6a9955; }
-.class { color: #4ec9b0; }
-.operator { color: #d4d4d4; }
-.property { color: #9cdcfe; }
-.css-selector { color: #d7ba7d; }
-.css-property { color: #9cdcfe; }
-.css-value { color: #ce9178; }
-.md-heading { color: #569cd6; font-weight: 700; }
-.md-list { color: #dcdcaa; }
-.md-bold { color: #4ec9b0; font-weight: 700; }
+.keyword { color: #f1a18b; }
+.function { color: #d4c177; }
+.number { color: #3ed9c4; }
+.string { color: #f28779; }
+.comment { color: #6b8489; }
+.class { color: #5ed1c0; }
+.operator { color: #e0e0e0; }
+.property { color: #a8e6ff; }
+.css-selector { color: #e8c686; }
+.css-property { color: #a8e6ff; }
+.css-value { color: #f28779; }
+.md-heading { color: #d180ff; font-weight: 700; }
+.md-list { color: #e6d98f; }
+.md-bold { color: #5ed1c0; font-weight: 700; }
 
 /* 태블릿 대응 (1280px 이하) */
 @media (max-width: 1280px) {

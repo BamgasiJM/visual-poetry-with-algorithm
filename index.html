@@ -1,147 +1,376 @@
 <!DOCTYPE html>
 <html class="dark" lang="ko">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>마음을 그리는 알고리즘 물감 - Visual Poetics with Algorithms</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-<script>
-    tailwind.config = {
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Visual Poetics with Algorithms</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script>
+      tailwind.config = {
         darkMode: "class",
         theme: {
-            extend: {
-                colors: {
-                    primary: "#2dd4bf", 
-                    secondary: "#0f766e",
-                    "background-dark": "#121212", 
-                    "surface-dark": "#1e1e1e",
-                    "card-border-dark": "#333333",
-                },
-                fontFamily: {
-                    sans: ['"Noto Sans KR"', "sans-serif"],
-                    mono: ['"JetBrains Mono"', "monospace"],
-                },
+          extend: {
+            colors: {
+              primary: "#2dd4bf",
+              secondary: "#0f766e",
+              "background-dark": "#121212",
+              "surface-dark": "#1e1e1e",
+              "card-border-dark": "#333333",
             },
+            fontFamily: {
+              sans: ['"Noto Sans KR"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+          },
         },
-    };
-</script>
-<style>
-    body::-webkit-scrollbar {
+      };
+    </script>
+    <style>
+      body::-webkit-scrollbar {
         display: none;
-    }
-    body {
+      }
+      body {
         -ms-overflow-style: none;
         scrollbar-width: none;
-    }
-    canvas {
+      }
+      canvas {
         display: block;
-    }
-</style>
-</head>
-<body class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black">
-<div class="absolute inset-0 pointer-events-none z-0" id="p5-container"></div>
-<main class="w-full max-w-[1800px] px-4 md:px-8 lg:px-12 flex flex-col items-center justify-center h-full z-10 py-6">
-<div class="text-center mb-6 lg:mb-10 shrink-0">
-<h2 class="text-primary font-mono text-sm md:text-base font-medium tracking-widest uppercase mb-2 opacity-90">Visual Poetics with Algorithms</h2>
-<h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-3 leading-tight">
-            마음을 그리는 알고리즘 물감
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black"
+  >
+    <div
+      class="absolute inset-0 pointer-events-none z-0"
+      id="p5-container"
+    ></div>
+    <main
+      class="w-full max-w-[1800px] px-4 md:px-8 lg:px-12 flex flex-col items-center justify-center h-full z-10 py-6"
+    >
+      <div class="text-center mb-6 lg:mb-10 shrink-0">
+        <h2
+          class="text-primary font-mono text-sm md:text-base font-medium tracking-widest uppercase mb-2 opacity-90"
+        >
+          Visual Poetics with Algorithms
+        </h2>
+        <h1
+          class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-3 leading-tight"
+        >
+          마음을 그리는 알고리즘 물감
         </h1>
-<p class="max-w-2xl mx-auto text-sm md:text-base text-gray-400 leading-relaxed font-light">
-            15주간의 커리큘럼을 통해 수학적 원리와 프로그래밍으로 나만의 감각적인 시각 예술을 창조해보세요.
+        <p
+          class="max-w-2xl mx-auto text-sm md:text-base text-gray-400 leading-relaxed font-light"
+        >
+          붓 대신 코드로, 물감 대신 알고리즘으로 당신만의 이야기를 담은 아트워크를 창조해보세요.
         </p>
-</div>
-<div class="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 xl:gap-5 auto-rows-fr shrink-0">
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_02/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 02</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">랜덤과 노이즈</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">통제된 무작위성과 Perlin Noise를 활용한 자연스러운 움직임 구현</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_03/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 03</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">벡터와 움직임</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">속도, 가속도, 힘의 개념을 통해 물체의 움직임 제어하기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_04/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 04</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">진동과 파동</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">삼각함수를 활용한 주기적인 운동과 패턴 만들기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_05/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 05</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">파티클 시스템</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">수많은 입자들의 상호작용으로 복잡한 형태 구성하기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_06/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 06</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">자율 에이전트</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">스스로 판단하고 움직이는 지능적인 객체 구현</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_07/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 07</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">셀룰러 오토마타</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">격자 위에서 피어나는 생명 게임과 패턴의 규칙</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_08/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 08</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">프랙탈과 재귀</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">자기 유사성을 가진 무한한 기하학적 구조 그리기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_09/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 09</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">유전 알고리즘</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">진화론을 모방하여 최적의 디자인 찾아내기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_10/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 10</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">이미지 프로세싱</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">픽셀 데이터를 조작하여 이미지를 예술적으로 변형하기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_11/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 11</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">사운드 인터랙션</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">소리에 반응하는 비주얼라이제이션 만들기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_12/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 12</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">3D 지오메트리</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">WEBGL을 활용한 3차원 공간과 도형 다루기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_13/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 13</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">셰이더 기초</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">GLSL을 이용하여 GPU 가속 그래픽 만들기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]" href="week_14/index.html">
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100">WEEK 14</span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">데이터 시각화</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed">외부 API 데이터를 예술적인 형태로 표현하기</p>
-</a>
-<a class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-hidden" href="week_15/index.html">
-<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<span class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-100 flex items-center gap-1">WEEK 15 <span class="bg-primary/20 text-primary text-[8px] px-1 rounded">FINAL</span></span>
-<h3 class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors">나만의 갤러리</h3>
-<p class="text-xs text-gray-500 group-hover:text-gray-300 line-clamp-3 leading-relaxed relative z-10">모든 기술을 통합하여 고유한 아트 작품 완성 및 전시</p>
-</a>
-</div>
-<footer class="mt-8 text-gray-600 text-[10px] md:text-xs font-mono tracking-wider opacity-60 shrink-0">
-        세명대학교 | Semyung Univ.
-    </footer>
-</main>
+      </div>
+      <div
+        class="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 xl:gap-5 auto-rows-fr shrink-0"
+      >
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_02/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 02</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            랜덤과 노이즈
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            통제된 무작위성과 Perlin Noise를 활용한 자연스러운 움직임 구현
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_03/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 03</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            벡터와 움직임
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            속도, 가속도, 힘의 개념을 통해 물체의 움직임 제어하기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_04/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 04</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            진동과 파동
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            삼각함수를 활용한 주기적인 운동과 패턴 만들기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_05/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 05</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            파티클 시스템
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            수많은 입자들의 상호작용으로 복잡한 형태 구성하기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_06/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 06</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            자율 에이전트
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            스스로 판단하고 움직이는 지능적인 객체 구현
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_07/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 07</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            셀룰러 오토마타
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            격자 위에서 피어나는 생명 게임과 패턴의 규칙
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_08/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-100 flex items-center gap-1"
+            >WEEK 08
+            <span class="bg-primary/20 text-primary text-[8px] px-1 rounded"
+              >MID-TERM</span
+            ></span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            마음 갤러리 1
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            감상하는 아트워크 제작과 발표
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_09/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 09</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            유전 알고리즘
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            진화론을 모방하여 최적의 디자인 찾아내기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_10/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 10</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            이미지 프로세싱
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            픽셀 데이터를 조작하여 이미지를 예술적으로 변형하기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_11/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 11</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            사운드 인터랙션
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            소리에 반응하는 비주얼라이제이션 만들기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_12/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 12</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            3D 지오메트리
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            WEBGL을 활용한 3차원 공간과 도형 다루기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_13/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 13</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            셰이더 기초
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            GLSL을 이용하여 GPU 가속 그래픽 만들기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-surface-dark border border-card-border-dark hover:border-primary hover:bg-[#252525] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.25)]"
+          href="week_14/index.html"
+        >
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-80 group-hover:opacity-100"
+            >WEEK 14</span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            데이터 시각화
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-400 line-clamp-3 leading-relaxed"
+          >
+            외부 API 데이터를 예술적인 형태로 표현하기
+          </p>
+        </a>
+        <a
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-hidden"
+          href="week_15/index.html"
+        >
+          <div
+            class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"
+          ></div>
+          <span
+            class="font-mono text-[10px] lg:text-xs text-primary font-bold mb-2 opacity-100 flex items-center gap-1"
+            >WEEK 15
+            <span class="bg-primary/20 text-primary text-[8px] px-1 rounded"
+              >FINAL</span
+            ></span
+          >
+          <h3
+            class="text-sm lg:text-base font-bold text-white mb-2 group-hover:text-primary transition-colors"
+          >
+            마음 갤러리 2
+          </h3>
+          <p
+            class="text-xs text-gray-500 group-hover:text-gray-300 line-clamp-3 leading-relaxed relative z-10"
+          >
+            인터랙티브 미디어 아트 제작과 발표
+          </p>
+        </a>
+      </div>
+      <footer
+        class="mt-8 text-#bbbbbb-600 text-[10px] md:text-xs font-mono tracking-wider opacity-60 shrink-0"
+      >
+        by 김재륭 교수 | 세명대학교
+      </footer>
+    </main>
     <script>
       // p5.js Sketch: Triangle Grid following the mouse
       const TRI_SIZE = 20;
       const SPACING = 40;
-      const BRIGHT_RANGE = 500;
+      const BRIGHT_RANGE = 640;
       const ROTATION_EASING = 0.1;
 
-      const HUE_MIN = 180;
-      const HUE_MAX = 200;
-      const BRIGHTNESS_NEAR = 50;
+      const HUE_MIN = 160;
+      const HUE_MAX = 220;
+      const BRIGHTNESS_NEAR = 70;
       const BRIGHTNESS_FAR = 10;
 
       let grid;
