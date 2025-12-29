@@ -57,8 +57,8 @@ header {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  background: rgba(30, 190, 180, 0.2);
-  color: rgb(30, 190, 180);
+  background: rgba(30, 179, 177, 0.323);
+  color: rgb(235, 172, 13);
 }
 
 .logo-title {
@@ -103,30 +103,38 @@ nav a.active {
   border-left: 1px solid #27272a;
 }
 
-.icon-button {
+.blog {
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  border: 1px solid #27272a;
+  border: 1px solid #3c3c3c;
   background: #18181b;
-  color: #a1a1aa;
+  color: rgb(30, 190, 180);
   cursor: pointer;
   transition: all 0.2s;
+  text-decoration: none;
 }
 
 .icon-button:hover {
   background: #262626;
 }
 
-.avatar {
+.p5editor {
   width: 40px;
   height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #525252, #404040);
-  border: 1px solid #27272a;
+  border: 1px solid #3c3c3c;
+  background: #18181b;
+  color: rgb(190, 30, 105);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
 }
 
 /* Main */
