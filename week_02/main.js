@@ -239,7 +239,7 @@ function getMinSizes() {
   } else if (screenWidth <= 1280) {
     return { minLeft: 350, minRight: 400 };
   } else {
-    return { minLeft: 400, minRight: 400 };
+    return { minLeft: 400, minRight: 200 };
   }
 }
 
