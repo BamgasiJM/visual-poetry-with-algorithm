@@ -129,7 +129,7 @@
               <div class="tab-spacer"></div>
               <div class="tab active" data-file="js">
                 <span class="material-symbols-outlined tab-icon icon-js"
-                  >javascript</span
+                  >code_blocks</span
                 >
                 <span>sketch.js</span>
               </div>
@@ -182,28 +182,20 @@
       </div>
     </main>
 
-    <!-- 캔버스 이미지 다운로드 기능 추가 -->
+    <!-- 캔버스 이미지 다운로드 기능 -->
     <script>
-      // 다운로드 버튼 클릭 이벤트
       document
         .getElementById("downloadBtn")
         .addEventListener("click", function () {
-          // 캔버스 요소 찾기
           const canvas = document.querySelector("#canvasWrapper canvas");
           if (!canvas) {
             alert("캔버스를 찾을 수 없습니다. 먼저 스케치를 실행해주세요.");
             return;
           }
-
-          // 캔버스를 이미지로 변환
           const imageURL = canvas.toDataURL("image/png");
-
-          // 다운로드 링크 생성
           const link = document.createElement("a");
           link.href = imageURL;
           link.download = "sample.png";
-
-          // 다운로드 실행
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

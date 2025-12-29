@@ -51,14 +51,14 @@ header {
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  background: rgba(30, 179, 177, 0.323);
-  color: rgb(235, 172, 13);
+  border-radius: 12px;
+  background: rgb(70, 24, 54);
+  color: rgb(227, 157, 228);
 }
 
 .logo-title {
@@ -427,15 +427,15 @@ main {
 }
 
 .btn-run {
-  background: rgb(30, 190, 180);
+  background: rgb(15, 170, 160);
   color: #ffffff;
   flex: 1;
   min-width: 120px;
-  box-shadow: 0 4px 6px rgba(30, 190, 180, 0.2);
+  box-shadow: 0 4px 6px rgba(15, 170, 160, 0.1);
 }
 
 .btn-run:hover {
-  background: rgb(27, 171, 162);
+  background: rgb(10, 140, 130);
   transform: translateY(-1px);
 }
 
@@ -532,7 +532,7 @@ main {
   gap: 8px;
   padding: 0 16px;
   height: 100%;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
   border-top: 2px solid transparent;
   transition: all 0.2s;
@@ -621,7 +621,7 @@ main {
 }
 
 .editor-statusbar {
-  background: rgb(30, 190, 180);
+  background: rgb(15, 170, 160);
   color: #ffffff;
   font-size: 11px;
   padding: 6px 12px;
