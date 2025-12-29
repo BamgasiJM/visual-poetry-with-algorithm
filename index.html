@@ -37,20 +37,54 @@
       };
     </script>
     <style>
-      body::-webkit-scrollbar {
-        display: none;
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
       }
       body {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        overflow-y: auto;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
       }
-      canvas {
-        display: block;
+      body::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
+    </style>
+
+    <style>
+      /* 얼굴 아이콘 스타일 */
+      .emotion-icons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding: 1rem 0;
+        background: transparent;
+      }
+
+      .emotion-icons .icon-container {
+        display: flex;
+        gap: 2.5rem;
+      }
+
+      .emotion-icons .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 100;
+        color: white;
+        font-size: 2.25rem;
+        transition: all 0.3s ease;
+      }
+
+      .emotion-icons .material-symbols-outlined:hover {
+        color: #2dd4bf;
+        filter: drop-shadow(0 0 4px rgba(45, 212, 191, 0.7));
       }
     </style>
   </head>
   <body
-    class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black"
+class="bg-background-dark text-gray-200 font-sans min-h-screen w-screen overflow-y-auto flex flex-col items-center justify-start relative selection:bg-primary selection:text-black"
   >
     <div
       class="absolute inset-0 pointer-events-none z-0"
@@ -73,7 +107,8 @@
         <p
           class="max-w-2xl mx-auto text-sm md:text-base text-gray-400 leading-relaxed font-light"
         >
-          붓 대신 코드로, 물감 대신 알고리즘으로 당신만의 이야기를 담은 아트워크를 창조해보세요.
+          붓 대신 코드로, 물감 대신 알고리즘으로 당신만의 이야기를 담은
+          아트워크를 창조해보세요.
         </p>
       </div>
       <div
@@ -330,7 +365,7 @@
           </p>
         </a>
         <a
-          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-hidden"
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-y-auto"
           href="week_15/index.html"
         >
           <div
@@ -355,10 +390,23 @@
           </p>
         </a>
       </div>
+      <div class="emotion-icons">
+        <div class="icon-container">
+          <i class="material-symbols-outlined">sentiment_very_satisfied</i>
+          <i class="material-symbols-outlined">sentiment_satisfied</i>
+          <i class="material-symbols-outlined">sentiment_neutral</i>
+          <i class="material-symbols-outlined">sentiment_dissatisfied</i>
+          <i class="material-symbols-outlined">sentiment_very_dissatisfied</i>
+          <i class="material-symbols-outlined">mood</i>
+          <i class="material-symbols-outlined">mood_bad</i>
+          <i class="material-symbols-outlined">emoji_emotions</i>
+          <i class="material-symbols-outlined">face</i>
+        </div>
+      </div>
       <footer
         class="mt-8 text-#bbbbbb-600 text-[10px] md:text-xs font-mono tracking-wider opacity-60 shrink-0"
       >
-        by 김재륭 교수 | 세명대학교
+        curated by JaiKim | Semyung Univ.
       </footer>
     </main>
     <script>
