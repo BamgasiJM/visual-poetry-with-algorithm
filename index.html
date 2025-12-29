@@ -39,18 +39,24 @@
     <style>
       html,
       body {
-        height: auto;
-        min-height: 100%;
+        height: 100%;
         margin: 0;
         padding: 0;
       }
       body {
+        min-height: 100vh;
         overflow-y: auto;
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
       }
       body::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera */
+      }
+      canvas {
+        display: block;
+      }
+      main {
+        min-height: 100vh;
       }
     </style>
 
@@ -84,7 +90,7 @@
     </style>
   </head>
   <body
-class="bg-background-dark text-gray-200 font-sans min-h-screen w-screen overflow-y-auto flex flex-col items-center justify-start relative selection:bg-primary selection:text-black"
+    class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black"
   >
     <div
       class="absolute inset-0 pointer-events-none z-0"
@@ -365,7 +371,7 @@ class="bg-background-dark text-gray-200 font-sans min-h-screen w-screen overflow
           </p>
         </a>
         <a
-          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-y-auto"
+          class="group flex flex-col p-4 lg:p-5 rounded-xl bg-gradient-to-br from-surface-dark to-[#252525] border border-primary/30 hover:border-primary transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(45,212,191,0.35)] relative overflow-hidden"
           href="week_15/index.html"
         >
           <div
