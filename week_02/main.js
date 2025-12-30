@@ -97,9 +97,12 @@ function highlightCodeLine(line, type) {
  * Render Code Editor
  *************************************************/
 function displayCode(type) {
-  // ✅ PDF VIEWER
+  editorLines.innerHTML = "";
+
+  /*************************************************
+   * PDF VIEWER
+   *************************************************/
   if (type === "pdf") {
-    editorLines.innerHTML = "";
     editorLines.style.display = "block";
     editorLines.style.height = "100%";
 
@@ -116,31 +119,61 @@ function displayCode(type) {
     return;
   }
 
-  // ✅ CODE VIEWER (JS / PROMPT)
+  /*************************************************
+   * MARKDOWN (PROMPT) – marked.js 사용
+   *************************************************/
+  if (type === "prompt") {
+    editorLines.style.display = "block";
+    editorLines.style.height = "100%";
+    editorLines.style.padding = "20px";
+    editorLines.style.lineHeight = "1.6";
+
+    // marked.js로 전체 문서 파싱
+    editorLines.innerHTML = marked.parse(codeFiles.prompt || "");
+
+    currentFileType = type;
+    fileType.textContent = "Markdown - Prompt";
+    return;
+  }
+
+  /*************************************************
+   * JAVASCRIPT CODE VIEWER
+   *************************************************/
   editorLines.style.display = "grid";
   editorLines.style.height = "";
+  editorLines.style.padding = "";
 
   const code = codeFiles[type];
   if (!code) return;
 
-  editorLines.innerHTML = "";
-
   const lines = code.split("\n");
+
   lines.forEach((line, index) => {
-    const no = document.createElement("div");
-    no.className = "editor-lineno";
-    no.textContent = index + 1;
+    const lineNo = document.createElement("div");
+    lineNo.className = "editor-lineno";
+    lineNo.textContent = index + 1;
 
-    const codeEl = document.createElement("div");
-    codeEl.className = "editor-code";
-    codeEl.innerHTML = highlightCodeLine(line, type) || " ";
+    const lineCode = document.createElement("div");
+    lineCode.className = "editor-code";
+    lineCode.innerHTML = highlightCodeLine(line, "js");
 
-    editorLines.appendChild(no);
-    editorLines.appendChild(codeEl);
+    editorLines.appendChild(lineNo);
+    editorLines.appendChild(lineCode);
   });
 
   currentFileType = type;
-  fileType.textContent = type === "js" ? "JavaScript" : "Markdown - Prompt";
+  fileType.textContent = "JavaScript";
+}
+
+/*************************************************
+ * Markdown Renderer (marked.js 설정)
+ *************************************************/
+if (typeof marked !== "undefined") {
+  marked.setOptions({
+    gfm: true,
+    breaks: true,   // ⭐ 빈 줄 / 줄바꿈 제대로 처리
+    pedantic: false
+  });
 }
 
 /*************************************************
