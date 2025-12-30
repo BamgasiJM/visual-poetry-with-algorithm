@@ -435,13 +435,13 @@ main {
 }
 
 .btn-next {
-  background: #87CEEB; /* Sky blue */
-  color: #121212; /* Dark text for contrast */
+  background: #4d7ab6; 
+  color: #ffffff;
   box-shadow: 0 4px 6px rgba(135, 206, 235, 0.1);
 }
 
 .btn-next:hover {
-  background: #76c1de;
+  background: #3f6393;
   transform: translateY(-1px);
 }
 
