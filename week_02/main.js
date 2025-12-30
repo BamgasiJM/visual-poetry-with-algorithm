@@ -5,7 +5,6 @@ const leftPanel = document.getElementById("leftPanel");
 const resizer = document.getElementById("resizer");
 const canvasWrapper = document.getElementById("canvasWrapper");
 
-const btnRun = document.getElementById("btnRun");
 const btnStop = document.getElementById("btnStop");
 const btnFullscreen = document.getElementById("btnFullscreen");
 const btnRestart = document.getElementById("btnRestart");
@@ -35,7 +34,6 @@ tabs.forEach((tab) => {
 const codeFiles = {
   js: "",
   prompt: "",
-  // concept 제거, pdf는 별도 로딩 없이 iframe src로 처리하므로 키만 존재하면 됨(또는 displayCode에서 처리)
 };
 let currentFileType = "js";
 
@@ -47,8 +45,6 @@ async function loadSketchFile() {
   codeFiles.js = await res.text();
   displayCode("js");
 }
-
-// concept.md 로드 함수 제거됨
 
 async function loadPromptFile() {
   const res = await fetch("prompt.md");
@@ -72,7 +68,6 @@ function highlightCodeLine(line, type) {
       .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
       .replace(/\/\/.*/g, '<span class="comment">$&</span>');
   } else if (type === "prompt") {
-    // Markdown 문법 강조
     return line
       .replace(/^(#{1,6})\s+(.+)$/g, '<span class="md-heading">$1 $2</span>')
       .replace(/^(\d+\.)\s+/g, '<span class="md-list">$1</span> ')
@@ -84,18 +79,14 @@ function highlightCodeLine(line, type) {
 }
 
 /*************************************************
- * Render Code Editor (ONE scroll, PERFECT sync)
+ * Render Code Editor
  *************************************************/
 function displayCode(type) {
-  // 1. PDF 처리 로직
   if (type === "pdf") {
     editorLines.innerHTML = "";
-
-    // PDF 모드에서는 그리드 레이아웃 해제 및 높이 100% 설정
     editorLines.style.display = "block";
     editorLines.style.height = "100%";
 
-    // iframe 생성하여 PDF 로드
     const iframe = document.createElement("iframe");
     iframe.src = "material.pdf";
     iframe.style.width = "100%";
@@ -106,13 +97,11 @@ function displayCode(type) {
 
     currentFileType = type;
     fileType.textContent = "PDF Viewer";
-    return; // 이후 코드 실행 중단
+    return;
   }
 
-  // 2. JS / MD 파일 처리 로직
-  // 일반 에디터 모드로 복귀 (Grid 레이아웃)
   editorLines.style.display = "grid";
-  editorLines.style.height = ""; // CSS 기본값으로 복귀
+  editorLines.style.height = "";
 
   const code = codeFiles[type];
   if (!code) return;
@@ -147,7 +136,6 @@ function displayCode(type) {
  * Load editor content
  *************************************************/
 loadSketchFile();
-// loadConceptFile(); // 제거됨
 loadPromptFile();
 
 /*************************************************
@@ -167,7 +155,7 @@ function attachCanvas() {
   }
 }
 
-// setup 이후 canvas 처리 + 초기 정지
+// setup 이후 canvas 처리 + 자동 실행
 window.addEventListener("load", () => {
   requestAnimationFrame(() => {
     attachCanvas();
@@ -175,50 +163,34 @@ window.addEventListener("load", () => {
     const canvas = getCanvas();
     if (!canvas) return;
 
-    // 처음에는 완전히 정지 + 숨김
-    canvas.style.display = "none";
+    // 자동으로 캔버스 표시 및 실행
+    canvas.style.display = "block";
 
-    if (typeof noLoop === "function") {
-      noLoop();
-    }
-    if (typeof background === "function") {
-      background(0);
+    // loop가 있으면 실행, 없으면 정적 스케치로 간주
+    if (typeof loop === "function") {
+      loop();
     }
   });
 });
 
 /*************************************************
- * Run / Stop / Restart
+ * Stop
  *************************************************/
-btnRun.addEventListener("click", () => {
-  const canvas = getCanvas();
-  if (!canvas) return;
-
-  canvas.style.display = "block";
-  if (typeof loop === "function") {
-    loop();
-  }
-});
-
 btnStop.addEventListener("click", () => {
   if (typeof noLoop === "function") {
     noLoop();
   }
 });
 
+/*************************************************
+ * Restart - 페이지 전체 리로드
+ *************************************************/
 btnRestart.addEventListener("click", () => {
-  const canvas = getCanvas();
-  if (!canvas) return;
-
-  if (typeof noLoop === "function") noLoop();
-  if (typeof background === "function") background(0);
-  if (typeof loop === "function") loop();
-
-  canvas.style.display = "block";
+  location.reload();
 });
 
 /*************************************************
- * Fullscreen (aspect ratio kept by CSS)
+ * Fullscreen
  *************************************************/
 btnFullscreen.addEventListener("click", () => {
   if (canvasWrapper.requestFullscreen) {
@@ -227,11 +199,10 @@ btnFullscreen.addEventListener("click", () => {
 });
 
 /*************************************************
- * Resizer (반응형 대응)
+ * Resizer
  *************************************************/
 let isResizing = false;
 
-// 화면 크기에 따른 최소값 동적 계산
 function getMinSizes() {
   const screenWidth = window.innerWidth;
   if (screenWidth <= 768) {

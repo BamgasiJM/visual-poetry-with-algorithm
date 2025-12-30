@@ -410,7 +410,7 @@ main {
   flex-wrap: wrap;
 }
 
-.btn-run, .btn-stop, .btn-fullscreen, .btn-restart {
+.btn-stop, .btn-fullscreen, .btn-restart {
   height: 44px;
   border: none;
   border-radius: 8px;
@@ -426,7 +426,7 @@ main {
   padding: 0 20px;
 }
 
-.btn-run {
+.btn-restart {
   background: rgb(15, 170, 160);
   color: #ffffff;
   flex: 1;
@@ -434,17 +434,28 @@ main {
   box-shadow: 0 4px 6px rgba(15, 170, 160, 0.1);
 }
 
-.btn-run:hover {
+.btn-restart:hover {
   background: rgb(10, 140, 130);
   transform: translateY(-1px);
 }
 
-.btn-restart, .btn-stop, .btn-fullscreen {
+.btn-stop {
+  background: rgb(222, 111, 71);
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(255, 127, 80, 0.1);
+}
+
+.btn-stop:hover {
+  background: rgb(200, 96, 77);
+  transform: translateY(-1px);
+}
+
+.btn-fullscreen {
   background: #27272a;
   color: #a1a1aa;
 }
 
-.btn-restart:hover, .btn-stop:hover, .btn-fullscreen:hover {
+.btn-fullscreen:hover {
   background: #3a3a3e;
   color: #ffffff;
 }
@@ -771,17 +782,16 @@ main {
     gap: 8px;
   }
   
-  .btn-run, .btn-stop, .btn-fullscreen, .btn-restart {
+  .btn-stop, .btn-fullscreen, .btn-restart {
     height: 40px;
     padding: 0 12px;
     font-size: 12px;
   }
   
-  .btn-run span, .btn-restart span, .btn-stop span, .btn-fullscreen span {
+  .btn-restart span, .btn-stop span, .btn-fullscreen span {
     display: none;
   }
   
-  .btn-run .material-symbols-outlined,
   .btn-restart .material-symbols-outlined,
   .btn-stop .material-symbols-outlined,
   .btn-fullscreen .material-symbols-outlined {
