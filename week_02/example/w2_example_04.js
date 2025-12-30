@@ -1,4 +1,5 @@
 // 004
+
 const WIN_SIZE = 800;
 const NUM_POINTS = 100;
 const RANGE = 200.0;

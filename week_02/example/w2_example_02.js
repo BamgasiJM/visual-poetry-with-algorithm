@@ -1,7 +1,9 @@
+// 002
+
 let flock = [];
 
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(500, 300);
   for (let i = 0; i < 250; i++) {
     flock.push(new Boid());
   }
