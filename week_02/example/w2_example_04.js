@@ -1,5 +1,6 @@
+// 004
 const WIN_SIZE = 800;
-const NUM_POINTS = 1500;
+const NUM_POINTS = 100;
 const RANGE = 200.0;
 
 let points = [];
@@ -46,13 +47,13 @@ function draw() {
       noStroke();
     } else {
       fill(128);
-      ellipse(p.pos.x, p.pos.y, 3, 3);
+      ellipse(p.pos.x, p.pos.y, 10, 10);
     }
   }
   // 중앙 노란색 원 그리기
   fill(200, 170, 0);
   noStroke();
-  ellipse(0, 0, 12, 12);
+  ellipse(0, 0, 30, 30);
 }
 
 function randomPoint() {

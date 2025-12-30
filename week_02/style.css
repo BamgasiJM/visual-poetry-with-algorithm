@@ -314,7 +314,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
+  padding: 6px 20px;
   border-bottom: 1px solid #27272a;
   background: #18181b;
   flex-shrink: 0;
@@ -325,11 +325,11 @@ main {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .card-title .material-symbols-outlined {
-  color: #a1a1aa;
+  color: rgb(20, 170, 160);
   font-size: 18px;
 }
 
@@ -341,7 +341,7 @@ main {
 .card-actions button {
   background: none;
   border: none;
-  color: #a1a1aa;
+  color: rgb(20, 170, 160);
   cursor: pointer;
   padding: 4px;
   transition: color 0.2s;
@@ -410,7 +410,7 @@ main {
   flex-wrap: wrap;
 }
 
-.btn-stop, .btn-fullscreen, .btn-restart {
+.btn-stop, .btn-fullscreen, .btn-restart, .btn-next {
   height: 44px;
   border: none;
   border-radius: 8px;
@@ -432,6 +432,17 @@ main {
   flex: 1;
   min-width: 120px;
   box-shadow: 0 4px 6px rgba(15, 170, 160, 0.1);
+}
+
+.btn-next {
+  background: #87CEEB; /* Sky blue */
+  color: #121212; /* Dark text for contrast */
+  box-shadow: 0 4px 6px rgba(135, 206, 235, 0.1);
+}
+
+.btn-next:hover {
+  background: #76c1de;
+  transform: translateY(-1px);
 }
 
 .btn-restart:hover {
@@ -569,6 +580,7 @@ main {
 }
 
 .icon-js { color: #f0db4f; }
+.icon-pdf { color: #b165bb; }
 .icon-md { color: #83b81a; }
 
 .editor-toolbar {
@@ -632,7 +644,7 @@ main {
 }
 
 .editor-statusbar {
-  background: rgb(15, 170, 160);
+  background:  rgb(10, 140, 130);
   color: #ffffff;
   font-size: 11px;
   padding: 6px 12px;
@@ -788,13 +800,15 @@ main {
     font-size: 12px;
   }
   
-  .btn-restart span, .btn-stop span, .btn-fullscreen span {
+  .btn-restart span, .btn-stop span, .btn-fullscreen span, .btn-next span {
     display: none;
   }
   
   .btn-restart .material-symbols-outlined,
   .btn-stop .material-symbols-outlined,
-  .btn-fullscreen .material-symbols-outlined {
+  .btn-fullscreen .material-symbols-outlined,
+  .btn-next .material-symbols-outlined {
     margin: 0;
   }
 }
+

@@ -8,6 +8,7 @@ const canvasWrapper = document.getElementById("canvasWrapper");
 const btnStop = document.getElementById("btnStop");
 const btnFullscreen = document.getElementById("btnFullscreen");
 const btnRestart = document.getElementById("btnRestart");
+const btnNextExample = document.getElementById("btnNextExample");
 
 /*************************************************
  * DOM – Editor
@@ -38,17 +39,41 @@ const codeFiles = {
 let currentFileType = "js";
 
 /*************************************************
+ * Dynamic State
+ *************************************************/
+const urlParams = new URLSearchParams(window.location.search);
+let currentExampleNum = parseInt(urlParams.get("example")) || 1;
+const pad = (n) => n.toString().padStart(2, "0");
+const getFileName = (n) => `w2_example_${pad(n)}.js`;
+
+/*************************************************
  * Load Code Files (for editor)
  *************************************************/
-async function loadSketchFile() {
-  const res = await fetch("class.js");
-  codeFiles.js = await res.text();
-  displayCode("js");
+async function loadSketchFile(filename) {
+  try {
+    const res = await fetch(`example/${filename}`);
+    if (!res.ok) throw new Error(res.statusText);
+    codeFiles.js = await res.text();
+  } catch (e) {
+    console.error("Failed to load sketch:", e);
+    codeFiles.js = `// Error loading file: ${filename}\n// Please ensure you are running this on a local web server (http://localhost), not directly from file://\n// Error details: ${e.message}`;
+  }
+
+  // JS 탭이 활성화되어 있을 때만 코드 표시
+  if (currentFileType === "js") {
+    displayCode("js");
+  }
 }
 
 async function loadPromptFile() {
-  const res = await fetch("prompt.md");
-  codeFiles.prompt = await res.text();
+  try {
+    const res = await fetch("prompt.md");
+    if (!res.ok) throw new Error(res.statusText);
+    codeFiles.prompt = await res.text();
+  } catch (e) {
+    console.error("Failed to load prompt:", e);
+    codeFiles.prompt = `# Error loading prompt.md\n\nPlease ensure you are running this on a local web server (http://localhost).\nError details: ${e.message}`;
+  }
 }
 
 /*************************************************
@@ -135,7 +160,6 @@ function displayCode(type) {
 /*************************************************
  * Load editor content
  *************************************************/
-loadSketchFile();
 loadPromptFile();
 
 /*************************************************
@@ -155,23 +179,21 @@ function attachCanvas() {
   }
 }
 
-// setup 이후 canvas 처리 + 자동 실행
-window.addEventListener("load", () => {
-  requestAnimationFrame(() => {
-    attachCanvas();
-
-    const canvas = getCanvas();
-    if (!canvas) return;
-
-    // 자동으로 캔버스 표시 및 실행
-    canvas.style.display = "block";
-
-    // loop가 있으면 실행, 없으면 정적 스케치로 간주
-    if (typeof loop === "function") {
-      loop();
-    }
+/*************************************************
+ * Canvas Observer (Fixes placement issues)
+ *************************************************/
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.tagName === "CANVAS") {
+        canvasWrapper.appendChild(node);
+        node.style.display = "block";
+      }
+    });
   });
 });
+
+observer.observe(document.body, { childList: true });
 
 /*************************************************
  * Stop
@@ -183,7 +205,7 @@ btnStop.addEventListener("click", () => {
 });
 
 /*************************************************
- * Restart - 페이지 전체 리로드
+ * Restart - 현재 예시 리로드
  *************************************************/
 btnRestart.addEventListener("click", () => {
   location.reload();
@@ -257,3 +279,66 @@ window.addEventListener("resize", () => {
     leftPanel.style.width = "45%";
   }
 });
+
+/*************************************************
+ * Load Example with Script Tag
+ *************************************************/
+function loadExample(filename) {
+  const script = document.createElement("script");
+  script.id = "sketchScript";
+  script.src = `example/${filename}`;
+
+  script.onload = () => {
+    setTimeout(() => {
+      const canvases = document.querySelectorAll("canvas");
+      canvases.forEach((c) => {
+        if (c.parentElement !== canvasWrapper) {
+          canvasWrapper.appendChild(c);
+          c.style.display = "block";
+        }
+      });
+
+      // p5 렌더링 완료 대기 후 loading 클래스 제거
+      setTimeout(() => {
+        document.body.classList.remove("loading");
+      }, 300);
+    }, 1);
+
+    loadSketchFile(filename);
+  };
+
+  document.body.appendChild(script);
+}
+
+/*************************************************
+ * Next Example Button - 페이지 리로드 방식
+ *************************************************/
+btnNextExample.addEventListener("click", async () => {
+  const nextNum = currentExampleNum + 1;
+  const nextFile = getFileName(nextNum);
+
+  try {
+    const res = await fetch(`example/${nextFile}`);
+    if (res.ok) {
+      // 다음 파일이 존재하면 URL 파라미터로 페이지 리로드
+      window.location.href = `?example=${nextNum}`;
+    } else {
+      // 다음 파일이 없으면 첫 파일로
+      window.location.href = `?example=1`;
+    }
+  } catch (e) {
+    // 에러 시 첫 파일로
+    window.location.href = `?example=1`;
+  }
+});
+
+/*************************************************
+ * 초기화 - 페이지 완전 로드 후 실행
+ *************************************************/
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    loadExample(getFileName(currentExampleNum));
+  });
+} else {
+  loadExample(getFileName(currentExampleNum));
+}

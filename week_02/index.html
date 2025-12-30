@@ -17,7 +17,7 @@
     <!-- Marked.js 추가 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
-  <body>
+  <body class="loading">
     <header>
       <div class="logo-section">
         <div class="logo-icon">
@@ -102,6 +102,10 @@
                 <span class="material-symbols-outlined">stop_circle</span>
                 정지
               </button>
+              <button class="btn-next" id="btnNextExample">
+                <span class="material-symbols-outlined">skip_next</span>
+                다음 예시
+              </button>
               <button class="btn-fullscreen" id="btnFullscreen">
                 <span class="material-symbols-outlined">fullscreen</span>
                 전체화면
@@ -125,10 +129,10 @@
                 <span class="material-symbols-outlined tab-icon icon-js"
                   >code_blocks</span
                 >
-                <span>sketch.js</span>
+                <span>example.js</span>
               </div>
               <div class="tab" data-file="pdf">
-                <span class="material-symbols-outlined tab-icon icon-md"
+                <span class="material-symbols-outlined tab-icon icon-pdf"
                   >picture_as_pdf</span
                 >
                 <span>material.pdf</span>
@@ -189,13 +193,12 @@
           const imageURL = canvas.toDataURL("image/png");
           const link = document.createElement("a");
           link.href = imageURL;
-          link.download = "sample.png";
+          link.download = "example.png";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
         });
     </script>
-    <script src="class.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
