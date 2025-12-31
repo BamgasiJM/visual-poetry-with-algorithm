@@ -55,11 +55,9 @@ async function loadSketchFile(filename) {
     if (!res.ok) throw new Error(res.statusText);
     codeFiles.js = await res.text();
   } catch (e) {
-    console.error("Failed to load sketch:", e);
-    codeFiles.js = `// Error loading file: ${filename}\n// Please ensure you are running this on a local web server (http://localhost), not directly from file://\n// Error details: ${e.message}`;
+    codeFiles.js = `// Error loading file: ${filename}\n// ${e.message}`;
   }
 
-  // JS 탭이 활성화되어 있을 때만 코드 표시
   if (currentFileType === "js") {
     displayCode("js");
   }
@@ -71,13 +69,12 @@ async function loadPromptFile() {
     if (!res.ok) throw new Error(res.statusText);
     codeFiles.prompt = await res.text();
   } catch (e) {
-    console.error("Failed to load prompt:", e);
-    codeFiles.prompt = `# Error loading prompt.md\n\nPlease ensure you are running this on a local web server (http://localhost).\nError details: ${e.message}`;
+    codeFiles.prompt = `# Error loading prompt.md\n\n${e.message}`;
   }
 }
 
 /*************************************************
- * Syntax Highlight (line-based)
+ * Syntax Highlight
  *************************************************/
 function highlightCodeLine(line, type) {
   if (type === "js") {
@@ -92,13 +89,6 @@ function highlightCodeLine(line, type) {
       )
       .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
       .replace(/\/\/.*/g, '<span class="comment">$&</span>');
-  } else if (type === "prompt") {
-    return line
-      .replace(/^(#{1,6})\s+(.+)$/g, '<span class="md-heading">$1 $2</span>')
-      .replace(/^(\d+\.)\s+/g, '<span class="md-list">$1</span> ')
-      .replace(/^(-|\*)\s+/g, '<span class="md-list">$1</span> ')
-      .replace(/\*\*(.+?)\*\*/g, '<span class="md-bold">$1</span>')
-      .replace(/\*(.+?)\*/g, '<span class="string">$1</span>');
   }
   return line;
 }
@@ -107,13 +97,19 @@ function highlightCodeLine(line, type) {
  * Render Code Editor
  *************************************************/
 function displayCode(type) {
+  editorLines.innerHTML = "";
+
+  /*************************************************
+   * PDF VIEWER
+   *************************************************/
   if (type === "pdf") {
-    editorLines.innerHTML = "";
     editorLines.style.display = "block";
     editorLines.style.height = "100%";
 
     const iframe = document.createElement("iframe");
-    iframe.src = "material.pdf";
+    iframe.src =
+      "https://drive.google.com/file/d/1PQ0Ind0LmDqhlGrNH75eqQ15h_Gtzr0k/preview";
+
     iframe.style.width = "100%";
     iframe.style.height = "100%";
     iframe.style.border = "none";
@@ -125,13 +121,32 @@ function displayCode(type) {
     return;
   }
 
+  /*************************************************
+   * MARKDOWN (PROMPT) – marked.js 사용
+   *************************************************/
+  if (type === "prompt") {
+    editorLines.style.display = "block";
+    editorLines.style.height = "100%";
+    editorLines.style.padding = "20px";
+    editorLines.style.lineHeight = "1.6";
+
+    // marked.js로 전체 문서 파싱
+    editorLines.innerHTML = marked.parse(codeFiles.prompt || "");
+
+    currentFileType = type;
+    fileType.textContent = "Markdown - Prompt";
+    return;
+  }
+
+  /*************************************************
+   * JAVASCRIPT CODE VIEWER
+   *************************************************/
   editorLines.style.display = "grid";
   editorLines.style.height = "";
+  editorLines.style.padding = "";
 
   const code = codeFiles[type];
   if (!code) return;
-
-  editorLines.innerHTML = "";
 
   const lines = code.split("\n");
 
@@ -142,19 +157,25 @@ function displayCode(type) {
 
     const lineCode = document.createElement("div");
     lineCode.className = "editor-code";
-    lineCode.innerHTML = highlightCodeLine(line, type) || " ";
+    lineCode.innerHTML = highlightCodeLine(line, "js");
 
     editorLines.appendChild(lineNo);
     editorLines.appendChild(lineCode);
   });
 
   currentFileType = type;
+  fileType.textContent = "JavaScript";
+}
 
-  if (type === "js") {
-    fileType.textContent = "JavaScript";
-  } else if (type === "prompt") {
-    fileType.textContent = "Markdown - Prompt";
-  }
+/*************************************************
+ * Markdown Renderer (marked.js 설정)
+ *************************************************/
+if (typeof marked !== "undefined") {
+  marked.setOptions({
+    gfm: true,
+    breaks: true, // ⭐ 빈 줄 / 줄바꿈 제대로 처리
+    pedantic: false,
+  });
 }
 
 /*************************************************
@@ -163,49 +184,38 @@ function displayCode(type) {
 loadPromptFile();
 
 /*************************************************
- * p5 CANVAS HANDLING (global mode)
+ * 🔒 CANVAS LOCK SYSTEM (핵심)
+ * 어떤 경우에도 canvas는 wrapper 안에만 존재
  *************************************************/
-function getCanvas() {
-  return document.querySelector("canvas");
-}
-
-function attachCanvas() {
-  const canvas = getCanvas();
-  if (!canvas) return;
-
-  if (canvas.parentElement !== canvasWrapper) {
-    canvasWrapper.innerHTML = "";
-    canvasWrapper.appendChild(canvas);
-  }
-}
-
-/*************************************************
- * Canvas Observer (Fixes placement issues)
- *************************************************/
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    mutation.addedNodes.forEach((node) => {
-      if (node.tagName === "CANVAS") {
-        canvasWrapper.appendChild(node);
-        node.style.display = "block";
+function lockCanvasToWrapper() {
+  const observer = new MutationObserver(() => {
+    const canvases = document.querySelectorAll("canvas");
+    canvases.forEach((canvas) => {
+      if (canvas.parentElement !== canvasWrapper) {
+        canvasWrapper.appendChild(canvas);
+        canvas.style.display = "block";
       }
     });
   });
-});
 
-observer.observe(document.body, { childList: true });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+// 즉시 실행
+lockCanvasToWrapper();
 
 /*************************************************
  * Stop
  *************************************************/
 btnStop.addEventListener("click", () => {
-  if (typeof noLoop === "function") {
-    noLoop();
-  }
+  if (typeof noLoop === "function") noLoop();
 });
 
 /*************************************************
- * Restart - 현재 예시 리로드
+ * Restart
  *************************************************/
 btnRestart.addEventListener("click", () => {
   location.reload();
@@ -226,19 +236,14 @@ btnFullscreen.addEventListener("click", () => {
 let isResizing = false;
 
 function getMinSizes() {
-  const screenWidth = window.innerWidth;
-  if (screenWidth <= 768) {
-    return { minLeft: 0, minRight: 0 };
-  } else if (screenWidth <= 1280) {
-    return { minLeft: 350, minRight: 400 };
-  } else {
-    return { minLeft: 400, minRight: 200 };
-  }
+  const w = window.innerWidth;
+  if (w <= 768) return { minLeft: 0, minRight: 0 };
+  if (w <= 1280) return { minLeft: 350, minRight: 400 };
+  return { minLeft: 400, minRight: 200 };
 }
 
 resizer.addEventListener("mousedown", () => {
   if (window.innerWidth <= 768) return;
-
   isResizing = true;
   document.body.style.cursor = "col-resize";
   document.body.style.userSelect = "none";
@@ -246,11 +251,9 @@ resizer.addEventListener("mousedown", () => {
 
 document.addEventListener("mousemove", (e) => {
   if (!isResizing) return;
-
   const { minLeft, minRight } = getMinSizes();
   const newWidth = e.clientX - 32;
   const maxWidth = window.innerWidth - minRight - 64;
-
   if (newWidth >= minLeft && newWidth <= maxWidth) {
     leftPanel.style.width = newWidth + "px";
   }
@@ -263,46 +266,28 @@ document.addEventListener("mouseup", () => {
 });
 
 /*************************************************
- * Fullscreen change safety
- *************************************************/
-document.addEventListener("fullscreenchange", () => {
-  requestAnimationFrame(attachCanvas);
-});
-
-/*************************************************
- * 화면 크기 변경 시 레이아웃 조정
- *************************************************/
-window.addEventListener("resize", () => {
-  if (window.innerWidth <= 768) {
-    leftPanel.style.width = "100%";
-  } else if (leftPanel.style.width === "100%") {
-    leftPanel.style.width = "45%";
-  }
-});
-
-/*************************************************
- * Load Example with Script Tag
+ * Load Example (p5 loop 제어)
  *************************************************/
 function loadExample(filename) {
+  const oldScript = document.getElementById("sketchScript");
+  if (oldScript) oldScript.remove();
+
+  document.querySelectorAll("canvas").forEach((c) => c.remove());
+  document.body.classList.add("loading");
+
   const script = document.createElement("script");
   script.id = "sketchScript";
   script.src = `example/${filename}`;
 
   script.onload = () => {
-    setTimeout(() => {
-      const canvases = document.querySelectorAll("canvas");
-      canvases.forEach((c) => {
-        if (c.parentElement !== canvasWrapper) {
-          canvasWrapper.appendChild(c);
-          c.style.display = "block";
-        }
-      });
+    // 🔴 첫 draw 방지
+    if (typeof noLoop === "function") noLoop();
 
-      // p5 렌더링 완료 대기 후 loading 클래스 제거
-      setTimeout(() => {
-        document.body.classList.remove("loading");
-      }, 300);
-    }, 1);
+    // 🔵 위치 고정 후 draw 재개
+    requestAnimationFrame(() => {
+      if (typeof loop === "function") loop();
+      document.body.classList.remove("loading");
+    });
 
     loadSketchFile(filename);
   };
@@ -311,7 +296,7 @@ function loadExample(filename) {
 }
 
 /*************************************************
- * Next Example Button - 페이지 리로드 방식
+ * Next Example (페이지 리로드 방식)
  *************************************************/
 btnNextExample.addEventListener("click", async () => {
   const nextNum = currentExampleNum + 1;
@@ -319,21 +304,14 @@ btnNextExample.addEventListener("click", async () => {
 
   try {
     const res = await fetch(`example/${nextFile}`);
-    if (res.ok) {
-      // 다음 파일이 존재하면 URL 파라미터로 페이지 리로드
-      window.location.href = `?example=${nextNum}`;
-    } else {
-      // 다음 파일이 없으면 첫 파일로
-      window.location.href = `?example=1`;
-    }
-  } catch (e) {
-    // 에러 시 첫 파일로
+    window.location.href = res.ok ? `?example=${nextNum}` : `?example=1`;
+  } catch {
     window.location.href = `?example=1`;
   }
 });
 
 /*************************************************
- * 초기화 - 페이지 완전 로드 후 실행
+ * Init
  *************************************************/
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {

@@ -17,12 +17,12 @@ const editorLines = document.getElementById("editorLines");
 const fileType = document.getElementById("fileType");
 
 /*************************************************
- * Tab Switching
+ * Tabs
  *************************************************/
 const tabs = document.querySelectorAll(".tab");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
-    const file = tab.getAttribute("data-file");
+    const file = tab.dataset.file;
     tabs.forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
     displayCode(file);
@@ -30,24 +30,19 @@ tabs.forEach((tab) => {
 });
 
 /*************************************************
- * Code Storage
+ * State
  *************************************************/
-const codeFiles = {
-  js: "",
-  prompt: "",
-};
+const codeFiles = { js: "", prompt: "" };
 let currentFileType = "js";
 
-/*************************************************
- * Dynamic State
- *************************************************/
 const urlParams = new URLSearchParams(window.location.search);
 let currentExampleNum = parseInt(urlParams.get("example")) || 1;
+
 const pad = (n) => n.toString().padStart(2, "0");
 const getFileName = (n) => `w2_example_${pad(n)}.js`;
 
 /*************************************************
- * Load Code Files (for editor)
+ * Load Files
  *************************************************/
 async function loadSketchFile(filename) {
   try {
@@ -58,9 +53,7 @@ async function loadSketchFile(filename) {
     codeFiles.js = `// Error loading file: ${filename}\n// ${e.message}`;
   }
 
-  if (currentFileType === "js") {
-    displayCode("js");
-  }
+  if (currentFileType === "js") displayCode("js");
 }
 
 async function loadPromptFile() {
@@ -76,28 +69,26 @@ async function loadPromptFile() {
 /*************************************************
  * Syntax Highlight
  *************************************************/
-function highlightCodeLine(line, type) {
-  if (type === "js") {
-    return line
-      .replace(
-        /\b(let|const|var|function|return|for|if|else|new)\b/g,
-        '<span class="keyword">$1</span>'
-      )
-      .replace(
-        /\b(setup|draw|createCanvas|background|ellipse|translate|rotate|push|pop|angleMode|random|map|fill|noStroke|color|int|frameRate|noLoop|loop|width|height|noise|vertex|beginShape|endShape|strokeWeight|stroke)\b/g,
-        '<span class="function">$1</span>'
-      )
-      .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
-      .replace(/\/\/.*/g, '<span class="comment">$&</span>');
-  }
-  return line;
+function highlightCodeLine(line) {
+  return line
+    .replace(
+      /\b(let|const|var|function|return|for|if|else|new)\b/g,
+      '<span class="keyword">$1</span>'
+    )
+    .replace(
+      /\b(setup|draw|createCanvas|background|ellipse|translate|rotate|push|pop|angleMode|random|map|fill|noStroke|color|int|frameRate|noLoop|loop|width|height|noise|vertex|beginShape|endShape|strokeWeight|stroke)\b/g,
+      '<span class="function">$1</span>'
+    )
+    .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
+    .replace(/\/\/.*/g, '<span class="comment">$&</span>');
 }
 
 /*************************************************
- * Render Code Editor
+ * Render Editor
  *************************************************/
 function displayCode(type) {
   editorLines.innerHTML = "";
+  currentFileType = type;
 
   /*************************************************
    * PDF VIEWER
@@ -109,20 +100,17 @@ function displayCode(type) {
     const iframe = document.createElement("iframe");
     iframe.src =
       "https://drive.google.com/file/d/1PQ0Ind0LmDqhlGrNH75eqQ15h_Gtzr0k/preview";
-
     iframe.style.width = "100%";
     iframe.style.height = "100%";
     iframe.style.border = "none";
 
     editorLines.appendChild(iframe);
-
-    currentFileType = type;
     fileType.textContent = "PDF Viewer";
     return;
   }
 
   /*************************************************
-   * MARKDOWN (PROMPT) – marked.js 사용
+   * MARKDOWN VIEWER
    *************************************************/
   if (type === "prompt") {
     editorLines.style.display = "block";
@@ -130,67 +118,54 @@ function displayCode(type) {
     editorLines.style.padding = "20px";
     editorLines.style.lineHeight = "1.6";
 
-    // marked.js로 전체 문서 파싱
     editorLines.innerHTML = marked.parse(codeFiles.prompt || "");
-
-    currentFileType = type;
     fileType.textContent = "Markdown - Prompt";
     return;
   }
 
   /*************************************************
-   * JAVASCRIPT CODE VIEWER
+   * JAVASCRIPT VIEWER
    *************************************************/
   editorLines.style.display = "grid";
   editorLines.style.height = "";
   editorLines.style.padding = "";
 
-  const code = codeFiles[type];
+  const code = codeFiles.js;
   if (!code) return;
 
-  const lines = code.split("\n");
+  code.split("\n").forEach((line, index) => {
+    const no = document.createElement("div");
+    no.className = "editor-lineno";
+    no.textContent = index + 1;
 
-  lines.forEach((line, index) => {
-    const lineNo = document.createElement("div");
-    lineNo.className = "editor-lineno";
-    lineNo.textContent = index + 1;
+    const content = document.createElement("div");
+    content.className = "editor-code";
+    content.innerHTML = highlightCodeLine(line) || " ";
 
-    const lineCode = document.createElement("div");
-    lineCode.className = "editor-code";
-    lineCode.innerHTML = highlightCodeLine(line, "js");
-
-    editorLines.appendChild(lineNo);
-    editorLines.appendChild(lineCode);
+    editorLines.appendChild(no);
+    editorLines.appendChild(content);
   });
 
-  currentFileType = type;
   fileType.textContent = "JavaScript";
 }
 
 /*************************************************
- * Markdown Renderer (marked.js 설정)
+ * Markdown Renderer
  *************************************************/
 if (typeof marked !== "undefined") {
   marked.setOptions({
     gfm: true,
-    breaks: true, // ⭐ 빈 줄 / 줄바꿈 제대로 처리
+    breaks: true,
     pedantic: false,
   });
 }
 
 /*************************************************
- * Load editor content
+ * Canvas Lock
  *************************************************/
-loadPromptFile();
-
-/*************************************************
- * 🔒 CANVAS LOCK SYSTEM (핵심)
- * 어떤 경우에도 canvas는 wrapper 안에만 존재
- *************************************************/
-function lockCanvasToWrapper() {
+(function lockCanvasToWrapper() {
   const observer = new MutationObserver(() => {
-    const canvases = document.querySelectorAll("canvas");
-    canvases.forEach((canvas) => {
+    document.querySelectorAll("canvas").forEach((canvas) => {
       if (canvas.parentElement !== canvasWrapper) {
         canvasWrapper.appendChild(canvas);
         canvas.style.display = "block";
@@ -198,32 +173,18 @@ function lockCanvasToWrapper() {
     });
   });
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-}
-
-// 즉시 실행
-lockCanvasToWrapper();
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
 
 /*************************************************
- * Stop
+ * Controls
  *************************************************/
 btnStop.addEventListener("click", () => {
   if (typeof noLoop === "function") noLoop();
 });
 
-/*************************************************
- * Restart
- *************************************************/
-btnRestart.addEventListener("click", () => {
-  location.reload();
-});
+btnRestart.addEventListener("click", () => location.reload());
 
-/*************************************************
- * Fullscreen
- *************************************************/
 btnFullscreen.addEventListener("click", () => {
   if (canvasWrapper.requestFullscreen) {
     canvasWrapper.requestFullscreen();
@@ -251,11 +212,13 @@ resizer.addEventListener("mousedown", () => {
 
 document.addEventListener("mousemove", (e) => {
   if (!isResizing) return;
+
   const { minLeft, minRight } = getMinSizes();
   const newWidth = e.clientX - 32;
   const maxWidth = window.innerWidth - minRight - 64;
+
   if (newWidth >= minLeft && newWidth <= maxWidth) {
-    leftPanel.style.width = newWidth + "px";
+    leftPanel.style.width = `${newWidth}px`;
   }
 });
 
@@ -266,13 +229,12 @@ document.addEventListener("mouseup", () => {
 });
 
 /*************************************************
- * Load Example (p5 loop 제어)
+ * Load Example
  *************************************************/
 function loadExample(filename) {
-  const oldScript = document.getElementById("sketchScript");
-  if (oldScript) oldScript.remove();
-
+  document.getElementById("sketchScript")?.remove();
   document.querySelectorAll("canvas").forEach((c) => c.remove());
+
   document.body.classList.add("loading");
 
   const script = document.createElement("script");
@@ -280,10 +242,8 @@ function loadExample(filename) {
   script.src = `example/${filename}`;
 
   script.onload = () => {
-    // 🔴 첫 draw 방지
     if (typeof noLoop === "function") noLoop();
 
-    // 🔵 위치 고정 후 draw 재개
     requestAnimationFrame(() => {
       if (typeof loop === "function") loop();
       document.body.classList.remove("loading");
@@ -296,7 +256,7 @@ function loadExample(filename) {
 }
 
 /*************************************************
- * Next Example (페이지 리로드 방식)
+ * Next Example
  *************************************************/
 btnNextExample.addEventListener("click", async () => {
   const nextNum = currentExampleNum + 1;
@@ -313,10 +273,12 @@ btnNextExample.addEventListener("click", async () => {
 /*************************************************
  * Init
  *************************************************/
+loadPromptFile();
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    loadExample(getFileName(currentExampleNum));
-  });
+  document.addEventListener("DOMContentLoaded", () =>
+    loadExample(getFileName(currentExampleNum))
+  );
 } else {
   loadExample(getFileName(currentExampleNum));
 }
