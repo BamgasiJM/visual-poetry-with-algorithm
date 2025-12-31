@@ -92,8 +92,39 @@
   <body
     class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black"
   >
+    <!-- ========================= -->
+    <!-- Password Gate -->
+    <!-- ========================= -->
     <div
-      class="absolute inset-0 pointer-events-none z-0"
+      id="password-gate"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black"
+    >
+      <div class="bg-[#1e1e1e] p-8 rounded-xl w-[320px] flex flex-col gap-4">
+        <h2 class="text-sm font-medium text-white text-center">2026년 1학기</h2>
+        <input
+  id="password-input"
+  type="password"
+  placeholder="학번을 입력하세요"
+  class="p-2 text-sm text-center rounded bg-black border border-gray-400 text-white"
+/>
+        <button
+          id="password-submit"
+          class="bg-primary text-black py-2 text-sm rounded font-medium"
+        >
+          확인
+        </button>
+        <p id="password-error" class="text-sm text-center hidden" style="color: #cc8731;">
+          학번을 제대로 입력하세요
+        </p>
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- Site Content (Protected) -->
+    <!-- ========================= -->
+    <div id="site-content" class="hidden w-full h-full">
+    <div
+      class="absolute inset-0 pointer-events-none -z-10"
       id="p5-container"
     ></div>
     <main
@@ -607,7 +638,7 @@
         this.maxSpeed = p.random(2.5, 4.5);
         this.maxForce = 0.1;
 
-        this.size = p.random(8, 16);
+        this.size = p.random(8, 12);
         this.explodeTimer = 0;
 
         this.color = p.color(45, 212, 191, p.random(40, 90));
@@ -683,5 +714,7 @@
       const chosen = Math.floor(Math.random() * sketches.length);
       new p5(sketches[chosen]);
     </script>
+        <!-- Auth Script -->
+    <script src="auth.js"></script>
   </body>
 </html>
