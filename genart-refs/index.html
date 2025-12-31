@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GenArt Refs</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#FF6B6B",
+              "background-light": "#f5f8f8",
+              "background-dark": "#0F0F0F",
+              "card-dark": "#1F1F1F",
+              "card-border": "#2D2D2D",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "Noto Sans KR", "sans-serif"],
+              "body": ["Noto Sans KR", "sans-serif"],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0F0F0F;
+        color: white;
+      }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-white overflow-x-hidden transition-colors duration-300">
+      <!-- Header -->
+      <header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-card-border bg-background-dark/80 backdrop-blur-md px-6 py-4 md:px-10 lg:px-40">
+        <div class="flex items-center gap-3 text-white">
+          <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-primary/20 text-primary">
+            <span class="material-symbols-outlined text-[24px]">palette</span>
+          </div>
+          <h1 class="text-xl font-medium leading-tight tracking-tight text-white">Generative Art References</h1>
+        </div>
+      </header>
+
+      <main class="flex-1 flex flex-col items-center px-4 py-10 md:px-10 lg:px-40 w-full">
+        <div class="max-w-[1024px] w-full flex flex-col gap-8">
+          
+          <!-- Hero Section -->
+          <section class="flex flex-col gap-6 py-8 md:py-12 items-start">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
+              <span class="text-primary">코딩 아트</span>와<br />
+              <span class="text-primary">제너레이티브 아트</span><br />
+              참고자료 모음
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-4xl font-light leading-relaxed">
+              영감을 주는 최고의 크리에이티브 코딩 및 제너레이티브 아트 웹사이트들을 엄선했습니다. 예술과 기술이 만나는 지점을 탐험해보세요.
+            </p>
+            <div class="h-1.5 w-24 bg-primary rounded-full mt-2"></div>
+          </section>
+
+          <!-- Controls Section -->
+          <div class="flex flex-col gap-4 pb-6 border-b border-card-border">
+            <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-1 shrink-0">
+                <h2 class="text-xl font-bold text-white">웹사이트 <span class="text-primary">ARCHIVED WEBSITES</span></h2>
+              </div>
+              
+              <!-- Sort Buttons -->
+              <div class="flex flex-wrap items-center gap-2" id="sort-controls">
+                <button id="btn-sort-recommended" class="px-3 py-1.5 rounded-lg border text-xs font-medium transition-all duration-300 text-primary border-primary shadow-[0_0_15px_rgba(255,107,107,0.4)] bg-card-dark">JaiKim 추천</button>
+                <button id="btn-sort-alpha" class="px-3 py-1.5 rounded-lg border text-xs font-medium transition-all duration-300 border-card-border bg-card-dark text-gray-400 hover:text-primary hover:border-primary hover:shadow-[0_0_15px_rgba(255,107,107,0.4)]">알파벳순</button>
+                <button id="btn-sort-random" class="px-3 py-1.5 rounded-lg border text-xs font-medium transition-all duration-300 border-card-border bg-card-dark text-gray-400 hover:text-primary hover:border-primary hover:shadow-[0_0_15px_rgba(255,107,107,0.4)]">네가 골라줘</button>
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full shrink-0">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <span class="material-symbols-outlined text-gray-400 text-lg">search</span>
+              </div>
+              <input
+                id="search-input"
+                type="text"
+                class="block w-full p-3 pl-12 text-sm text-white border border-card-border rounded-lg bg-card-dark focus:ring-2 focus:ring-primary focus:border-primary placeholder-gray-500 transition-all outline-none"
+                placeholder="설명글과 제목 검색..."
+              />
+            </div>
+          </div>
+
+          <!-- Resource List -->
+          <div id="resource-list" class="flex flex-col">
+            <!-- Items injected by JS -->
+          </div>
+          
+          <div id="no-results" class="hidden py-12 text-center text-gray-500">
+            검색 결과가 없습니다.
+          </div>
+
+          <!-- Load More Button -->
+          <div id="load-more-container" class="mt-8 flex justify-center py-6 hidden">
+            <button
+              id="btn-load-more"
+              class="flex items-center gap-3 rounded-full border border-card-border bg-transparent px-8 py-3 text-base font-medium text-white transition-all hover:border-primary hover:text-primary hover:bg-primary/5 active:scale-95 outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <span class="material-symbols-outlined text-xl">refresh</span>
+              더 불러오기
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="mt-auto border-t border-card-border bg-background-dark py-10 text-center text-sm text-gray-500">
+        <div class="px-6 flex flex-col items-center gap-2">
+          <p>ⓒ 2026 JaiKim & Semyung Univ. All rights reserved</p>
+        </div>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
