@@ -107,7 +107,9 @@ function displayCode(type) {
     editorLines.style.height = "100%";
 
     const iframe = document.createElement("iframe");
-    iframe.src = "material.pdf";
+    iframe.src =
+      "https://drive.google.com/file/d/1PQ0Ind0LmDqhlGrNH75eqQ15h_Gtzr0k/preview";
+
     iframe.style.width = "100%";
     iframe.style.height = "100%";
     iframe.style.border = "none";
@@ -171,8 +173,8 @@ function displayCode(type) {
 if (typeof marked !== "undefined") {
   marked.setOptions({
     gfm: true,
-    breaks: true,   // ⭐ 빈 줄 / 줄바꿈 제대로 처리
-    pedantic: false
+    breaks: true, // ⭐ 빈 줄 / 줄바꿈 제대로 처리
+    pedantic: false,
   });
 }
 
