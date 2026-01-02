@@ -1,68 +1,116 @@
 // 004
 
-const WIN_SIZE = 800;
-const NUM_POINTS = 100;
-const RANGE = 200.0;
+const CANVAS_SIZE = 1000;
+const PARTICLE_COUNT = 2000;
+const TRAIL_LENGTH = 60;
 
-let points = [];
+let particles = [];
+let trailPoints = [];
+let exploded = false;
+let explodeTimer = 0;
 
 function setup() {
-  createCanvas(WIN_SIZE, WIN_SIZE);
+  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
   noStroke();
-  for (let i = 0; i < NUM_POINTS; i++) {
-    points.push(randomPoint());
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle(random(width), random(height)));
   }
 }
 
 function draw() {
-  background(0);
-  translate(width / 2, height / 2);
+  // 어두운 배경 (trail 효과)
+  background(10, 10, 12, 60);
 
-  // 점 업데이트
-  for (let i = points.length - 1; i >= 0; i--) {
-    points[i].pos.y += points[i].speed;
+  // 폭발 중이 아닐 때만 마우스 궤적 저장
+  if (!exploded && mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    const v = createVector(); // 경고 방지
+    v.set(mouseX, mouseY);
+    trailPoints.push(v);
+  }
+  if (trailPoints.length > TRAIL_LENGTH) {
+    trailPoints.splice(0, trailPoints.length - TRAIL_LENGTH);
+  }
 
-    // 화면 아래로 나간 점 제거
-    if (points[i].pos.y > height / 2 + 50) {
-      points.splice(i, 1);
+  // 파티클 업데이트
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+
+    if (!exploded && trailPoints.length > 0) {
+      const targetIndex = floor(map(i, 0, PARTICLE_COUNT, 0, trailPoints.length - 1));
+      const target = trailPoints[targetIndex];
+      p.follow(target);
+    }
+
+    p.update();
+    p.display();
+  }
+
+  // 폭발 상태 시간 카운트
+  if (exploded) {
+    explodeTimer--;
+    if (explodeTimer <= 0) {
+      exploded = false;
     }
   }
-
-  // 점 개수 유지
-  while (points.length < NUM_POINTS) {
-    points.push(randomPoint());
-  }
-
-  // 점 그리기
-  for (let p of points) {
-    let dist = p5.Vector.dist(p.pos, createVector(0, 0));
-    if (dist < RANGE) {
-      fill(200);
-      ellipse(p.pos.x, p.pos.y, 4, 4);
-
-      // 거리 비율에 따른 알파값 계산
-      let alpha = map(dist, 0, RANGE, 255, 0);
-      stroke(255, alpha);
-      strokeWeight(0.5);
-      line(0, 0, p.pos.x, p.pos.y);
-      noStroke();
-    } else {
-      fill(128);
-      ellipse(p.pos.x, p.pos.y, 10, 10);
-    }
-  }
-  // 중앙 노란색 원 그리기
-  fill(200, 170, 0);
-  noStroke();
-  ellipse(0, 0, 30, 30);
 }
 
-function randomPoint() {
-  return {
-    pos: createVector(
-      random(-WIN_SIZE / 2, WIN_SIZE / 2),
-      random(-WIN_SIZE / 2 - 100, -WIN_SIZE / 2)
-    ),
-    speed: random(0.5, 2.0),
-  };
+function mousePressed() {
+  explodeParticles();
+  return false; // 이벤트 전파 방지
+}
+
+function explodeParticles() {
+  exploded = true;
+  explodeTimer = 60;
+
+  const center = createVector();
+  center.set(mouseX, mouseY);
+
+  for (let p of particles) {
+    const dir = p5.Vector.sub(p.pos, center);
+    if (dir.mag() === 0) dir.set(random(-1, 1), random(-1, 1)); // 완전 겹치면 랜덤 방향
+    dir.normalize();
+    dir.rotate(random(-PI / 3, PI / 3));
+    dir.mult(random(5, 12));
+    p.vel = dir;
+  }
+}
+
+// ----------------------
+// Particle 클래스
+// ----------------------
+class Particle {
+  constructor(x, y) {
+    this.pos = createVector();
+    this.pos.set(x, y);
+
+    this.vel = createVector();
+    this.acc = createVector();
+
+    this.size = random(2, 6);
+    this.maxSpeed = random(2, 4);
+    this.colorAlpha = random(180, 255);
+  }
+
+  follow(target) {
+    const dir = p5.Vector.sub(target, this.pos);
+    dir.setMag(0.05);
+    this.acc.add(dir);
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    if (!exploded) this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+
+    // 감속 (마찰)
+    this.vel.mult(exploded ? 0.95 : 0.9);
+    this.acc.mult(0);
+  }
+
+  display() {
+    fill(255, this.colorAlpha);
+    circle(this.pos.x, this.pos.y, this.size);
+  }
 }
