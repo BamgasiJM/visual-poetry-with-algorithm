@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WEEK 2</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Fira+Code:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/p5@2.1.2/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="loading">
+    <header>
+      <div class="logo-section">
+        <div class="logo-icon">
+          <span class="material-symbols-outlined">heart_smile</span>
+        </div>
+        <h2 class="logo-title">마음을 그리는 알고리즘 물감</h2>
+      </div>
+<div class="header-right">
+  <nav>
+    <a href="#" class="active">수업자료</a>
+    <a href="https://velog.io/@ryoong1125/%EB%A7%88%EC%9D%8C%EC%9D%84-%EA%B7%B8%EB%A6%AC%EB%8A%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EB%AC%BC%EA%B0%90-%EC%A3%BC%EC%B0%A8%EB%B3%84-%EA%B3%84%ED%9A%8D" target="_blank" rel="noopener noreferrer">
+  강의계획서
+</a>
+
+    <a href="../genart-refs/index.html" target="_blank" rel="noopener noreferrer">자료실</a>
+  </nav>
+  <div class="header-actions">
+    <a href="https://p5js.org/reference/" target="_blank" rel="noopener noreferrer" class="blog">
+      <span class="material-symbols-outlined">code_blocks</span>
+    </a>
+    <a href="https://editor.p5js.org/" target="_blank" rel="noopener noreferrer" class="p5editor">
+      p5
+    </a>
+  </div>
+</div>
+    </header>
+
+    <main>
+      <div class="page-info">
+        <div class="breadcrumb">
+          <a href="../index.html">주차별 계획</a>
+          <span class="material-symbols-outlined">chevron_right</span>
+          <a href="#">2주차</a>
+          <span class="material-symbols-outlined">chevron_right</span>
+          <span class="badge">주제</span>
+        </div>
+        <div class="page-header">
+          <div class="page-header-content">
+            <h1 class="page-title">마음의 윤곽</h1>
+            <p class="page-description">
+              감정이 형태를 가진다면 어떤 모습일지 상상하여 내 마음의 윤곽을 그려봅니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="left-panel" id="leftPanel">
+          <div class="theme-card">
+            <div class="theme-header">
+              <div>
+                <div class="theme-label">오늘의 알고리즘 물감</div>
+                <h2 class="theme-title">기본 도형과 캔버스</h2>
+              </div>
+            </div>
+            <p class="theme-description">
+              <span style="color: #87c8c4; font-weight: 400;">
+                p5.js를 비롯한 대부분의 그래픽 프레임워크는 점, 선, 면을 그리기 위한 기본 도형 함수를 제공합니다. <br/>
+                원, 사각형, 다각형, 곡선과 같은 기본 요소를 정확히 다루는 것은 모든 시각 알고리즘의 출발점입니다. <br/>
+                또한 캔버스의 크기와 비율은 최종 출력 환경을 고려해 설정해야 하며, 해상도에 따라 시각적 밀도가 크게 달라집니다.
+            </p>
+          </div>
+
+          <div class="canvas-card">
+            <div class="card-header">
+              <span class="card-title">
+                <span class="material-symbols-outlined">image</span>
+                캔버스 출력
+              </span>
+              <div class="card-actions">
+                <button id="downloadBtn">
+                  <span class="material-symbols-outlined">download</span>
+                </button>
+              </div>
+            </div>
+            <div class="canvas-container">
+              <div class="canvas-wrapper" id="canvasWrapper"></div>
+            </div>
+            <div class="canvas-footer">
+              <button class="btn-restart" id="btnRestart">
+                <span class="material-symbols-outlined">replay</span>
+                다시 실행
+              </button>
+              <button class="btn-stop" id="btnStop">
+                <span class="material-symbols-outlined">stop_circle</span>
+                정지
+              </button>
+              <button class="btn-next" id="btnNextExample">
+                <span class="material-symbols-outlined">skip_next</span>
+                다음 예시
+              </button>
+              <button class="btn-fullscreen" id="btnFullscreen">
+                <span class="material-symbols-outlined">fullscreen</span>
+                전체화면
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="resizer" id="resizer"></div>
+
+        <div class="right-panel">
+          <div class="editor-container">
+            <div class="editor-tabs">
+              <div class="window-controls">
+                <div class="window-control close"></div>
+                <div class="window-control minimize"></div>
+                <div class="window-control maximize"></div>
+              </div>
+              <div class="tab-spacer"></div>
+              <div class="tab active" data-file="js">
+                <span class="material-symbols-outlined tab-icon icon-js"
+                  >code_blocks</span
+                >
+                <span>자바스크립트</span>
+              </div>
+              <div class="tab" data-file="prompt">
+                <span class="material-symbols-outlined tab-icon icon-md"
+                  >note</span
+                >
+                <span>프롬프트</span>
+              </div>
+              <div class="tab" data-file="pdf">
+                <span class="material-symbols-outlined tab-icon icon-pdf"
+                  >picture_as_pdf</span
+                >
+                <span>수업자료</span>
+              </div>
+              <div class="editor-toolbar">
+                <button>
+                  <span class="material-symbols-outlined">vertical_split</span>
+                </button>
+                <button>
+                  <span class="material-symbols-outlined">more_horiz</span>
+                </button>
+              </div>
+            </div>
+            <div class="editor-content">
+              <div class="editor-lines" id="editorLines"></div>
+            </div>
+            <div class="editor-statusbar">
+              <div class="status-left">
+                <span class="status-item ready">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  Ready
+                </span>
+                <span class="status-item">
+                  <span class="material-symbols-outlined">warning</span>
+                  0
+                </span>
+              </div>
+              <div class="status-right">
+                <span>UTF-8</span>
+                <span id="fileType">JavaScript</span>
+                <span class="status-item">
+                  <span class="material-symbols-outlined">notifications</span>
+                  Prettier
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 캔버스 이미지 다운로드 기능 -->
+    <script>
+      document
+        .getElementById("downloadBtn")
+        .addEventListener("click", function () {
+          const canvas = document.querySelector("#canvasWrapper canvas");
+          if (!canvas) {
+            alert("캔버스를 찾을 수 없습니다. 먼저 스케치를 실행해주세요.");
+            return;
+          }
+          const imageURL = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.href = imageURL;
+          link.download = "example.png";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+    </script>
+    <script src="main.js"></script>
+  </body>
+</html>
