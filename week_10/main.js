@@ -39,7 +39,7 @@ const urlParams = new URLSearchParams(window.location.search);
 let currentExampleNum = parseInt(urlParams.get("example")) || 1;
 
 const pad = (n) => n.toString().padStart(2, "0");
-const getFileName = (n) => `w2_example_${pad(n)}.js`;
+const getFileName = (n) => `w10_example_${pad(n)}.js`;
 
 /*************************************************
  * Load Files
