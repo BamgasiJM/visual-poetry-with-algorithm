@@ -1,7 +1,7 @@
 /* =========================
    Application Constants
 ========================= */
-const ITEMS_PER_PAGE_INCREMENT = 10;
+const ITEMS_PER_PAGE_INCREMENT = 15;
 
 /* =========================
    Application State
