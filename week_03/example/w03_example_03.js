@@ -1,92 +1,79 @@
-// w03_example_03.js
+// w03_example_02.js
 
-let numConcentric = 20;
-let numRays = 60;
-let maxRadius;
-let rotationAngle = 0;
-let rayData = []; // 각 선의 정보를 저장할 배열
+// --- 전역 변수 설정 (Global Variables) ---
 
+let canvasSize = 800; 
+let numCircles = 10;  // 동심원의 개수
+let numSegments = 30; // 분할 각의 개수
+let startHue;         // !!! 새로 추가: 매 실행마다 달라질 시작 색조(Hue) 값
+
+// --- setup() 함수: 초기 설정 ---
 function setup() {
-  createCanvas(1080, 1080);
-  maxRadius = width * 0.45;
-
-  // 각 선의 데이터 미리 생성
-  for (let i = 0; i < numRays; i++) {
-    let baseAngle = map(i, 0, numRays, 0, TWO_PI);
-    let len = random(30, maxRadius);
-
-    // 이 선 위에 그려질 원들의 정보
-    let circles = [];
-    let steps = int(random(3, 8));
-    for (let j = 1; j <= steps; j++) {
-      let t = j / (steps + 1);
-      let distance = len * t; // 중심으로부터의 거리
-
-      // 중심에서 30px 이내면 제외
-      if (distance < 30) continue;
-
-      circles.push({
-        distance: distance,
-        size: random(2, 8),
-        color:
-          random(100) > 85
-            ? color(220, 180, 80, 200)
-            : color(240, 240, 240, 180),
-      });
-    }
-
-    rayData.push({
-      baseAngle: baseAngle,
-      length: len,
-      circles: circles,
-    });
-  }
+  createCanvas(canvasSize, canvasSize); 
+  
+  colorMode(HSB, 360, 100, 100, 100); 
+  angleMode(DEGREES); 
+  
+  // !!! 주요 수정 사항: setup에서 0부터 359 사이의 랜덤 Hue 값을 설정합니다.
+  // 이 값이 그라데이션의 중심 색상 범위를 결정합니다.
+  startHue = random(360); 
+  
+  noLoop(); 
 }
 
+// --- draw() 함수: 한 번 실행 ---
 function draw() {
-  background(40, 30, 40);
+  // 배경색은 아주 밝은 회색으로 고정하여 중심 색상을 강조합니다.
+  background(0, 0, 98); 
+  
+  noStroke(); 
+  
+  let centerX = canvasSize / 2;
+  let centerY = canvasSize / 2;
+  
+  let maxRadius = dist(0, 0, centerX, centerY);
+  let radiusStep = maxRadius / numCircles; 
+  let angleStep = 360 / numSegments; 
+  
+  // 동심원 개수만큼 반복하며 바깥쪽부터 안쪽으로 그립니다.
+  for (let i = numCircles; i >= 1; i--) {
+    let currentRadius = i * radiusStep;
+    
+    // 1. HUE(색조) 변화 로직 수정: startHue 값을 기준으로 매핑합니다.
+    
+    // i가 1일 때 (안쪽 원): startHue 값
+    // i가 10일 때 (바깥쪽 원): startHue + 120 (색조가 120도 정도 차이 나도록 설정)
+    // % 360을 사용하여 Hue 값이 360을 넘어가도 순환되도록 합니다.
+    let targetHue = (startHue + 120) % 360; 
+    let currentHue = map(i, 1, numCircles, startHue, targetHue) % 360; 
+    
+    // 채도(Saturation): 안쪽 100 -> 바깥쪽 50 (요청에 따라 극적인 대비 유지)
+    let currentSaturation = map(i, 1, numCircles, 100, 50); 
+    
+    // 명도(Brightness): 안쪽 60 -> 바깥쪽 90 (요청에 따라 명암 대비 유지)
+    let currentBrightness = map(i, 1, numCircles, 60, 90);
 
-  // 동심원 그리기
-  noFill();
-  stroke(100, 90, 100, 180);
-  strokeWeight(0.5);
-  for (let i = 1; i <= numConcentric; i++) {
-    let r = map(i, 1, numConcentric, 20, maxRadius);
-    circle(width / 2, height / 2, r * 2);
-  }
-
-  // 중심부 강조
-  noFill();
-  stroke(255, 255, 255, 100);
-  strokeWeight(1.5);
-  circle(width / 2, height / 2, 60);
-
-  // 회전 각도 업데이트
-  rotationAngle = (millis() * 0.05) / 1000;
-
-  let cx = width / 2;
-  let cy = height / 2;
-
-  // 저장된 데이터로 선과 원 그리기
-  for (let ray of rayData) {
-    let angle = ray.baseAngle + rotationAngle;
-
-    // 선 끝점 계산
-    let x2 = cx + cos(angle) * ray.length;
-    let y2 = cy + sin(angle) * ray.length;
-
-    // 선 그리기
-    stroke(200, 200, 220, 150);
-    line(cx, cy, x2, y2);
-
-    // 원들 그리기
-    noStroke();
-    for (let c of ray.circles) {
-      let px = cx + cos(angle) * c.distance;
-      let py = cy + sin(angle) * c.distance;
-
-      fill(c.color);
-      circle(px, py, c.size);
+    // 2. 분할된 각도만큼 반복하며 부채꼴 조각을 그립니다.
+    for (let j = 0; j < numSegments; j++) {
+      
+      let angleStart = j * angleStep;
+      let angleEnd = (j + 1) * angleStep;
+      
+      // 각 조각마다 미세한 색상 변화를 주어 질감을 표현합니다.
+      // (currentHue + (j * 0.2)) % 360을 사용하여 미세한 색조 변화를 줍니다.
+      let segmentHue = (currentHue + (j * 0.2)) % 360; 
+      
+      fill(segmentHue, currentSaturation, currentBrightness, 100);
+      
+      // arc() 함수를 사용하여 부채꼴을 그립니다.
+      arc(
+        centerX, centerY,           
+        currentRadius * 2,          
+        currentRadius * 2,          
+        angleStart,                 
+        angleEnd,                   
+        PIE                         
+      );
     }
   }
 }
