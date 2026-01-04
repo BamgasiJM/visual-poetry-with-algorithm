@@ -516,7 +516,7 @@ main {
   border: 1px solid #27272a;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  font-family: "Fira Code", monospace;
+  font-family: "D2Coding", "Fira Code", monospace;
   font-size: 14px;
   min-height: 0;
 }
