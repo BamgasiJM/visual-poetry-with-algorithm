@@ -6,14 +6,8 @@
     <title>Visual Poetics with Algorithms</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <script>
@@ -90,9 +84,8 @@
       }
     </style>
   </head>
-  <body
-    class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-center relative selection:bg-primary selection:text-black"
-  >
+    <body class="bg-background-dark text-gray-200 font-sans h-screen w-screen overflow-hidden flex flex-col relative selection:bg-primary selection:text-black">
+
     <!-- ========================= -->
     <!-- Password Gate -->
     <!-- ========================= -->
@@ -106,8 +99,7 @@
   id="password-input"
   type="password"
   placeholder="학번을 입력하세요"
-  class="p-2 text-sm text-center rounded bg-black border border-gray-400 text-white"
-/>
+  class="p-2 text-sm text-center rounded bg-black border border-gray-400 text-white"/>
         <button
           id="password-submit"
           class="bg-primary text-black py-2 text-sm rounded font-medium"
@@ -128,21 +120,19 @@
       class="absolute inset-0 pointer-events-none -z-10"
       id="p5-container"
     ></div>
-    <main
-      class="w-full max-w-[1800px] px-4 md:px-8 lg:px-12 flex flex-col items-center justify-center h-full z-10 py-6"
-    >
+    <main class="w-full max-w-[1800px] px-4 md:px-8 lg:px-12 flex flex-col items-center justify-center min-h-screen z-10 py-6 mx-auto">
       <div class="text-center mb-6 lg:mb-10 shrink-0">
         <h2
           class="
-  text-primary
-  font-sans
-  text-lg md:text-xl
-  font-semibold
-  tracking-wide
-  uppercase
-  mb-3
-  opacity-90
-"
+            text-primary
+            font-sans
+            text-lg md:text-xl
+            font-semibold
+            tracking-wide
+            uppercase
+            mb-3
+            opacity-90
+          "
         >
           AI와 함께 하는 감성 코딩 아트
         </h2>
@@ -576,7 +566,7 @@
   const sketchAgents = (p) => {
     let agents = [];
 
-    const AGENT_COUNT = 400;
+    const AGENT_COUNT = 600;
     const EXPLOSION_FORCE = 4;   // 폭발 최대 임펄스
     const EXPLOSION_RADIUS = 50; // 폭발 영향 반경
     const EXPLOSION_FRAMES = 10;  // 폭발 후 자유 비행 프레임
@@ -651,7 +641,7 @@
         this.size = p.random(8, 12);
         this.explodeTimer = 0;
 
-        this.color = p.color(45, 212, 191, p.random(40, 90));
+        this.color = p.color(p.random(40, 190), 212, 191, p.random(40, 90));
       }
 
       applyForce(force) {
