@@ -1,7 +1,6 @@
+// w04_example_04.js
 
-
-// 전역 변수 설정 (Variables)
-
+// ***** 전역 변수 설정 (Variables) ***** //
 // 캔버스 크기를 정의합니다.
 const CANVAS_SIZE = 600;
 
@@ -9,12 +8,12 @@ const CANVAS_SIZE = 600;
 const NUM_CIRCLES = 40;
 
 // 중심이 왕복하는 속도를 조절하는 상수입니다.
-const SPEED_CENTER = 0.003;
+const SPEED_CENTER = 0.002;
 
 // 동심원들의 크기가 맥동하는 속도를 조절하는 상수입니다.
-const SPEED_PULSE = 0.05;
+const SPEED_PULSE = 0.03;
 
-// setup() 함수: 프로그램 시작 시 한 번 실행됩니다.
+// ***** setup() 함수: 프로그램 시작 시 한 번 실행 ***** //
 function setup() {
   // 600x600 크기의 캔버스를 생성합니다.
   createCanvas(CANVAS_SIZE, CANVAS_SIZE);
@@ -25,10 +24,10 @@ function setup() {
   frameRate(60);
 }
 
-// draw() 함수: 프레임마다 반복 실행됩니다.
+// ***** draw() 함수: 프레임마다 반복 실행 ***** //
 function draw() {
   // 배경을 어두운 색으로 설정하여 화려한 원을 돋보이게 합니다.
-  background(5);
+  background(0);
 
   // 1. 중심 X 좌표 왕복 운동 계산
 
