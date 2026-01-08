@@ -448,130 +448,131 @@
         ⓒ 2026 JaiKim & Semyung Univ. All rights reserved
       </footer>
     </main>
-    <script>
-      // -----------------------------
-      // Sketch A: Triangle Grid
-      // -----------------------------
-      const sketchTriangleGrid = (p) => {
-        const TRI_SIZE = 15;
-        const SPACING = 40;
-        const BRIGHT_RANGE = 450;
-        const ROTATION_EASING = 0.1;
+<script>
+  // -----------------------------
+  // Sketch A: Triangle Grid
+  // -----------------------------
+  const sketchTriangleGrid = (p) => {
+    const TRI_SIZE = 15;
+    const SPACING = 40;
+    const BRIGHT_RANGE = 450;
+    const ROTATION_EASING = 0.1;
 
-        const HUE_MIN = 160;
-        const HUE_MAX = 200;
-        const BRIGHTNESS_NEAR = 60;
-        const BRIGHTNESS_FAR = 20;
+    const HUE_MIN = 160;
+    const HUE_MAX = 200;
+    const BRIGHTNESS_NEAR = 60;
+    const BRIGHTNESS_FAR = 20;
 
-        let grid;
+    let grid;
 
-        p.setup = () => {
-          let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
-          cnv.parent("p5-container");
-          p.colorMode(p.HSB, 360, 100, 100);
-          grid = new TriangleGrid();
-        };
+    p.setup = () => {
+      let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
+      cnv.parent("p5-container");
+      p.colorMode(p.HSB, 360, 100, 100);
+      grid = new TriangleGrid();
+    };
 
-        p.draw = () => {
-          p.clear();
-          grid.update();
-          grid.display();
-        };
+    p.draw = () => {
+      p.clear();
+      grid.update();
+      grid.display();
+    };
 
-        p.windowResized = () => {
-          p.resizeCanvas(window.innerWidth, window.innerHeight);
-          grid = new TriangleGrid();
-        };
+    p.windowResized = () => {
+      p.resizeCanvas(window.innerWidth, window.innerHeight);
+      grid = new TriangleGrid();
+    };
 
-        class TriangleGrid {
-          constructor() {
-            this.cols = Math.ceil(p.width / SPACING);
-            this.rows = Math.ceil(p.height / SPACING);
-            this.triangles = [];
-            this.init();
-          }
+    class TriangleGrid {
+      constructor() {
+        this.cols = Math.ceil(p.width / SPACING);
+        this.rows = Math.ceil(p.height / SPACING);
+        this.triangles = [];
+        this.init();
+      }
 
-          init() {
-            for (let i = 0; i < this.cols; i++) {
-              for (let j = 0; j < this.rows; j++) {
-                let x = SPACING / 2 + i * SPACING;
-                let y = SPACING / 2 + j * SPACING;
-                this.triangles.push(new Triangle(x, y));
-              }
-            }
-          }
-
-          update() {
-            this.triangles.forEach((t) => t.update());
-          }
-
-          display() {
-            this.triangles.forEach((t) => t.display());
+      init() {
+        for (let i = 0; i < this.cols; i++) {
+          for (let j = 0; j < this.rows; j++) {
+            let x = SPACING / 2 + i * SPACING;
+            let y = SPACING / 2 + j * SPACING;
+            this.triangles.push(new Triangle(x, y));
           }
         }
+      }
 
-        class Triangle {
-          constructor(x, y) {
-            this.x = x;
-            this.y = y;
-            this.angle = 0;
-          }
+      update() {
+        this.triangles.forEach((t) => t.update());
+      }
 
-          update() {
-            let tx = p.mouseX === 0 ? p.width / 2 : p.mouseX;
-            let ty = p.mouseY === 0 ? p.height / 2 : p.mouseY;
+      display() {
+        this.triangles.forEach((t) => t.display());
+      }
+    }
 
-            let target = p.atan2(ty - this.y, tx - this.x);
-            let diff = target - this.angle;
+    class Triangle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.angle = 0;
+      }
 
-            if (diff > p.PI) diff -= p.TWO_PI;
-            if (diff < -p.PI) diff += p.TWO_PI;
+      update() {
+        let tx = p.mouseX === 0 ? p.width / 2 : p.mouseX;
+        let ty = p.mouseY === 0 ? p.height / 2 : p.mouseY;
 
-            this.angle += diff * ROTATION_EASING;
-          }
+        let target = p.atan2(ty - this.y, tx - this.x);
+        let diff = target - this.angle;
 
-          display() {
-            let tx = p.mouseX === 0 ? p.width / 2 : p.mouseX;
-            let ty = p.mouseY === 0 ? p.height / 2 : p.mouseY;
+        if (diff > p.PI) diff -= p.TWO_PI;
+        if (diff < -p.PI) diff += p.TWO_PI;
 
-            let d = p.dist(tx, ty, this.x, this.y);
-            let hue = p.map(d, 0, BRIGHT_RANGE, HUE_MIN, HUE_MAX, true);
+        this.angle += diff * ROTATION_EASING;
+      }
 
-            let b =
-              d < BRIGHT_RANGE
-                ? p.lerp(
-                    BRIGHTNESS_NEAR,
-                    BRIGHTNESS_FAR,
-                    p.pow(d / BRIGHT_RANGE, 3)
-                  )
-                : BRIGHTNESS_FAR;
+      display() {
+        let tx = p.mouseX === 0 ? p.width / 2 : p.mouseX;
+        let ty = p.mouseY === 0 ? p.height / 2 : p.mouseY;
 
-            p.noStroke();
-            p.fill(hue, 100, b);
+        let d = p.dist(tx, ty, this.x, this.y);
+        let hue = p.map(d, 0, BRIGHT_RANGE, HUE_MIN, HUE_MAX, true);
 
-            p.push();
-            p.translate(this.x, this.y);
-            p.rotate(this.angle);
-            p.beginShape();
-            p.vertex(TRI_SIZE * 0.5, 0);
-            p.vertex(-TRI_SIZE * 0.5, -TRI_SIZE * 0.25);
-            p.vertex(-TRI_SIZE * 0.5, TRI_SIZE * 0.25);
-            p.endShape(p.CLOSE);
-            p.pop();
-          }
-        }
-      };
+        let b =
+          d < BRIGHT_RANGE
+            ? p.lerp(
+                BRIGHTNESS_NEAR,
+                BRIGHTNESS_FAR,
+                p.pow(d / BRIGHT_RANGE, 3)
+              )
+            : BRIGHTNESS_FAR;
 
-      // -----------------------------
-      // Sketch B: Agent Triangles
-      // -----------------------------
+        p.noStroke();
+        p.fill(hue, 100, b);
+
+        p.push();
+        p.translate(this.x, this.y);
+        p.rotate(this.angle);
+        p.beginShape();
+        p.vertex(TRI_SIZE * 0.5, 0);
+        p.vertex(-TRI_SIZE * 0.5, -TRI_SIZE * 0.25);
+        p.vertex(-TRI_SIZE * 0.5, TRI_SIZE * 0.25);
+        p.endShape(p.CLOSE);
+        p.pop();
+      }
+    }
+  };
+
+  // -----------------------------
+  // Sketch B: Agent Triangles
+  // -----------------------------
   const sketchAgents = (p) => {
     let agents = [];
 
-    const AGENT_COUNT = 600;
-    const EXPLOSION_FORCE = 4;   // 폭발 최대 임펄스
-    const EXPLOSION_RADIUS = 50; // 폭발 영향 반경
-    const EXPLOSION_FRAMES = 10;  // 폭발 후 자유 비행 프레임
+    const AGENT_COUNT = 1000;
+    const EXPLOSION_FORCE = 2;
+    const EXPLOSION_RADIUS = 50;
+    const EXPLOSION_FRAMES = 20;
+    const SAFE_RADIUS = 50; // 마우스 접근 금지 반경
 
     p.setup = () => {
       let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
@@ -594,9 +595,6 @@
       p.resizeCanvas(window.innerWidth, window.innerHeight);
     };
 
-    // ---------------------------------
-    // 마우스 클릭 → 폭발
-    // ---------------------------------
     p.mousePressed = () => {
       let origin =
         p.mouseX === 0 && p.mouseY === 0
@@ -608,7 +606,6 @@
         let d = dir.mag() + 0.0001;
         dir.normalize();
 
-        // 가까울수록 더 강한 임펄스
         let strength = p.map(
           d,
           0,
@@ -619,18 +616,11 @@
         );
 
         dir.mult(strength);
-
-        // 속도에 직접 임펄스 적용
         a.vel.add(dir);
-
-        // 일정 시간 동안 수렴 중지
         a.explodeTimer = EXPLOSION_FRAMES;
       });
     };
 
-    // ---------------------------------
-    // Agent class
-    // ---------------------------------
     class Agent {
       constructor() {
         this.pos = p.createVector(p.random(p.width), p.random(p.height));
@@ -639,11 +629,9 @@
 
         this.maxSpeed = p.random(2.5, 4.5);
         this.maxForce = 0.1;
-
-        this.size = p.random(8, 12);
+        this.size = p.random(4, 6);
         this.explodeTimer = 0;
-
-        this.color = p.color(p.random(40, 190), 212, 191, p.random(40, 90));
+        this.color = p.color(p.random(30, 50), 190, 180, p.random(150, 200));
       }
 
       applyForce(force) {
@@ -651,9 +639,6 @@
       }
 
       update() {
-        // -----------------------------
-        // 폭발 중이 아닐 때만 수렴
-        // -----------------------------
         if (this.explodeTimer > 0) {
           this.explodeTimer--;
         } else {
@@ -665,26 +650,24 @@
           let desired = p5.Vector.sub(target, this.pos);
           let d = desired.mag();
 
-          desired.setMag(
-            d < 140
-              ? p.map(d, 0, 140, 0, this.maxSpeed)
-              : this.maxSpeed
-          );
+          if (d > SAFE_RADIUS) {
+            desired.setMag(
+              d < 140
+                ? p.map(d, SAFE_RADIUS, 140, 0, this.maxSpeed, true)
+                : this.maxSpeed
+            );
 
-          let steer = p5.Vector.sub(desired, this.vel);
-          steer.limit(this.maxForce);
-          this.applyForce(steer);
+            let steer = p5.Vector.sub(desired, this.vel);
+            steer.limit(this.maxForce);
+            this.applyForce(steer);
+          }
         }
 
-        // -----------------------------
-        // 물리 업데이트
-        // -----------------------------
         this.vel.add(this.acc);
-        this.vel.limit(12); // 폭발 속도 상한
+        this.vel.limit(6);
         this.pos.add(this.vel);
         this.acc.mult(0);
 
-        // 미세한 유기적 흔들림
         this.pos.add(
           p.random(-0.35, 0.35),
           p.random(-0.35, 0.35)
@@ -705,17 +688,115 @@
         p.vertex(this.size / 2, this.size);
         p.endShape(p.CLOSE);
         p.pop();
-          }
-        }
-      };
+      }
+    }
+  };
 
-      // -----------------------------
-      // Random launch
-      // -----------------------------
-      const sketches = [sketchTriangleGrid, sketchAgents];
-      const chosen = Math.floor(Math.random() * sketches.length);
-      new p5(sketches[chosen]);
-    </script>
+  // -----------------------------
+  // Sketch C: Vortex Particles
+  // -----------------------------
+  const sketchVortexParticles = (p) => {
+    let particles = [];
+
+    const PARTICLE_COUNT = 9000;
+    const NOISE_SCALE = 0.005;
+    const VORTEX_RADIUS = 100;
+    const SAFE_RADIUS = 10;
+    
+
+    let vortexStrength = 0;
+    let isExpanding = false;
+
+    p.setup = () => {
+      let cnv = p.createCanvas(window.innerWidth, window.innerHeight);
+      cnv.parent("p5-container");
+      p.colorMode(p.HSB, 360, 100, 100, 1);
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: p.random(p.width),
+          y: p.random(p.height),
+          size: p.random(1, 3),
+          speed: p.random(1, 2),
+          noiseOffset: p.random(1000)
+        });
+      }
+    };
+
+    p.draw = () => {
+      p.background(0, 0, 0, 0.6);
+
+      if (isExpanding) {
+        vortexStrength = p.lerp(vortexStrength, -20, 0.05);
+        if (vortexStrength < -15) isExpanding = false;
+      } else {
+        vortexStrength = p.lerp(vortexStrength, 20, 0.02);
+      }
+
+      particles.forEach(pt => {
+        let noiseVal = p.noise(
+          pt.x * NOISE_SCALE,
+          pt.y * NOISE_SCALE,
+          p.frameCount * 0.005
+        );
+
+        let angle = p.map(noiseVal, 0, 1, 0, p.TWO_PI);
+
+        let dx = p.mouseX - pt.x;
+        let dy = p.mouseY - pt.y;
+        let d = p.sqrt(dx * dx + dy * dy);
+
+        if (d > SAFE_RADIUS && d < VORTEX_RADIUS) {
+          let vortexAngle = p.atan2(dy, dx) + p.PI / 2;
+          let force = p.map(
+            d,
+            SAFE_RADIUS,
+            VORTEX_RADIUS,
+            vortexStrength,
+            0
+          );
+          angle = vortexAngle + force * 0.1;
+        }
+
+        pt.x += p.cos(angle) * pt.speed;
+        pt.y += p.sin(angle) * pt.speed;
+
+        if (pt.x < 0) pt.x = p.width;
+        if (pt.x > p.width) pt.x = 0;
+        if (pt.y < 0) pt.y = p.height;
+        if (pt.y > p.height) pt.y = 0;
+
+        let hue = p.map(d, 0, VORTEX_RADIUS, 150, 180);
+        let bri = p.map(d, 0, VORTEX_RADIUS, 100, 80);
+
+        p.noStroke();
+        p.fill(hue, 80, bri, 0.9);
+        p.circle(pt.x, pt.y, pt.size);
+      });
+    };
+
+    p.mousePressed = () => {
+      isExpanding = true;
+    };
+
+    p.windowResized = () => {
+      p.resizeCanvas(window.innerWidth, window.innerHeight);
+    };
+  };
+
+  // -----------------------------
+  // Random launch
+  // -----------------------------
+  const sketches = [
+    sketchTriangleGrid,
+    sketchAgents,
+    sketchVortexParticles
+  ];
+
+  const chosen = Math.floor(Math.random() * sketches.length);
+  new p5(sketches[chosen]);
+</script>
+
         <!-- Auth Script -->
     <script src="auth.js"></script>
   </body>
