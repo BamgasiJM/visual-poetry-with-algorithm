@@ -1,74 +1,93 @@
 // w02_example_05.js
 
 function setup() {
-  createCanvas(1280, 720);
-  background(255); // 흰 배경
-  noStroke(); // 테두리 없음
-  fill(0); // 모든 도형 검정색
+  createCanvas(1920, 1080);
+  background(25, 190, 180);
+  noLoop();
 
-  // 화면을 가로로 3등분한 중심점들
-  let leftX = width * 0.25; // 왼쪽 영역 중심 (320)
-  let middleX = width * 0.5; // 가운데 영역 중심 (640)
-  let rightX = width * 0.75; // 오른쪽 영역 중심 (960)
-  let centerY = height / 2; // 세로 중앙 (360)
+  noStroke();
+  colorMode(HSB, 360, 100, 100, 100);
 
-  // 각 도형의 기본 크기 (화면 높이의 몇 퍼센트 차지하는지)
-  let baseSize = height * 0.4;
+  let count = 240;
 
-  // 왼쪽: 날카로운 가시가 사방으로 뻗친 폭발적인 불안
-  drawSpikyBurst(leftX, centerY, baseSize * 0.9);
+  for (let i = 0; i < count; i++) {
+    let x = random(width);
+    let y = random(height);
+    let size = random(30, 140);
+    let emotion = int(random(5));
 
-  // 가운데: 조여들고 뒤틀린 숨 막히는 압박감
-  drawDistortedBlob(middleX, centerY, baseSize * 0.9);
+    push();
+    translate(x, y);
+    rotate(random(TWO_PI));
 
-  // 오른쪽: 무겁게 쌓이고 내려앉는 절망적인 덩어리들
-  drawHeavyLayers(rightX, centerY, baseSize * 0.9);
+    if (emotion === 0) {
+      // 평온한 마음 – 부드러운 원
+      fill(200, 10, 90, 150);
+      ellipse(0, 0, size, size);
+    } else if (emotion === 1) {
+      // 화난 마음 – 뾰족한 별
+      fill(10, 80, 90, 90);
+      drawStar(0, 0, size * 0.3, size * 0.7, 8);
+    } else if (emotion === 2) {
+      // 불안한 마음 – 찌그러진 원
+      fill(40, 70, 90, 80);
+      drawDistortedCircle(size);
+    } else if (emotion === 3) {
+      // 집착하는 마음 – 반복된 사각 구조
+      fill(280, 50, 85, 50);
+      drawStackedRects(size);
+    } else {
+      // 무너지는 마음 – 파편 삼각형
+      fill(120, 60, 85, 80);
+      drawFragments(size);
+    }
 
-  noLoop(); // 한 번만 그리고 끝
+    pop();
+  }
 }
 
-// 날카로운 가시 폭발 (불안이 터져 나오는 느낌)
-function drawSpikyBurst(cx, cy, size) {
-  let points = 18;
+/* ---------- 도형 함수 ---------- */
+
+function drawStar(x, y, inner, outer, points) {
   beginShape();
   for (let i = 0; i < points * 2; i++) {
-    let r = i % 2 === 0 ? size * 0.9 : size * random(0.35, 0.45);
-    let angle = radians((i * 180) / points + random(-8, 8));
-    vertex(cx + cos(angle) * r, cy + sin(angle) * r);
+    let angle = (PI / points) * i;
+    let r = i % 2 === 0 ? outer : inner;
+    vertex(cos(angle) * r, sin(angle) * r);
   }
   endShape(CLOSE);
 }
 
-// 뒤틀리고 조여드는 울퉁불퉁 blob (숨 막히는 걱정)
-function drawDistortedBlob(cx, cy, size) {
+function drawDistortedCircle(s) {
   beginShape();
-  for (let i = 0; i <= 24; i++) {
-    let angle = map(i, 0, 24, 0, TWO_PI);
-    let n = noise(cos(angle) * 1.5, sin(angle) * 1.5);
-    let r = (size / 2) * (0.6 + n * 1.0); // 강한 왜곡
-    let x = cx + cos(angle) * r;
-    let y = cy + sin(angle) * r;
-    if (i === 0) vertex(x, y);
-    else
-      bezierVertex(
-        cx + cos(angle - 0.15) * r * 1.2,
-        cy + sin(angle - 0.15) * r * 1.2,
-        cx + cos(angle + 0.15) * r * 1.2,
-        cy + sin(angle + 0.15) * r * 1.2,
-        x,
-        y
-      );
+  let steps = 24;
+  for (let i = 0; i < steps; i++) {
+    let angle = map(i, 0, steps, 0, TWO_PI);
+    let r = s / 2 + random(-s * 0.2, s * 0.2);
+    vertex(cos(angle) * r, sin(angle) * r);
   }
   endShape(CLOSE);
 }
 
-// 무겁게 쌓여 내려앉는 검은 덩어리들 (절망과 피로)
-function drawHeavyLayers(cx, cy, size) {
-  for (let i = 0; i < 12; i++) {
-    let w = size * (1.0 - i * 0.09) + random(-60, 60);
-    let h = size * 0.75;
-    let offsetY = i * 13;
-    let offsetX = random(-20, 20);
-    ellipse(cx + offsetX, cy + offsetY, w, h);
+function drawStackedRects(s) {
+  rectMode(CENTER);
+  for (let i = 0; i < 5; i++) {
+    let scale = map(i, 0, 4, 1, 0.3);
+    rect(0, 0, s * scale, s * scale);
   }
+}
+
+function drawFragments(s) {
+  let pieces = int(random(5, 9));
+  for (let i = 0; i < pieces; i++) {
+    beginShape();
+    for (let j = 0; j < 3; j++) {
+      vertex(random(-s / 2, s / 2), random(-s / 2, s / 2));
+    }
+    endShape(CLOSE);
+  }
+}
+
+function draw() {
+  // 정적 이미지
 }

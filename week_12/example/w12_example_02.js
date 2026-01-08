@@ -1,104 +1,85 @@
-class RotatingCurve {
-  constructor(angle, baseRadius, curveSize, hue, sat, bri, speed, frequency) {
-    this.angle = angle;
-    this.baseRadius = baseRadius;
-    this.curveSize = curveSize;
-    this.hue = hue;
-    this.sat = sat;
-    this.bri = bri;
-    this.speed = speed;
-    this.frequency = frequency;
-    this.phase = 0;
-    this.points = [];
-    this.maxPoints = 2000;
-  }
-
-  update() {
-    this.phase += this.speed;
-
-    // 원점에서 일정 거리에 위치한 곡선의 중심점
-    const centerX = this.baseRadius * cos(this.angle);
-    const centerY = this.baseRadius * sin(this.angle);
-
-    // 곡선을 따라 움직이는 점 계산
-    const t = this.phase;
-    const r = this.curveSize * (1 + 0.5 * sin(this.frequency * t));
-    const spiralAngle = t * 3;
-
-    const x = centerX + r * cos(spiralAngle);
-    const y = centerY + r * sin(spiralAngle);
-
-    this.points.push({ x, y });
-
-    if (this.points.length > this.maxPoints) {
-      this.points.shift();
-    }
-  }
-
-  display() {
-    const len = this.points.length;
-
-    for (let i = 1; i < len; i++) {
-      const ratio = i / len;
-      const alpha = map(ratio, 0, 1, 0, 60);
-      const weight = map(ratio, 0, 1, 0.2, 1.0);
-
-      stroke(this.hue, this.sat, this.bri, alpha);
-      strokeWeight(weight);
-
-      line(
-        this.points[i - 1].x,
-        this.points[i - 1].y,
-        this.points[i].x,
-        this.points[i].y
-      );
-    }
-  }
-}
-
-let curves = [];
-let globalRotation = 0;
-let scaleOsc = 0;
+let movers = [];
+const numMovers = 230;
+let isRepulsionMode = false;
 
 function setup() {
-  createCanvas(800, 800);
-  colorMode(HSB, 360, 100, 100, 100);
-  background(20, 15, 95);
+  createCanvas(1200, 900);
 
-  const numCurves = 7;
-
-  for (let i = 0; i < numCurves; i++) {
-    const angle = (TWO_PI * i) / numCurves;
-
-    curves.push(
-      new RotatingCurve(
-        angle,
-        random(150, 160), // 원점으로부터의 거리
-        random(30, 40), // 곡선 크기
-        random(0, 20), // 주황-빨강 색상
-        random(70, 90),
-        random(85, 95),
-        random(0.03, 0.04), // 회전 속도
-        random(7, 9) // 진동 주파수
-      )
-    );
+  for (let i = 0; i < numMovers; i++) {
+    movers.push(new Mover(random(width), random(height)));
   }
 }
 
 function draw() {
-  background(20, 15, 95, 50);
+  background(25);
 
-  translate(width / 2, height / 2);
+  let isMouseInside =
+    mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
 
-  globalRotation += 0.0005;
-  rotate(globalRotation);
+  for (let mover of movers) {
+    if (isMouseInside) {
+      let mouse = createVector(mouseX, mouseY);
+      let dir = p5.Vector.sub(mouse, mover.pos);
+      let d = constrain(dir.mag(), 5, 50);
+      dir.normalize();
 
-  scaleOsc += 0.01;
-  const s = 1.5 + 0.1 * sin(scaleOsc);
-  scale(s);
+      if (mouseIsPressed) {
+        dir.mult(-1);
+      }
 
-  for (let curve of curves) {
-    curve.update();
-    curve.display();
+      let strength = (100 * mover.mass) / (d * d);
+      dir.mult(strength);
+      mover.applyForce(dir);
+    }
+
+    mover.update();
+    mover.edges();
+    mover.display();
+  }
+
+  // 정보 텍스트
+  if (mouseIsPressed && isMouseInside) {
+    fill(255, 200, 0);
+    textSize(24);
+    text("REPULSION MODE", 20, 40);
+  } else if (isMouseInside) {
+    fill(255);
+    textSize(24);
+    text("Move mouse to attract particles", 20, 40);
+  }
+}
+
+class Mover {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    this.size = random(5, 15);
+    this.mass = this.size / 10;
+  }
+
+  applyForce(f) {
+    let force = p5.Vector.div(f, this.mass);
+    this.acc.add(force);
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.vel.mult(0.94); // 마찰력 감소로 속도 유지
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+  }
+
+  edges() {
+    if (this.pos.x > width) this.pos.x = 0;
+    if (this.pos.x < 0) this.pos.x = width;
+    if (this.pos.y > height) this.pos.y = 0;
+    if (this.pos.y < 0) this.pos.y = height;
+  }
+
+  display() {
+    fill(10, 180, 170);
+    noStroke();
+    ellipse(this.pos.x, this.pos.y, this.size, this.size);
   }
 }

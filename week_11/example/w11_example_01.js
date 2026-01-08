@@ -1,66 +1,78 @@
-const WIN_SIZE = 1000;
-const NUM_POINTS = 500;
-const RANGE = 200.0;
-
-let points = [];
+let centerObj;
+let dragObj;
+let isDragging = false;
 
 function setup() {
-  createCanvas(WIN_SIZE, WIN_SIZE);
-  noStroke();
-  for (let i = 0; i < NUM_POINTS; i++) {
-    points.push(randomPoint());
-  }
+  createCanvas(800, 800);
+  colorMode(RGB);
+
+  centerObj = {
+    x: width / 2,
+    y: height / 2,
+    baseSize: 120,
+  };
+
+  dragObj = {
+    x: width / 2 + 200,
+    y: height / 2,
+    r: 20,
+  };
 }
 
 function draw() {
-  background(0);
-  translate(width / 2, height / 2);
+  background(200);
 
-  // 점 업데이트
-  for (let i = points.length - 1; i >= 0; i--) {
-    points[i].pos.y += points[i].speed;
+  // 거리 계산
+  let d = dist(centerObj.x, centerObj.y, dragObj.x, dragObj.y);
+  let maxDist = 300;
+  let t = constrain(d / maxDist, 0, 1);
 
-    // 화면 아래로 나간 점 제거
-    if (points[i].pos.y > height / 2 + 50) {
-      points.splice(i, 1);
-    }
-  }
+  // 색상 보간 (가까울수록 따뜻한 색)
+  let c1 = color(255, 80, 80);
+  let c2 = color(80, 150, 255);
+  let centerColor = lerpColor(c1, c2, t);
 
-  // 점 개수 유지
-  while (points.length < NUM_POINTS) {
-    points.push(randomPoint());
-  }
+  // 형태 변화: 원 → 다각형
+  let sides = int(map(t, 0, 1, 3, 24));
 
-  // 점 그리기
-  for (let p of points) {
-    let dist = p5.Vector.dist(p.pos, createVector(0, 0));
-    if (dist < RANGE) {
-      fill(200);
-      ellipse(p.pos.x, p.pos.y, 4, 4);
-
-      // 거리 비율에 따른 알파값 계산
-      let alpha = map(dist, 0, RANGE, 255, 0);
-      stroke(255, alpha);
-      strokeWeight(0.5);
-      line(0, 0, p.pos.x, p.pos.y);
-      noStroke();
-    } else {
-      fill(128);
-      ellipse(p.pos.x, p.pos.y, 3, 3);
-    }
-  }
-  // 중앙 노란색 원 그리기
-  fill(200, 170, 0);
   noStroke();
-  ellipse(0, 0, 14, 14);
+  fill(centerColor);
+  drawPolygon(centerObj.x, centerObj.y, centerObj.baseSize, sides);
+
+  // 드래그 오브젝트
+  fill(240);
+  ellipse(dragObj.x, dragObj.y, dragObj.r * 2);
+
+  // 보조 시각화: 거리 라인
+  stroke(120);
+  line(centerObj.x, centerObj.y, dragObj.x, dragObj.y);
 }
 
-function randomPoint() {
-  return {
-    pos: createVector(
-      random(-WIN_SIZE / 2, WIN_SIZE / 2),
-      random(-WIN_SIZE / 2 - 100, -WIN_SIZE / 2)
-    ),
-    speed: random(0.5, 1.0),
-  };
+function mousePressed() {
+  let d = dist(mouseX, mouseY, dragObj.x, dragObj.y);
+  if (d < dragObj.r) {
+    isDragging = true;
+  }
+}
+
+function mouseDragged() {
+  if (isDragging) {
+    dragObj.x = mouseX;
+    dragObj.y = mouseY;
+  }
+}
+
+function mouseReleased() {
+  isDragging = false;
+}
+
+function drawPolygon(x, y, r, sides) {
+  beginShape();
+  for (let i = 0; i < sides; i++) {
+    let angle = (TWO_PI * i) / sides;
+    let px = x + cos(angle) * r;
+    let py = y + sin(angle) * r;
+    vertex(px, py);
+  }
+  endShape(CLOSE);
 }

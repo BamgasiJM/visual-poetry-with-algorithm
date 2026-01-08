@@ -1,72 +1,74 @@
 // w02_example_03.js
 
-// setup() : 캔버스를 처음 만들 때 한 번 실행됩니다.
 function setup() {
-  createCanvas(1000, 1000);
-  background(0); // 배경 검은색
+  createCanvas(1280, 720);
+  background(255); // 흰 배경
   noStroke(); // 테두리 없음
-  fill(255); // 도형 색상 하얀색
+  fill(0); // 모든 도형 검정색
+
+  // 화면을 가로로 3등분한 중심점들
+  let leftX = width * 0.25; // 왼쪽 영역 중심 (320)
+  let middleX = width * 0.5; // 가운데 영역 중심 (640)
+  let rightX = width * 0.75; // 오른쪽 영역 중심 (960)
+  let centerY = height / 2; // 세로 중앙 (360)
+
+  // 각 도형의 기본 크기 (화면 높이의 몇 퍼센트 차지하는지)
+  let baseSize = height * 0.4;
+
+  // 왼쪽: 날카로운 가시가 사방으로 뻗친 폭발적인 불안
+  drawSpikyBurst(leftX, centerY, baseSize * 0.9);
+
+  // 가운데: 조여들고 뒤틀린 숨 막히는 압박감
+  drawDistortedBlob(middleX, centerY, baseSize * 0.9);
+
+  // 오른쪽: 무겁게 쌓이고 내려앉는 절망적인 덩어리들
+  drawHeavyLayers(rightX, centerY, baseSize * 0.9);
+
+  noLoop(); // 한 번만 그리고 끝
 }
 
-// draw() : 그림을 그리는 부분
-function draw() {
-  let centerX = width / 2;
-  let centerY = height / 2;
-  let halfW = width / 2;
-  let halfH = height / 2;
-
-  // 도형 크기 (사분면의 약 70% 정도 차지)
-  let shape_size = min(halfW, halfH) * 0.7;
-
-  // 1사분면 (오른쪽 위) - 원 하나
-  circle(centerX + halfW / 2, centerY - halfH / 2, shape_size);
-
-  // 2사분면 (왼쪽 위) - 삼각형 하나
-  let triX = centerX - halfW / 2;
-  let triY = centerY - halfH / 2;
-  triangle(
-    triX,
-    triY - shape_size / 2,
-    triX - shape_size / 2,
-    triY + shape_size / 2,
-    triX + shape_size / 2,
-    triY + shape_size / 2
-  );
-
-  // 3사분면 (왼쪽 아래) - 사각형 하나
-  rectMode(CENTER);
-  rect(centerX - halfW / 2, centerY + halfH / 2, shape_size, shape_size);
-
-  // 4사분면 (오른쪽 아래) - 6각형(육각형) 하나
-  let curveX = centerX + halfW / 2; // 이 사분면의 중심 x좌표
-  let curveY = centerY + halfH / 2; // 이 사분면의 중심 y좌표
-
-  // 6각형의 반지름 (사분면 크기에 맞춰 크게)
-  let radius = min(halfW, halfH) * 0.4;
-
+// 날카로운 가시 폭발 (불안이 터져 나오는 느낌)
+function drawSpikyBurst(cx, cy, size) {
+  let points = 18;
   beginShape();
-
-  // 6각형은 360도를 6등분 → 각 60도
-  for (let i = 0; i < 6; i++) {
-    // 각도를 라디안으로 바꿈 (p5.js는 degree가 아니라 radian 사용)
-    let angle = radians(i * 60);
-
-    // x, y 좌표 계산 (중심에서 반지름만큼 떨어진 점)
-    let x = curveX + cos(angle) * radius;
-    let y = curveY + sin(angle) * radius;
-
-    // 그 점을 꼭짓점으로 추가
-    vertex(x, y);
+  for (let i = 0; i < points * 2; i++) {
+    let r = i % 2 === 0 ? size * 0.9 : size * random(0.35, 0.45);
+    let angle = radians((i * 180) / points + random(-8, 8));
+    vertex(cx + cos(angle) * r, cy + sin(angle) * r);
   }
-
-  endShape(CLOSE); // 자동으로 닫힌 6각형 완성!
-
-  noLoop(); // 한 번만 그리고 멈춤
+  endShape(CLOSE);
 }
 
-// 창 크기 바뀔 때 다시 그리기
-function windowResized() {
-  resizeCanvas(1000, 1000);
-  background(0);
-  redraw();
+// 뒤틀리고 조여드는 울퉁불퉁 blob (숨 막히는 걱정)
+function drawDistortedBlob(cx, cy, size) {
+  beginShape();
+  for (let i = 0; i <= 24; i++) {
+    let angle = map(i, 0, 24, 0, TWO_PI);
+    let n = noise(cos(angle) * 1.5, sin(angle) * 1.5);
+    let r = (size / 2) * (0.6 + n * 1.0); // 강한 왜곡
+    let x = cx + cos(angle) * r;
+    let y = cy + sin(angle) * r;
+    if (i === 0) vertex(x, y);
+    else
+      bezierVertex(
+        cx + cos(angle - 0.15) * r * 1.2,
+        cy + sin(angle - 0.15) * r * 1.2,
+        cx + cos(angle + 0.15) * r * 1.2,
+        cy + sin(angle + 0.15) * r * 1.2,
+        x,
+        y
+      );
+  }
+  endShape(CLOSE);
+}
+
+// 무겁게 쌓여 내려앉는 검은 덩어리들 (절망과 피로)
+function drawHeavyLayers(cx, cy, size) {
+  for (let i = 0; i < 12; i++) {
+    let w = size * (1.0 - i * 0.09) + random(-60, 60);
+    let h = size * 0.75;
+    let offsetY = i * 13;
+    let offsetX = random(-20, 20);
+    ellipse(cx + offsetX, cy + offsetY, w, h);
+  }
 }
