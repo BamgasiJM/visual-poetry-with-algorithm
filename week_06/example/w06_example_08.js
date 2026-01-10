@@ -1,153 +1,82 @@
-// Conway's Game of Life
+// 응집 DLA
 
-// ====== 전역 변수 설정 ======
-let grid; // 현재 세대의 상태 (0: Dead, 1: Alive)
-let cols;
-let rows;
-let resolution = 5; // 셀 하나의 크기 (픽셀)
+const MAX_PARTICLES = 1000; // 동시에 존재하는 입자 수
+const STICKINESS = 5; // 응집 거리
+const WALK_STEP = 2; // 랜덤 워크 한 번에 이동하는 거리
+const MAX_WALK_COUNT = 5; // 입자당 프레임당 랜덤 워크 횟수
+
+let particles = [];
+let stuck = [];
+let maxRadius = 0;
 
 function setup() {
-  // 캔버스를 600x600으로 생성합니다.
-  createCanvas(600, 600);
+  createCanvas(800, 400);
+  background(15);
+  colorMode(RGB, 255);
 
-  // 셀의 개수 계산
-  cols = floor(width / resolution);
-  rows = floor(height / resolution);
-
-  // 시뮬레이션 속도를 조절합니다. (초당 5 프레임)
-  // 너무 빠르면 패턴 변화를 관찰하기 어렵습니다.
-  frameRate(5);
-
-  // 초기 격자 상태를 설정하고 무작위로 생명체를 배치합니다.
-  grid = initializeRandomGrid(cols, rows);
-
-  // 배경은 어두운 색으로 설정합니다.
-  background(20);
+  // 초기 시드 생성
+  stuck.push(createVector(width / 2, height / 2));
+  maxRadius = 1;
 }
 
 function draw() {
-  // 1. 현재 세대 그리기
-  background(20); // 매 프레임마다 배경을 다시 칠해 잔상을 제거합니다.
-  drawGrid(grid);
+  background(15, 15, 15, 20);
 
-  // 2. 다음 세대 계산
-  // CA의 핵심: 현재 상태(grid)를 기반으로 다음 상태(nextGrid)를 계산합니다.
-  let nextGrid = computeNextGeneration(grid);
-
-  // 3. 상태 업데이트
-  // 계산된 다음 세대를 현재 세대로 교체합니다.
-  grid = nextGrid;
-}
-
-// ====== 유틸리티 함수 ======
-
-/**
- * 2차원 배열을 생성하고 무작위 초기값을 설정합니다.
- */
-function initializeRandomGrid(cols, rows) {
-  let arr = new Array(cols);
-  for (let i = 0; i < cols; i++) {
-    arr[i] = new Array(rows);
-    for (let j = 0; j < rows; j++) {
-      // 50% 확률로 0(죽음) 또는 1(생존)을 부여합니다.
-      arr[i][j] = floor(random(2));
-    }
+  // 1. 입자 생성: 패턴 외곽에서 생성
+  if (particles.length < MAX_PARTICLES) {
+    let launchRadius = maxRadius + 50;
+    let angle = random(TWO_PI);
+    let x = width / 2 + cos(angle) * launchRadius;
+    let y = height / 2 + sin(angle) * launchRadius;
+    particles.push(createVector(x, y));
   }
-  return arr;
-}
 
-/**
- * 현재 격자의 상태를 캔버스에 그립니다.
- */
-function drawGrid(currentGrid) {
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      let x = i * resolution;
-      let y = j * resolution;
+  // 2. 입자 이동 및 응집 확인
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
 
-      if (currentGrid[i][j] == 1) {
-        // 생존한 셀 (Alive): 흰색
-        fill(200, 170, 80);
-        stroke(20); // 셀 경계선은 배경색과 비슷하게 설정
-        rect(x, y, resolution, resolution);
-      } else {
-        // 죽은 셀 (Dead): 그리지 않음 (배경색 유지)
-        // noStroke();
-        // fill(20);
-        // rect(x, y, resolution, resolution);
+    // 🌟 가속화 1: 입자당 여러 번의 랜덤 워크 수행 (속도 증폭)
+    for (let k = 0; k < MAX_WALK_COUNT; k++) {
+      p.x += random(-WALK_STEP, WALK_STEP);
+      p.y += random(-WALK_STEP, WALK_STEP);
+    }
+
+    let closestDistSq = Infinity;
+
+    // 🌟 가속화 2: 패턴 외곽에 접근했을 때만 충돌 확인
+    let distFromCenter = dist(width / 2, height / 2, p.x, p.y);
+    if (distFromCenter < maxRadius + STICKINESS * 2) {
+      // 입자가 응집체 근처에 도달했을 때만 N*M 충돌 검사 실행
+      for (let s of stuck) {
+        let dSq = (p.x - s.x) ** 2 + (p.y - s.y) ** 2;
+        closestDistSq = min(closestDistSq, dSq);
       }
-    }
-  }
-}
 
-/**
- * 콘웨이의 생명 게임 규칙을 적용하여 다음 세대를 계산합니다.
- */
-function computeNextGeneration(currentGrid) {
-  // 다음 세대를 담을 새로운 격자를 만듭니다. (중요: 현재 격자를 직접 수정하면 안 됩니다!)
-  let newGrid = initializeEmptyGrid(cols, rows);
+      // 응집 조건
+      if (closestDistSq < STICKINESS * STICKINESS) {
+        stuck.push(p);
+        particles.splice(i, 1);
 
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      // 1. 현재 셀의 상태
-      let state = currentGrid[i][j];
-
-      // 2. 이웃 셀 (8방향) 중 살아있는 셀의 개수를 셉니다.
-      let liveNeighbors = countLiveNeighbors(currentGrid, i, j);
-
-      // 3. 콘웨이의 4가지 규칙 적용
-      if (state == 0 && liveNeighbors == 3) {
-        // 🌟 규칙 4: 탄생 (Birth)
-        // 죽은 셀이 이웃 3개를 가지면 살아납니다.
-        newGrid[i][j] = 1;
-      } else if (state == 1) {
-        if (liveNeighbors < 2 || liveNeighbors > 3) {
-          // 💀 규칙 1 & 3: 과소/과밀에 의한 죽음 (Death)
-          // 이웃이 2개 미만이거나 3개를 초과하면 고독 또는 과밀로 죽습니다.
-          newGrid[i][j] = 0;
-        } else {
-          // 💖 규칙 2: 생존 (Survival)
-          // 이웃이 2개 또는 3개면 다음 세대에도 생존합니다.
-          newGrid[i][j] = 1;
+        // 최대 반지름 업데이트
+        if (distFromCenter > maxRadius) {
+          maxRadius = distFromCenter;
         }
+        break; // 응집 후 다음 입자로
       }
-      // 그 외의 경우 (state=0, liveNeighbors!=3), 셀은 0(죽은 상태)을 유지합니다.
     }
-  }
-  return newGrid;
-}
 
-/**
- * 이웃 셀의 생존 개수를 셉니다. (토러스 경계 조건 적용)
- */
-function countLiveNeighbors(grid, x, y) {
-  let sum = 0;
-  // 현재 셀의 주변 8개 셀을 순회 (-1, 0, 1)
-  for (let i = -1; i <= 1; i++) {
-    for (let j = -1; j <= 1; j++) {
-      // ⚠️ 경계 조건 처리 (Toroidal Boundary - 토러스/도넛 모양)
-      // 격자 끝을 넘어가면 반대편으로 이어지게 계산합니다.
-      let col = (x + i + cols) % cols;
-      let row = (y + j + rows) % rows;
-
-      // 이웃 셀의 상태를 합산합니다.
-      sum += grid[col][row];
+    // 🌟 가속화 3: 너무 멀리 나간 입자 제거 (최대 반지름 + 1000 이상)
+    // 패턴이 커질 때 효율적으로 입자를 제거하도록 범위 확장
+    if (distFromCenter > maxRadius + 1000) {
+      particles.splice(i, 1);
     }
   }
 
-  // 자기 자신은 이웃에 포함되지 않으므로, 합산에서 제외합니다.
-  sum -= grid[x][y];
+  // 3. 드로잉
+  noStroke();
+  fill(255);
+  for (let s of stuck) circle(s.x, s.y, 3);
 
-  return sum;
-}
-
-/**
- * 빈 2차원 배열(모든 값 0)을 생성합니다.
- */
-function initializeEmptyGrid(cols, rows) {
-  let arr = new Array(cols);
-  for (let i = 0; i < cols; i++) {
-    arr[i] = new Array(rows).fill(0);
-  }
-  return arr;
+  fill(30, 190, 180);
+  for (let p of particles) circle(p.x, p.y, 3);
 }

@@ -2,9 +2,9 @@
 
 function setup() {
   createCanvas(800, 800);
-  background(255);
+  background(5);
 
-  stroke(0);
+  stroke(50, 210, 200);
   noFill();
   rectMode(CENTER);
   ellipseMode(CENTER);
@@ -31,10 +31,11 @@ function setup() {
 
   for (let y = margin; y <= height - margin; y += step) {
     for (let x = margin; x <= width - margin; x += step) {
-      let s = random(20, 60);
+      let s = random(10, 50);
       push();
       translate(x, y);
       rotate(int(random(4)) * HALF_PI);
+      fill(50, 210, 200);
       rect(0, 0, s, s);
       pop();
     }

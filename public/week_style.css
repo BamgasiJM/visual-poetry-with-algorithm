@@ -174,7 +174,7 @@ main {
 }
 
 .breadcrumb a:hover {
-  color: #ffffff;
+  color: rgb(30, 190, 180);
 }
 
 .badge {
