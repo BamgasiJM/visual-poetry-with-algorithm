@@ -1,8 +1,8 @@
 // w02_example_02.js
 
 function setup() {
-  createCanvas(800, 800);
-  background(0, 20, 50);
+  createCanvas(1000, 1000);
+  background(0, 20, 30);
 }
 
 function draw() {
@@ -11,9 +11,9 @@ function draw() {
     if (mouseIsPressed) {
       fill(30, 200, 180);
     } else {
-      fill(255, 255, 255);
+      fill(230, 230, 230);
     }
     strokeWeight(1);
-    ellipse(mouseX, mouseY, 80, 80);
+    ellipse(mouseX, mouseY, 120, 120);
   }
 }

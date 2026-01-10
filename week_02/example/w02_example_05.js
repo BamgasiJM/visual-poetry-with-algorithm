@@ -1,3 +1,5 @@
+// w02_example_05.js
+
 // Motif 클래스 정의
 class Motif {
   constructor(r) {

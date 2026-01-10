@@ -1,4 +1,7 @@
+// w02_example_06.js
+
 let smoothPoints = [];
+let eyes = [];
 
 function setup() {
   createCanvas(1080, 1080);
@@ -10,12 +13,25 @@ function setup() {
   for (let i = 0; i < numPoints; i++) {
     const theta = (i * TWO_PI) / numPoints;
     const noiseVal = noise(i * 4.0, 0);
-    const r = 200 + noiseVal * 450;
+    const r = 180 + noiseVal * 400;
     points.push(createVector(cos(theta) * r, sin(theta) * r));
   }
 
   // Catmull-Rom 스플라인으로 부드럽게 보간
   smoothPoints = catmullRomSpline(points, 10);
+
+  // 눈 2개 생성 (중심 언저리 랜덤 위치)
+  for (let i = 0; i < 2; i++) {
+    const angle = random(TWO_PI);
+    const distance = random(70, 100);
+    const eyeSize = random(30, 60);
+
+    eyes.push({
+      x: cos(angle) * distance,
+      y: sin(angle) * distance,
+      size: eyeSize,
+    });
+  }
 
   noLoop();
 }
@@ -64,6 +80,7 @@ function draw() {
 
   // 닫힌 곡선 그리기
   fill(50, 210, 200);
+  noStroke();
 
   beginShape();
   for (let p of smoothPoints) {
@@ -74,4 +91,10 @@ function draw() {
     vertex(smoothPoints[0].x, smoothPoints[0].y);
   }
   endShape();
+
+  // 눈 그리기
+  fill(0);
+  for (let eye of eyes) {
+    ellipse(eye.x, eye.y, eye.size, eye.size);
+  }
 }
