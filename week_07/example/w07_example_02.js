@@ -1,29 +1,44 @@
 // w07_example_02.js
 
-let r = 370;
-// 원을 72등분. 360/72=5도 간각으로 점이 배치됨. 약수이므로 균등분할 가능
-// 3을 곱해서 더 세밀하게 만듦. 총 216개의 점을 생성함.
-// 결과적으로 n = 216 -> 원 위에 216개 점 뱇치, 각 점 사이의 각도는 약 1.67도(360/216)
-// let n = 72 * 3;
-let n = 12 * 1;
+// 원의 반지름
+let radius = 370;
+
+// 원 위의 점 개수
+// 12: 기본 분할 수 (360도/12 = 30도 간격)
+// 배수를 늘리면 더 조밀한 패턴 생성 (예: 12*3 = 36개 점)
+// let pointCount = 12 * 1;
+let pointCount = 72 * 6;
 
 function setup() {
   createCanvas(800, 800);
 }
 
 function draw() {
-  background(35, 0, 20);
-  translate(width * 0.5, height * 0.5);
-  let s = 1 + 0.001 * frameCount;
+  background(35, 10, 20);
 
-  for (let i = 0; i < n; i++) {
-    let theta = (TWO_PI * i) / n;
-    let y = r * sin(theta);
-    let x = r * cos(theta);
-    let y2 = r * sin(s * theta);
-    let x2 = r * cos(s * theta);
-    strokeWeight(1.0);
-    stroke(240);
-    line(x, y, x2, y2);
+  // 캔버스 중앙으로 원점 이동
+  translate(width * 0.5, height * 0.5);
+
+  // 회전 배율 (시간에 따라 증가)
+  // frameCount가 증가하면서 끝점의 각도가 점점 더 많이 회전함
+  let rotationScale = 1 + 0.001 * frameCount;
+
+  // 원 위의 각 점에서 나선형으로 선 그리기
+  for (let i = 0; i < pointCount; i++) {
+    // 현재 점의 각도 (라디안)
+    let angle = (TWO_PI * i) / pointCount;
+
+    // 시작점: 원 위의 고정된 위치
+    let x1 = radius * cos(angle);
+    let y1 = radius * sin(angle);
+
+    // 끝점: 회전된 각도의 위치
+    let x2 = radius * cos(rotationScale * angle);
+    let y2 = radius * sin(rotationScale * angle);
+
+    // 선 그리기
+    strokeWeight(0.5);
+    stroke(240, 210, 0);
+    line(x1, y1, x2, y2);
   }
 }

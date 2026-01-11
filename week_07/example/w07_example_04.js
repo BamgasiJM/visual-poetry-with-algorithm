@@ -10,13 +10,13 @@ let hueDirection = 1;  // Hue 증가/감소 방향
 function setup() {
   createCanvas(800, 800);
   colorMode(HSB, 360, 100, 100, 1);
-  background(255);
+  background(30, 20, 5);
   angleMode(DEGREES);
   noFill();
 }
 
 function draw() {
-  background(255, 0.01); // 잔상 효과
+  background(30, 20, 5, 0.05); // 잔상 효과
 
   translate(width / 2, height / 2);
   // rotate(rotationAngle);
@@ -44,20 +44,19 @@ function draw() {
 
       // 색상: Hue 순환 + 레이어별 변형
       let hue = (hueCycle + i * 30) % 360;
-      let saturation = 85;
-      let brightness = 90;
-      let alpha = 0.9;
+      let saturation = 95;
+      let brightness = 100;
+      let alpha = 1.0;
 
       stroke(hue, saturation, brightness, alpha);
-      strokeWeight(0.6);
+      strokeWeight(1.8);
       point(x, y);
     }
     pop();
   }
 
-  // 주파수 변화 (+마우스 위치에 따라 각도 변화)
-  // rotationAngle = map(mouseX, 0, width, -10, 10);
-  a = 3 + sin(frameCount * 0.007) * 1.5;
+  // 주파수 변화
+  a = 3 + sin(frameCount * 0.007) * 1.7;
   b = 2 + cos(frameCount * 0.005) * 1.2;
   delta += 0.7;
 }

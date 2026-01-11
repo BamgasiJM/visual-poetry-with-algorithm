@@ -1,90 +1,76 @@
+// w14_example_03.js
+
 let population = [];
-let popSize = 50;
-let target;
-let obstacles = [];
-let lifespan = 300;
-let lifeCounter = 0;
+let popSize = 100;
+let targetColor;
+let targetSize = 50;
 let generation = 1;
 
 function setup() {
   createCanvas(600, 600);
-  target = createVector(width / 2, 50);
-
-  // 장애물 생성
-  obstacles.push(createVector(width / 2, height / 2));
-  obstacles.push(createVector(width / 2 - 100, height / 2 + 100));
-  obstacles.push(createVector(width / 2 + 100, height / 2 + 100));
+  targetColor = color(255, 100, 150); // 목표 색상
 
   for (let i = 0; i < popSize; i++) {
-    population.push(new Rocket());
+    population.push(new Circle());
   }
 }
 
 function draw() {
   background(0);
 
-  // 목표 지점
-  fill(0, 255, 0);
-  circle(target.x, target.y, 20);
+  // 목표 표시
+  fill(targetColor);
+  circle(width / 2, 100, targetSize);
+  fill(255);
+  textAlign(CENTER);
+  text("Target", width / 2, 150);
 
-  // 장애물
-  fill(255, 0, 0);
-  for (let obs of obstacles) {
-    circle(obs.x, obs.y, 40);
+  // 현재 세대 표시
+  for (let i = 0; i < population.length; i++) {
+    let x = (i % 10) * 60 + 30;
+    let y = floor(i / 10) * 60 + 200;
+    population[i].show(x, y);
   }
 
-  // 로켓 업데이트
-  for (let rocket of population) {
-    // 장애물 충돌 체크
-    for (let obs of obstacles) {
-      if (dist(rocket.pos.x, rocket.pos.y, obs.x, obs.y) < 25) {
-        rocket.crashed = true;
-      }
-    }
-
-    rocket.update();
-    rocket.show();
-  }
-
-  lifeCounter++;
-
-  if (lifeCounter >= lifespan) {
-    lifeCounter = 0;
-    evaluate();
-    selection();
-    generation++;
-  }
-
+  // 정보
   fill(255);
   textAlign(LEFT);
   text("Generation: " + generation, 10, 20);
-  text("Lifespan: " + lifeCounter + "/" + lifespan, 10, 40);
+
+  // 한 프레임마다 진화
+  if (frameCount % 60 === 0) {
+    evolve();
+    generation++;
+  }
 }
 
-function evaluate() {
+function evolve() {
+  // 적합도 계산
+  for (let circle of population) {
+    circle.calcFitness(targetColor, targetSize);
+  }
+
+  // 정규화
   let maxFit = 0;
-  for (let rocket of population) {
-    rocket.calcFitness(target);
-    if (rocket.fitness > maxFit) {
-      maxFit = rocket.fitness;
+  for (let circle of population) {
+    if (circle.fitness > maxFit) {
+      maxFit = circle.fitness;
     }
   }
-
-  for (let rocket of population) {
-    rocket.fitness /= maxFit;
+  for (let circle of population) {
+    circle.fitness /= maxFit;
   }
-}
 
-function selection() {
+  // 선택
   let matingPool = [];
-
-  for (let rocket of population) {
-    let n = floor(rocket.fitness * 100);
+  for (let circle of population) {
+    let n = floor(circle.fitness * 100);
     for (let i = 0; i < n; i++) {
-      matingPool.push(rocket);
+      matingPool.push(circle);
     }
   }
 
+  // 교배 및 돌연변이
   let newPopulation = [];
   for (let i = 0; i < popSize; i++) {
     let parentA = random(matingPool);
@@ -95,105 +81,68 @@ function selection() {
   }
 
   population = newPopulation;
-  lifeCounter = 0;
 }
 
-class Rocket {
-  constructor(dna) {
-    this.pos = createVector(width / 2, height - 50);
-    this.vel = createVector();
-    this.acc = createVector();
-    this.completed = false;
-    this.crashed = false;
+class Circle {
+  constructor(r, g, b, size) {
+    if (r === undefined) {
+      this.r = random(255);
+      this.g = random(255);
+      this.b = random(255);
+      this.size = random(10, 80);
+    } else {
+      this.r = r;
+      this.g = g;
+      this.b = b;
+      this.size = size;
+    }
     this.fitness = 0;
-
-    if (dna) {
-      this.dna = dna;
-    } else {
-      this.dna = [];
-      for (let i = 0; i < lifespan; i++) {
-        this.dna.push(p5.Vector.random2D().setMag(0.1));
-      }
-    }
   }
 
-  update() {
-    if (!this.completed && !this.crashed) {
-      this.applyForce(this.dna[lifeCounter]);
-      this.vel.add(this.acc);
-      this.pos.add(this.vel);
-      this.acc.mult(0);
-
-      if (
-        this.pos.x < 0 ||
-        this.pos.x > width ||
-        this.pos.y < 0 ||
-        this.pos.y > height
-      ) {
-        this.crashed = true;
-      }
-
-      if (dist(this.pos.x, this.pos.y, target.x, target.y) < 20) {
-        this.completed = true;
-      }
-    }
+  show(x, y) {
+    fill(this.r, this.g, this.b);
+    circle(x, y, this.size);
   }
 
-  applyForce(force) {
-    this.acc.add(force);
-  }
+  calcFitness(targetCol, targetSize) {
+    let dr = abs(this.r - red(targetCol));
+    let dg = abs(this.g - green(targetCol));
+    let db = abs(this.b - blue(targetCol));
+    let colorDist = (dr + dg + db) / 3;
 
-  show() {
-    push();
-    translate(this.pos.x, this.pos.y);
-    rotate(this.vel.heading());
+    let sizeDist = abs(this.size - targetSize);
 
-    if (this.completed) {
-      fill(0, 255, 0);
-    } else if (this.crashed) {
-      fill(255, 0, 0, 50);
-    } else {
-      fill(255, 150);
-    }
-
-    rectMode(CENTER);
-    rect(0, 0, 20, 5);
-    pop();
-  }
-
-  calcFitness(target) {
-    let d = dist(this.pos.x, this.pos.y, target.x, target.y);
-    this.fitness = map(d, 0, width, width, 0);
-
-    if (this.completed) {
-      this.fitness *= 10;
-    }
-    if (this.crashed) {
-      this.fitness /= 10;
-    }
+    let totalDist = colorDist + sizeDist;
+    this.fitness = map(totalDist, 0, 255 + 80, 255 + 80, 0);
   }
 
   crossover(partner) {
-    let newDNA = [];
-    let midpoint = floor(random(this.dna.length));
+    let childR = random(1) < 0.5 ? this.r : partner.r;
+    let childG = random(1) < 0.5 ? this.g : partner.g;
+    let childB = random(1) < 0.5 ? this.b : partner.b;
+    let childSize = random(1) < 0.5 ? this.size : partner.size;
 
-    for (let i = 0; i < this.dna.length; i++) {
-      if (i < midpoint) {
-        newDNA.push(this.dna[i]);
-      } else {
-        newDNA.push(partner.dna[i]);
-      }
-    }
-
-    return new Rocket(newDNA);
+    return new Circle(childR, childG, childB, childSize);
   }
 
   mutate() {
-    let mutationRate = 0.01;
-    for (let i = 0; i < this.dna.length; i++) {
-      if (random(1) < mutationRate) {
-        this.dna[i] = p5.Vector.random2D().setMag(0.1);
-      }
+    let mutationRate = 0.05;
+
+    if (random(1) < mutationRate) {
+      this.r += random(-20, 20);
+      this.r = constrain(this.r, 0, 255);
+    }
+    if (random(1) < mutationRate) {
+      this.g += random(-20, 20);
+      this.g = constrain(this.g, 0, 255);
+    }
+    if (random(1) < mutationRate) {
+      this.b += random(-20, 20);
+      this.b = constrain(this.b, 0, 255);
+    }
+    if (random(1) < mutationRate) {
+      this.size += random(-5, 5);
+      this.size = constrain(this.size, 10, 80);
     }
   }
 }
