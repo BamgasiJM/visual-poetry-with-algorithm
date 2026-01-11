@@ -9,9 +9,9 @@ let particles = [];
     }
 
     function mousePressed() {
-      for (let i = 0; i < 30; i++) {
-        const vel = createVector(random(-3, 3), random(-3, 3));
-        const radius = random(2, 5);
+      for (let i = 0; i < 50; i++) {
+        const vel = createVector(random(-2, 2), random(-2, 2));
+        const radius = random(4, 9);
         const life = random(1, 3);
         
         particles.push({
@@ -28,7 +28,7 @@ let particles = [];
       const dt = (currentTime - lastFrameTime) / 1000;
       lastFrameTime = currentTime;
 
-      background(0);
+      background(0, 10, 18);
 
       for (let p of particles) {
         p.pos.add(p.vel);
@@ -39,7 +39,7 @@ let particles = [];
 
       for (let p of particles) {
         const alpha = map(p.life / 2, 0, 1.5, 0, 255);
-        fill(255, 255, 255, alpha);
+        fill(240, 240, 240, alpha);
         noStroke();
         ellipse(p.pos.x, p.pos.y, p.radius * 2);
       }

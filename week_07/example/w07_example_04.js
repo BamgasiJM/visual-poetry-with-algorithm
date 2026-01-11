@@ -1,10 +1,11 @@
-let a = 3,
-  b = 2; // 주파수 비율 (복잡성 증가)
-let delta = 0; // 위상 차이
-let scale = 180; // 패턴 크기
+// w07_example_04.js
+
+let a = 3, b = 2;      // 주파수 비율 (복잡성 증가)
+let delta = 0;         // 위상 차이
+let scale = 180;       // 패턴 크기
 let rotationAngle = 0; // 회전 각도
-let hueCycle = 0; // Hue 순환 변수
-let hueDirection = 1; // Hue 증가/감소 방향
+let hueCycle = 0;      // Hue 순환 변수
+let hueDirection = 1;  // Hue 증가/감소 방향
 
 function setup() {
   createCanvas(800, 800);
@@ -29,7 +30,7 @@ function draw() {
   for (let i = 0; i < 7; i++) {
     // 레이어 수
     push();
-    rotate(i * 120);      // n도씩 회전하여 패턴 중첩
+    rotate(i * 120); // n도씩 회전하여 패턴 중첩
     for (let angle = 0; angle < 360; angle += 0.3) {
       // 12중 리사주 곡선 계산
       let x =

@@ -1,91 +1,81 @@
-class Spirograph {
-  constructor(R, r, d, hueOffset, saturation, brightness, speed, offset) {
-    this.R = R;
-    this.r = r;
-    this.d = d;
-    this.hueOffset = hueOffset; // 고유 색상 오프셋
-    this.saturation = saturation;
-    this.brightness = brightness;
-    this.speed = speed;
-    this.theta = offset;
-    this.points = [];
-    this.maxPoints = 3000;
-  }
+// w07_example_03.js
 
-  update() {
-    this.theta += this.speed;
-
-    const k = (this.R - this.r) / this.r;
-    const x =
-      (this.R - this.r) * cos(this.theta) + this.d * cos(k * this.theta);
-    const y =
-      (this.R - this.r) * sin(this.theta) - this.d * sin(k * this.theta);
-
-    this.points.push({ x, y });
-    if (this.points.length > this.maxPoints) this.points.shift();
-  }
-
-  display() {
-    const len = this.points.length;
-    // 시간과 고유 오프셋으로 색상 변화
-    const currentHue = (this.hueOffset + frameCount * 0.2) % 360;
-
-    noFill();
-    beginShape();
-    for (let i = 0; i < len; i++) {
-      const ratio = i / len;
-      const alpha = map(ratio, 0, 1, 0, 80);
-      const weight = map(ratio, 0, 1, 0.3, 0.8);
-
-      stroke(currentHue, this.saturation, this.brightness, alpha);
-      strokeWeight(weight);
-
-      vertex(this.points[i].x, this.points[i].y);
-    }
-    endShape();
-  }
-}
-
-let spiros = [];
-let rotation = 0;
-let scaleOsc = 0;
+let petals = [];
+let time = 0;
 
 function setup() {
   createCanvas(800, 800);
   colorMode(HSB, 360, 100, 100, 100);
-  background(0); // 검정색 배경
 
-  const numSpiros = 7;
-  for (let i = 0; i < numSpiros; i++) {
-    const angle = (TWO_PI * i) / numSpiros;
-    spiros.push(
-      new Spirograph(
-        random(120, 200),
-        random(30, 70),
-        random(40, 100),
-        random(0, 360), // 고유 색상 오프셋
-        random(70, 90), // 채도
-        random(85, 95), // 밝기
-        random(0.01, 0.025),
-        angle
-      )
-    );
+  // 여러 층의 꽃잎 생성
+  for (let layer = 0; layer < 5; layer++) {
+    petals.push({
+      n: 36 + layer * 12,
+      r: 80 + layer * 60,
+      phase: layer * 0.3,
+      speed: 0.01 - layer * 0.0015,
+      hue: 320 + layer * 10,
+      maxRadius: 80 + layer * 60,
+    });
   }
 }
 
 function draw() {
-  background(0, 0, 0, 3); // 검정색 + 잔상 효과
+  background(270, 45, 25);
+  translate(400, 400);
 
-  translate(width / 2, height / 2);
-  rotation += 0.002;
-  rotate(rotation);
+  time += 0.007;
+  let bloomProgress = constrain(time * 0.3, 0, 1);
+  // easeOutCubic 이징 적용
+  let bloom = 1 - pow(1 - bloomProgress, 3);
 
-  scaleOsc += 0.04;
-  const s = 0.9 + 0.15 * sin(scaleOsc);
-  scale(s);
+  // 중심에서 바깥으로 꽃잎 그리기
+  for (let layer = petals.length - 1; layer >= 0; layer--) {
+    let petal = petals[layer];
+    let layerBloom = constrain((bloom - layer * 0.15) * 1.5, 0, 1);
+    let currentR = petal.maxRadius * layerBloom;
 
-  for (let spiro of spiros) {
-    spiro.update();
-    spiro.display();
+    if (layerBloom > 0) {
+      let s = 1 + petal.speed * frameCount + petal.phase;
+      let alpha = 70 * layerBloom;
+
+      strokeWeight(2.1);
+
+      for (let i = 0; i < petal.n; i++) {
+        let theta = (TWO_PI * i) / petal.n;
+        let wave = sin(time * 2 + layer * 0.5) * 0.1;
+        let spiralFactor = s + wave;
+
+        let x1 = currentR * cos(theta);
+        let y1 = currentR * sin(theta);
+        let x2 = currentR * cos(spiralFactor * theta);
+        let y2 = currentR * sin(spiralFactor * theta);
+
+        // 그라데이션 효과
+        let hue = (petal.hue + i * 2) % 360;
+        let brightness = 85 + sin(time + i * 0.1) * 10;
+
+        stroke(hue, 70, brightness, alpha);
+        line(x1, y1, x2, y2);
+      }
+    }
+  }
+
+  // 중심부 강조
+  if (bloom > 0.5) {
+    let centerAlpha = (bloom - 0.5) * 100;
+    fill(50, 80, 90, centerAlpha);
+    noStroke();
+    let centerSize = 20 * (bloom - 0.5) * 2;
+    circle(0, 0, centerSize);
+
+    // 중심 꽃술
+    stroke(45, 60, 95, centerAlpha);
+    strokeWeight(2);
+    for (let i = 0; i < 12; i++) {
+      let angle = (TWO_PI * i) / 12;
+      let len = centerSize * 0.8;
+      line(0, 0, cos(angle) * len, sin(angle) * len);
+    }
   }
 }
