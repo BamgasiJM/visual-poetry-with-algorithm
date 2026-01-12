@@ -1,136 +1,198 @@
-// 전역 변수
-const numCircles = 10;
-const numRects = 10;
-const collisionDistance = 50;
-let objects = [];
+// w11_example_02.js 
 
+// ===== 전역 변수 =====
+const CANVAS_SIZE = 800;
+const NUM_CIRCLES = 20;
+const NUM_SQUARES = 10;
+
+let circles = [];
+let squares = [];
+
+// ===== p5.js 기본 함수 =====
 function setup() {
-  createCanvas(1000, 600);
+  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+  fill(220);
+  noStroke();
 
-  // 원 오브젝트 생성
-  for (let i = 0; i < numCircles; i++) {
-    objects.push({
-      x: random(50, width - 50),
-      y: random(50, height - 50),
-      vx: random(-1, 1),
-      vy: random(-1, 1),
-      size: random(20, 40),
-      type: "circle",
-    });
+  // 원 생성
+  for (let i = 0; i < NUM_CIRCLES; i++) {
+    circles.push(new CircleObject());
   }
 
-  // 사각형 오브젝트 생성
-  for (let i = 0; i < numRects; i++) {
-    objects.push({
-      x: random(50, width - 50),
-      y: random(50, height - 50),
-      vx: random(-1, 1),
-      vy: random(-1, 1),
-      size: random(20, 40),
-      type: "rect",
-      rotation: random(TWO_PI),
-      rotationSpeed: random(-0.02, 0.02),
-    });
+  // 정사각형 생성
+  for (let i = 0; i < NUM_SQUARES; i++) {
+    squares.push(new SquareObject());
   }
 }
 
 function draw() {
-  // 배경 그라데이션
-  drawRadialGradient(500, 300, 800);
+  background(0, 50);
 
-  noStroke();
+  // 업데이트
+  circles.forEach((c) => c.update());
+  squares.forEach((s) => s.update());
 
-  // 충돌 체크 및 타입 변경, 강체 충돌
-  for (let i = 0; i < objects.length; i++) {
-    for (let j = i + 1; j < objects.length; j++) {
-      let d = dist(objects[i].x, objects[i].y, objects[j].x, objects[j].y);
-      let minDist = (objects[i].size + objects[j].size) / 2;
-
-      if (d < minDist) {
-        // 타입이 다르면 교환
-        if (objects[i].type !== objects[j].type) {
-          let temp = objects[i].type;
-          objects[i].type = objects[j].type;
-          objects[j].type = temp;
-
-          // 사각형으로 변한 경우 회전 속성 추가
-          if (objects[i].type === "rect" && objects[i].rotation === undefined) {
-            objects[i].rotation = random(TWO_PI);
-            objects[i].rotationSpeed = random(-0.02, 0.02);
-          }
-          if (objects[j].type === "rect" && objects[j].rotation === undefined) {
-            objects[j].rotation = random(TWO_PI);
-            objects[j].rotationSpeed = random(-0.02, 0.02);
-          }
-        }
-
-        // 강체 충돌 처리
-        let angle = atan2(
-          objects[j].y - objects[i].y,
-          objects[j].x - objects[i].x
-        );
-        let targetX = objects[i].x + cos(angle) * minDist;
-        let targetY = objects[i].y + sin(angle) * minDist;
-
-        let ax = (targetX - objects[j].x) * 0.5;
-        let ay = (targetY - objects[j].y) * 0.5;
-
-        objects[i].vx -= ax;
-        objects[i].vy -= ay;
-        objects[j].vx += ax;
-        objects[j].vy += ay;
-
-        // 겹침 방지
-        objects[i].x -= ax;
-        objects[i].y -= ay;
-        objects[j].x += ax;
-        objects[j].y += ay;
-      }
+  // 충돌 검사: 원-원
+  for (let i = 0; i < circles.length; i++) {
+    for (let j = i + 1; j < circles.length; j++) {
+      circleCircleCollision(circles[i], circles[j]);
     }
   }
 
-  // 오브젝트 업데이트 및 그리기
-  for (let obj of objects) {
-    // 이동
-    obj.x += obj.vx;
-    obj.y += obj.vy;
-
-    // 사각형 회전
-    if (obj.type === "rect" && obj.rotation !== undefined) {
-      obj.rotation += obj.rotationSpeed;
+  // 충돌 검사: 사각형-사각형
+  for (let i = 0; i < squares.length; i++) {
+    for (let j = i + 1; j < squares.length; j++) {
+      squareSquareCollision(squares[i], squares[j]);
     }
+  }
 
-    // 벽 충돌
-    if (obj.x - obj.size / 2 < 0 || obj.x + obj.size / 2 > width) {
-      obj.vx *= -1;
-      obj.x = constrain(obj.x, obj.size / 2, width - obj.size / 2);
-    }
-    if (obj.y - obj.size / 2 < 0 || obj.y + obj.size / 2 > height) {
-      obj.vy *= -1;
-      obj.y = constrain(obj.y, obj.size / 2, height - obj.size / 2);
-    }
+  // 충돌 검사: 원-사각형
+  circles.forEach((c) => {
+    squares.forEach((s) => {
+      circleSquareCollision(c, s);
+    });
+  });
 
-    // 그리기
-    fill(255, 200);
-    if (obj.type === "circle") {
-      circle(obj.x, obj.y, obj.size);
+  // 그리기
+  circles.forEach((c) => c.draw());
+  squares.forEach((s) => s.draw());
+}
+
+// ===== 클래스 정의 =====
+class CircleObject {
+  constructor() {
+    this.r = random(10, 15);
+    this.pos = createVector(
+      random(this.r, width - this.r),
+      random(this.r, height - this.r)
+    );
+    this.vel = p5.Vector.random2D().mult(random(1.5, 2.0));
+  }
+
+  update() {
+    this.pos.add(this.vel);
+    this.wallCollision();
+  }
+
+  wallCollision() {
+    if (this.pos.x < this.r || this.pos.x > width - this.r) {
+      this.vel.x *= -1;
+    }
+    if (this.pos.y < this.r || this.pos.y > height - this.r) {
+      this.vel.y *= -1;
+    }
+  }
+
+  draw() {
+    circle(this.pos.x, this.pos.y, this.r * 2);
+  }
+}
+
+class SquareObject {
+  constructor() {
+    this.size = random(30, 50);
+    this.pos = createVector(
+      random(this.size / 2, width - this.size / 2),
+      random(this.size / 2, height - this.size / 2)
+    );
+    this.vel = p5.Vector.random2D().mult(random(0.5, 2));
+  }
+
+  update() {
+    this.pos.add(this.vel);
+    this.wallCollision();
+  }
+
+  wallCollision() {
+    let h = this.size / 2;
+    if (this.pos.x < h || this.pos.x > width - h) {
+      this.vel.x *= -1;
+    }
+    if (this.pos.y < h || this.pos.y > height - h) {
+      this.vel.y *= -1;
+    }
+  }
+
+  draw() {
+    rectMode(CENTER);
+    square(this.pos.x, this.pos.y, this.size);
+  }
+}
+
+// ===== 충돌 함수 =====
+
+// 원-원 충돌
+function circleCircleCollision(a, b) {
+  let diff = p5.Vector.sub(b.pos, a.pos);
+  let d = diff.mag();
+  let minDist = a.r + b.r;
+
+  if (d < minDist && d !== 0) {
+    // 1. 위치 보정
+    let penetration = minDist - d;
+    let normal = diff.copy().normalize();
+
+    a.pos.add(p5.Vector.mult(normal, -penetration / 2));
+    b.pos.add(p5.Vector.mult(normal, penetration / 2));
+
+    // 2. 속도 반사 (단순 탄성)
+    let temp = a.vel.copy();
+    a.vel = b.vel.copy();
+    b.vel = temp;
+  }
+}
+
+// 사각형-사각형 충돌 (AABB)
+function squareSquareCollision(a, b) {
+  let ha = a.size / 2;
+  let hb = b.size / 2;
+
+  let dx = b.pos.x - a.pos.x;
+  let dy = b.pos.y - a.pos.y;
+
+  let overlapX = ha + hb - abs(dx);
+  let overlapY = ha + hb - abs(dy);
+
+  if (overlapX > 0 && overlapY > 0) {
+    if (overlapX < overlapY) {
+      let sx = Math.sign(dx);
+      a.pos.x -= (overlapX / 2) * sx;
+      b.pos.x += (overlapX / 2) * sx;
+
+      a.vel.x *= -1;
+      b.vel.x *= -1;
     } else {
-      push();
-      translate(obj.x, obj.y);
-      rotate(obj.rotation || 0);
-      rectMode(CENTER);
-      rect(0, 0, obj.size, obj.size);
-      pop();
+      let sy = Math.sign(dy);
+      a.pos.y -= (overlapY / 2) * sy;
+      b.pos.y += (overlapY / 2) * sy;
+
+      a.vel.y *= -1;
+      b.vel.y *= -1;
     }
   }
 }
 
-function drawRadialGradient(x, y, radius) {
-  for (let r = radius; r > 0; r -= 3) {
-    let inter = map(r, 0, radius, 0, 1);
-    let c = lerpColor(color(128, 0, 128), color(0, 0, 0), inter);
-    fill(c);
-    noStroke();
-    ellipse(x, y, r * 2, r * 2);
+// 원-사각형 충돌
+function circleSquareCollision(c, s) {
+  let h = s.size / 2;
+
+  let closestX = constrain(c.pos.x, s.pos.x - h, s.pos.x + h);
+  let closestY = constrain(c.pos.y, s.pos.y - h, s.pos.y + h);
+
+  let diff = createVector(c.pos.x - closestX, c.pos.y - closestY);
+
+  let d = diff.mag();
+
+  if (d < c.r && d !== 0) {
+    let penetration = c.r - d;
+    let normal = diff.copy().normalize();
+
+    // 위치 보정
+    c.pos.add(p5.Vector.mult(normal, penetration));
+    s.pos.add(p5.Vector.mult(normal, -penetration * 0.5));
+
+    // 속도 반응
+    let dot = c.vel.dot(normal);
+    c.vel.sub(p5.Vector.mult(normal, 2 * dot));
   }
 }
