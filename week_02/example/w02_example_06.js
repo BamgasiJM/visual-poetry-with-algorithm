@@ -1,100 +1,93 @@
 // w02_example_06.js
 
-let smoothPoints = [];
-let eyes = [];
-
 function setup() {
-  createCanvas(1080, 1080);
-
-  const numPoints = 30;
-  const points = [];
-
-  // Perlin noise로 불규칙한 원형 점들 생성
-  for (let i = 0; i < numPoints; i++) {
-    const theta = (i * TWO_PI) / numPoints;
-    const noiseVal = noise(i * 4.0, 0);
-    const r = 180 + noiseVal * 400;
-    points.push(createVector(cos(theta) * r, sin(theta) * r));
-  }
-
-  // Catmull-Rom 스플라인으로 부드럽게 보간
-  smoothPoints = catmullRomSpline(points, 10);
-
-  // 눈 2개 생성 (중심 언저리 랜덤 위치)
-  for (let i = 0; i < 2; i++) {
-    const angle = random(TWO_PI);
-    const distance = random(70, 100);
-    const eyeSize = random(30, 60);
-
-    eyes.push({
-      x: cos(angle) * distance,
-      y: sin(angle) * distance,
-      size: eyeSize,
-    });
-  }
-
+  createCanvas(1920, 1080);
+  background(25, 190, 180);
   noLoop();
+
+  noStroke();
+  colorMode(HSB, 360, 100, 100, 100);
+
+  let count = 240;
+
+  for (let i = 0; i < count; i++) {
+    let x = random(width);
+    let y = random(height);
+    let size = random(30, 140);
+    let emotion = int(random(5));
+
+    push();
+    translate(x, y);
+    rotate(random(TWO_PI));
+
+    if (emotion === 0) {
+      // 평온한 마음 – 부드러운 원
+      fill(200, 10, 90, 150);
+      ellipse(0, 0, size, size);
+    } else if (emotion === 1) {
+      // 화난 마음 – 뾰족한 별
+      fill(10, 80, 90, 90);
+      drawStar(0, 0, size * 0.3, size * 0.7, 8);
+    } else if (emotion === 2) {
+      // 불안한 마음 – 찌그러진 원
+      fill(40, 70, 90, 80);
+      drawDistortedCircle(size);
+    } else if (emotion === 3) {
+      // 집착하는 마음 – 반복된 사각 구조
+      fill(280, 50, 85, 50);
+      drawStackedRects(size);
+    } else {
+      // 무너지는 마음 – 파편 삼각형
+      fill(120, 60, 85, 80);
+      drawFragments(size);
+    }
+
+    pop();
+  }
 }
 
-function catmullRomSpline(points, segments) {
-  const smoothed = [];
-  const n = points.length;
+/* ---------- 도형 함수 ---------- */
 
-  for (let i = 0; i < n; i++) {
-    // 순환형 인덱싱 (닫힌 도형)
-    const p0 = points[(i + n - 1) % n];
-    const p1 = points[i];
-    const p2 = points[(i + 1) % n];
-    const p3 = points[(i + 2) % n];
-
-    for (let j = 0; j < segments; j++) {
-      const t = j / segments;
-      const t2 = t * t;
-      const t3 = t2 * t;
-
-      const x =
-        0.5 *
-        (2 * p1.x +
-          (-p0.x + p2.x) * t +
-          (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
-          (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3);
-
-      const y =
-        0.5 *
-        (2 * p1.y +
-          (-p0.y + p2.y) * t +
-          (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
-          (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3);
-
-      smoothed.push(createVector(x, y));
-    }
+function drawStar(x, y, inner, outer, points) {
+  beginShape();
+  for (let i = 0; i < points * 2; i++) {
+    let angle = (PI / points) * i;
+    let r = i % 2 === 0 ? outer : inner;
+    vertex(cos(angle) * r, sin(angle) * r);
   }
+  endShape(CLOSE);
+}
 
-  return smoothed;
+function drawDistortedCircle(s) {
+  beginShape();
+  let steps = 24;
+  for (let i = 0; i < steps; i++) {
+    let angle = map(i, 0, steps, 0, TWO_PI);
+    let r = s / 2 + random(-s * 0.2, s * 0.2);
+    vertex(cos(angle) * r, sin(angle) * r);
+  }
+  endShape(CLOSE);
+}
+
+function drawStackedRects(s) {
+  rectMode(CENTER);
+  for (let i = 0; i < 5; i++) {
+    let scale = map(i, 0, 4, 1, 0.3);
+    rect(0, 0, s * scale, s * scale);
+  }
+}
+
+function drawFragments(s) {
+  let pieces = int(random(5, 9));
+  for (let i = 0; i < pieces; i++) {
+    beginShape();
+    for (let j = 0; j < 3; j++) {
+      vertex(random(-s / 2, s / 2), random(-s / 2, s / 2));
+    }
+    endShape(CLOSE);
+  }
 }
 
 function draw() {
-  background(0);
-
-  translate(width / 2, height / 2);
-
-  // 닫힌 곡선 그리기
-  fill(50, 210, 200);
-  noStroke();
-
-  beginShape();
-  for (let p of smoothPoints) {
-    vertex(p.x, p.y);
-  }
-  // 시작점과 끝점을 같게 하여 깔끔한 연결
-  if (smoothPoints.length > 0) {
-    vertex(smoothPoints[0].x, smoothPoints[0].y);
-  }
-  endShape();
-
-  // 눈 그리기
-  fill(0);
-  for (let eye of eyes) {
-    ellipse(eye.x, eye.y, eye.size, eye.size);
-  }
+  // 정적 이미지
 }

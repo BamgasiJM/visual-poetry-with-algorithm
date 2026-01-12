@@ -3,9 +3,9 @@
 // setup() : 캔버스를 처음 만들 때 한 번 실행됩니다.
 function setup() {
   createCanvas(1000, 1000);   // 캔버스 가로 세로 크기
-  background(0);              // 배경 검은색
+  background(30);              // 배경 검은색
   noStroke();                 // 테두리 없음
-  fill(255);                  // 도형 색상 하얀색
+  fill(220);                  // 도형 색상 하얀색
 }
 
 // draw() : 그림을 그리는 부분

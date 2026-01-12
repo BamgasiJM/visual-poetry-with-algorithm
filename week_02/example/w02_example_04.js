@@ -1,48 +1,70 @@
 // w02_example_04.js
 
+// Motif 클래스 정의
+class Motif {
+  constructor(r) {
+    this.a = r; // 내부 반지름
+    this.b = r * (sin(135) / sin(15)); // 외부 반지름
+  }
+
+  display() {
+    const angle = 30;
+    beginShape();
+    for (let i = 0; i < 12; i++) {
+      let sx, sy;
+      if (i % 2 === 0) {
+        sx = cos(i * angle) * this.b;
+        sy = sin(i * angle) * this.b;
+      } else {
+        sx = cos(i * angle) * this.a;
+        sy = sin(i * angle) * this.a;
+      }
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
+  }
+}
+
+let a = 24; // 내부 반지름, 스케일 팩터
+let b; // 외부 반지름
+let dx, dy;
+let nRow;
+let nCol;
+
 function setup() {
   createCanvas(800, 800);
-  background(5);
-
-  stroke(50, 210, 200);
+  angleMode(DEGREES);
   noFill();
-  rectMode(CENTER);
-  ellipseMode(CENTER);
-
-  // 1. 중앙에 중첩된 원 구조
-  translate(width / 2, height / 2);
-
-  for (let r = 50; r <= 350; r += 25) {
-    ellipse(0, 0, r * 2, r * 2);
-  }
-
-  // 2. 방사형 선 구조
-  for (let a = 0; a < TWO_PI; a += PI / 24) {
-    let x = cos(a) * 360;
-    let y = sin(a) * 360;
-    line(0, 0, x, y);
-  }
-
-  resetMatrix();
-
-  // 3. 격자 기반 사각형 변주
-  let margin = 80;
-  let step = 80;
-
-  for (let y = margin; y <= height - margin; y += step) {
-    for (let x = margin; x <= width - margin; x += step) {
-      let s = random(10, 50);
-      push();
-      translate(x, y);
-      rotate(int(random(4)) * HALF_PI);
-      fill(50, 210, 200);
-      rect(0, 0, s, s);
-      pop();
-    }
-  }
+  stroke(30);
+  strokeWeight(5);
   noLoop();
+
+  b = a * (sin(135) / sin(15));
+  dx = 2 * b;
+  dy = 2 * b * cos(30);
+
+  // 행과 열 개수 계산
+  nRow = ceil(height / dy) + 1;
+  nCol = ceil(width / dx) + 1;
 }
 
 function draw() {
-  // 정적 이미지이므로 사용하지 않습니다.
+  background(220);
+
+  const motif = new Motif(a);
+
+  for (let r = 0; r < nRow; r++) {
+    for (let c = 0; c < nCol; c++) {
+      push();
+      if (r % 2 === 0) {
+        // 짝수 행: 0, 2, 4, 6
+        translate(c * dx, r * dy);
+      } else {
+        // 홀수 행: 1, 3, 5, 7
+        translate(c * dx + b, r * dy);
+      }
+      motif.display();
+      pop();
+    }
+  }
 }

@@ -1,70 +1,100 @@
 // w02_example_05.js
 
-// Motif 클래스 정의
-class Motif {
-  constructor(r) {
-    this.a = r; // 내부 반지름
-    this.b = r * (sin(135) / sin(15)); // 외부 반지름
-  }
-
-  display() {
-    const angle = 30;
-    beginShape();
-    for (let i = 0; i < 12; i++) {
-      let sx, sy;
-      if (i % 2 === 0) {
-        sx = cos(i * angle) * this.b;
-        sy = sin(i * angle) * this.b;
-      } else {
-        sx = cos(i * angle) * this.a;
-        sy = sin(i * angle) * this.a;
-      }
-      vertex(sx, sy);
-    }
-    endShape(CLOSE);
-  }
-}
-
-let a = 24; // 내부 반지름, 스케일 팩터
-let b; // 외부 반지름
-let dx, dy;
-let nRow;
-let nCol;
+let smoothPoints = [];
+let eyes = [];
 
 function setup() {
-  createCanvas(800, 800);
-  angleMode(DEGREES);
-  noFill();
-  stroke(50, 210, 200);
-  strokeWeight(2);
+  createCanvas(1080, 1080);
+
+  const numPoints = 30;
+  const points = [];
+
+  // Perlin noise로 불규칙한 원형 점들 생성
+  for (let i = 0; i < numPoints; i++) {
+    const theta = (i * TWO_PI) / numPoints;
+    const noiseVal = noise(i * 4.0, 0);
+    const r = 180 + noiseVal * 400;
+    points.push(createVector(cos(theta) * r, sin(theta) * r));
+  }
+
+  // Catmull-Rom 스플라인으로 부드럽게 보간
+  smoothPoints = catmullRomSpline(points, 10);
+
+  // 눈 2개 생성 (중심 언저리 랜덤 위치)
+  for (let i = 0; i < 2; i++) {
+    const angle = random(TWO_PI);
+    const distance = random(70, 100);
+    const eyeSize = random(30, 60);
+
+    eyes.push({
+      x: cos(angle) * distance,
+      y: sin(angle) * distance,
+      size: eyeSize,
+    });
+  }
+
   noLoop();
+}
 
-  b = a * (sin(135) / sin(15));
-  dx = 2 * b;
-  dy = 2 * b * cos(30);
+function catmullRomSpline(points, segments) {
+  const smoothed = [];
+  const n = points.length;
 
-  // 행과 열 개수 계산
-  nRow = ceil(height / dy) + 1;
-  nCol = ceil(width / dx) + 1;
+  for (let i = 0; i < n; i++) {
+    // 순환형 인덱싱 (닫힌 도형)
+    const p0 = points[(i + n - 1) % n];
+    const p1 = points[i];
+    const p2 = points[(i + 1) % n];
+    const p3 = points[(i + 2) % n];
+
+    for (let j = 0; j < segments; j++) {
+      const t = j / segments;
+      const t2 = t * t;
+      const t3 = t2 * t;
+
+      const x =
+        0.5 *
+        (2 * p1.x +
+          (-p0.x + p2.x) * t +
+          (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
+          (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3);
+
+      const y =
+        0.5 *
+        (2 * p1.y +
+          (-p0.y + p2.y) * t +
+          (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
+          (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3);
+
+      smoothed.push(createVector(x, y));
+    }
+  }
+
+  return smoothed;
 }
 
 function draw() {
   background(0);
 
-  const motif = new Motif(a);
+  translate(width / 2, height / 2);
 
-  for (let r = 0; r < nRow; r++) {
-    for (let c = 0; c < nCol; c++) {
-      push();
-      if (r % 2 === 0) {
-        // 짝수 행: 0, 2, 4, 6
-        translate(c * dx, r * dy);
-      } else {
-        // 홀수 행: 1, 3, 5, 7
-        translate(c * dx + b, r * dy);
-      }
-      motif.display();
-      pop();
-    }
+  // 닫힌 곡선 그리기
+  fill(50, 210, 200);
+  noStroke();
+
+  beginShape();
+  for (let p of smoothPoints) {
+    vertex(p.x, p.y);
+  }
+  // 시작점과 끝점을 같게 하여 깔끔한 연결
+  if (smoothPoints.length > 0) {
+    vertex(smoothPoints[0].x, smoothPoints[0].y);
+  }
+  endShape();
+
+  // 눈 그리기
+  fill(0);
+  for (let eye of eyes) {
+    ellipse(eye.x, eye.y, eye.size, eye.size);
   }
 }
