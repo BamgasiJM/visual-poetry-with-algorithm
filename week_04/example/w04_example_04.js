@@ -1,86 +1,92 @@
-// w04_example_04.js
+// w03_example_04.js
 
-// ***** 전역 변수 설정 (Variables) ***** //
-// 캔버스 크기를 정의합니다.
-const CANVAS_SIZE = 600;
+let numConcentric = 20;
+let numRays = 60;
+let maxRadius;
+let rotationAngle = 0;
+let rayData = []; // 각 선의 정보를 저장할 배열
 
-// 동심원을 구성할 원의 개수입니다.
-const NUM_CIRCLES = 40;
-
-// 중심이 왕복하는 속도를 조절하는 상수입니다.
-const SPEED_CENTER = 0.002;
-
-// 동심원들의 크기가 맥동하는 속도를 조절하는 상수입니다.
-const SPEED_PULSE = 0.03;
-
-// ***** setup() 함수: 프로그램 시작 시 한 번 실행 ***** //
 function setup() {
-  // 600x600 크기의 캔버스를 생성합니다.
-  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
-  // 색상 모드를 HSB(색조, 채도, 명도)로 설정하여 화려한 색상을 쉽게 만듭니다.
-  // 최대 값: H(360), S(100), B(100), Alpha(100)
-  colorMode(HSB, 360, 100, 100, 100);
-  // 드로잉 속도를 60FPS로 설정하여 부드러운 애니메이션을 만듭니다.
-  frameRate(60);
+  createCanvas(1080, 1080);
+  maxRadius = width * 0.45;
+
+  // 각 선의 데이터 미리 생성
+  for (let i = 0; i < numRays; i++) {
+    let baseAngle = map(i, 0, numRays, 0, TWO_PI);
+    let len = random(30, maxRadius);
+
+    // 이 선 위에 그려질 원들의 정보
+    let circles = [];
+    let steps = int(random(3, 8));
+    for (let j = 1; j <= steps; j++) {
+      let t = j / (steps + 1);
+      let distance = len * t; // 중심으로부터의 거리
+
+      // 중심에서 30px 이내면 제외
+      if (distance < 30) continue;
+
+      circles.push({
+        distance: distance,
+        size: random(2, 8),
+        color:
+          random(100) > 85
+            ? color(220, 180, 80, 200)
+            : color(240, 240, 240, 180),
+      });
+    }
+
+    rayData.push({
+      baseAngle: baseAngle,
+      length: len,
+      circles: circles,
+    });
+  }
 }
 
-// ***** draw() 함수: 프레임마다 반복 실행 ***** //
 function draw() {
-  // 배경을 어두운 색으로 설정하여 화려한 원을 돋보이게 합니다.
-  background(0);
+  background(40, 30, 40);
 
-  // 1. 중심 X 좌표 왕복 운동 계산
-
-  // frameCount(시간)를 이용하여 -1과 1 사이를 반복하는 값을 얻습니다.
-  // map() 함수를 사용하여 이 값을 캔버스 중앙을 기준으로 왼쪽 끝에서 오른쪽 끝(CANVAS_SIZE/4 ~ 3*CANVAS_SIZE/4)까지 왕복하도록 매핑합니다.
-  const centerX = map(
-    sin(frameCount * SPEED_CENTER * TWO_PI), // sin() 값은 -1.0 ~ 1.0
-    -1,
-    1,
-    CANVAS_SIZE * 0.25, // 최소 x 위치 (왼쪽 1/4 지점)
-    CANVAS_SIZE * 0.75 // 최대 x 위치 (오른쪽 3/4 지점)
-  );
-
-  // 중심 Y 좌표는 항상 캔버스 중앙에 고정합니다.
-  const centerY = CANVAS_SIZE / 2;
-
-  // 원 그리기 설정: 채우기 색상(fill)은 없애고, 테두리(stroke)만 얇게 남깁니다.
+  // 동심원 그리기
   noFill();
-  // 선의 굵기를 얇게 설정합니다.
-  strokeWeight(1);
+  stroke(100, 90, 100, 180);
+  strokeWeight(0.5);
+  for (let i = 1; i <= numConcentric; i++) {
+    let r = map(i, 1, numConcentric, 20, maxRadius);
+    circle(width / 2, height / 2, r * 2);
+  }
 
-  // 2. 동심원 반복문: NUM_CIRCLES 수만큼 원을 그립니다.
-  // i는 0부터 NUM_CIRCLES - 1까지 증가합니다. (가장 안쪽 원부터 바깥쪽 원까지)
-  for (let i = 0; i < NUM_CIRCLES; i++) {
-    // **색상 변화 계산**
+  // 중심부 강조
+  noFill();
+  stroke(255, 255, 255, 100);
+  strokeWeight(1.5);
+  circle(width / 2, height / 2, 60);
 
-    // i(원의 인덱스)를 이용해 0부터 360까지 색조(Hue) 값을 매핑하고,
-    // frameCount(시간)를 더해 시간이 지남에 따라 색상이 계속 변화하도록 합니다 (화려함).
-    let hueValue = (map(i, 0, NUM_CIRCLES - 1, 0, 360) + frameCount * 2) % 360;
+  // 회전 각도 업데이트
+  rotationAngle = (millis() * 0.05) / 1000;
 
-    // 원의 색상을 설정합니다. (색조, 채도, 명도, 불투명도)
-    stroke(hueValue, 90, 95, 100);
+  let cx = width / 2;
+  let cy = height / 2;
 
-    // **반지름(r) 맥동 계산**
+  // 저장된 데이터로 선과 원 그리기
+  for (let ray of rayData) {
+    let angle = ray.baseAngle + rotationAngle;
 
-    // 원의 기본 반지름: i(인덱스)에 비례하여 바깥으로 커집니다.
-    const baseRadius = i * 10; // 인접한 원과의 간격은 10픽셀입니다.
+    // 선 끝점 계산
+    let x2 = cx + cos(angle) * ray.length;
+    let y2 = cy + sin(angle) * ray.length;
 
-    // **맥동 애니메이션 요소**:
-    // i(위치 인덱스)와 frameCount(시간)를 결합하여 파동 효과를 만듭니다.
-    const pulseInput = i * 0.2 + frameCount * SPEED_PULSE;
+    // 선 그리기
+    stroke(200, 200, 220, 150);
+    line(cx, cy, x2, y2);
 
-    // sin() 함수의 결과(-1~1)를 이용하여 반지름 변화량(offset)을 계산합니다.
-    // baseRadius * 0.2: 바깥쪽 원일수록 변화 폭이 커지게 설정합니다.
-    let radiusOffset = sin(pulseInput) * (baseRadius * 0.2);
+    // 원들 그리기
+    noStroke();
+    for (let c of ray.circles) {
+      let px = cx + cos(angle) * c.distance;
+      let py = cy + sin(angle) * c.distance;
 
-    // 최종 반지름: 기본 반지름에 맥동 변화량을 더합니다.
-    const finalRadius = baseRadius + radiusOffset;
-
-    // 3. 원 그리기 (Draw)
-
-    // 계산된 중심점과 최종 반지름으로 원을 그립니다.
-    // p5.js의 circle(x, y, d) 함수는 지름(d)을 인수로 받습니다.
-    circle(centerX, centerY, finalRadius * 2);
-  } // 동심원 반복문 종료
+      fill(c.color);
+      circle(px, py, c.size);
+    }
+  }
 }
