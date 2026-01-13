@@ -1,6 +1,6 @@
 // w14_example_05.js
 
-const CANVAS_SIZE = 1000;
+const CANVAS_SIZE = 1080;
 const AGENT_COUNT = 2000;
 const TARGET_DENSITY = 1.2; // 1px당 타겟 수
 
@@ -59,6 +59,13 @@ function setup() {
 
 function draw() {
   background(0, 30);
+
+  fill(180, 50, 80);
+  noStroke();
+
+  textSize(18);
+  textAlign(CENTER, CENTER);
+  text("마우스를 드래그해서 자유롭게 선을 그려보세요.", width / 2, 1030);
 
   // 사용자 궤적 (서서히 사라짐)
   if (rawPath.length > 1 && lineAlpha > 0) {
