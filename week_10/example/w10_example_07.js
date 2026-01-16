@@ -1,3 +1,5 @@
+// w10_example_07.js
+
 let inc = 0.1;
 let scl = 10;
 let cols, rows;

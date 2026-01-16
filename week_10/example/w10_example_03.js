@@ -1,3 +1,5 @@
+// w10_example_03.js
+
 // 점들을 저장할 배열
 let points = [];
 // 생성할 점의 개수
@@ -6,7 +8,7 @@ const POINT_COUNT = 5200;
 function setup() {
   createCanvas(500, 500);
   background(10); // 어두운 배경
-  stroke(255); // 흰색 점
+  stroke(255);    // 흰색 점
 
   // 점 초기화
   for (let i = 0; i < POINT_COUNT; i++) {

@@ -1,4 +1,4 @@
-// w09_example_01.js
+// w09_example_04.js
 
 function setup() {
   createCanvas(1000, 1000);

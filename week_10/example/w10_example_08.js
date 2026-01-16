@@ -1,10 +1,12 @@
+// w10_example_08.js
+
 let particles = [];
 const PARTICLE_COUNT = 6000;
 const NOISE_SCALE = 0.005;
-const VORTEX_RADIUS = 120; // 소용돌이 반경
-const SAFE_RADIUS = 40; // 마우스 주변 파티클 금지 구역 반경
-let vortexStrength = 0; // 소용돌이 세기 (클릭 시 변화)
-let isExpanding = false; // 퍼져나가는 상태
+const VORTEX_RADIUS = 120;  // 소용돌이 반경
+const SAFE_RADIUS = 40;     // 마우스 주변 파티클 금지 구역 반경
+let vortexStrength = 0;     // 소용돌이 세기 (클릭 시 변화)
+let isExpanding = false;    // 퍼져나가는 상태
 
 function setup() {
   createCanvas(1000, 600);

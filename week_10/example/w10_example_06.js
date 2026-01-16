@@ -1,3 +1,5 @@
+// w10_example_06.js
+
 let points = [];
 
 function setup() {
