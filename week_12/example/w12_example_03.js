@@ -1,3 +1,5 @@
+// w12_example_03.js
+
 let movers = [];
 
 function setup() {

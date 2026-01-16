@@ -1,9 +1,11 @@
+// w12_example_02.js
+
 let movers = [];
 const numMovers = 230;
 let isRepulsionMode = false;
 
 function setup() {
-  createCanvas(1200, 900);
+  createCanvas(1000, 1000);
 
   for (let i = 0; i < numMovers; i++) {
     movers.push(new Mover(random(width), random(height)));
@@ -27,7 +29,7 @@ function draw() {
         dir.mult(-1);
       }
 
-      let strength = (100 * mover.mass) / (d * d);
+      let strength = (250 * mover.mass) / (d * d);
       dir.mult(strength);
       mover.applyForce(dir);
     }
