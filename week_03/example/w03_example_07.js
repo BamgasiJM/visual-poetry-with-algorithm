@@ -1,14 +1,14 @@
-// w03_example_05.js
+// w03_example_07.js
 
 // *** 마우스 위치에 반응하여 크기와 색상이 변하는 그리드 원 *** //
 
 // --- 전역 변수 설정 (Global Variables) ---
 
-let canvasW = 1920; // 캔버스 폭
+let canvasW = 1080; // 캔버스 폭
 let canvasH = 1080; // 캔버스 높이
 let defaultR = 5; // 원의 기본 반지름 (R = Radius)
 let spacing = 40; // 그리드 간격 (원 지름의 2배)
-let hoverDistance = 180; // 마우스 반응 거리 (픽셀)
+let hoverDistance = 250; // 마우스 반응 거리 (픽셀)
 
 // --- setup() 함수: 초기 설정 ---
 function setup() {
@@ -65,7 +65,7 @@ function draw() {
 
         // Hue(색조)는 시간에 따라 빠르게 변하도록 합니다.
         // frameCount는 프로그램이 실행된 프레임 수이며, % 360으로 0~359 사이의 값을 반복합니다.
-        let dynamicHue = (frameCount * 5) % 360; // * 5는 변화 속도를 빠르게 함
+        let dynamicHue = (frameCount * 2) % 360; // * n으로 속도 변경
 
         // 최종 색상 설정: 동적인 색상
         fill(dynamicHue, currentSaturation, currentBrightness, 100);
@@ -84,9 +84,3 @@ function draw() {
     }
   }
 }
-
-// --- windowResized() 함수: 창 크기가 변경될 때 실행됩니다. ---
-// 지금은 캔버스 크기(1920x1080)를 고정했으므로 필요하지 않습니다.
-// function windowResized() {
-//   // resizeCanvas(canvasW, canvasH);
-// }

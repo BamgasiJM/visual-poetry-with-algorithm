@@ -5,21 +5,21 @@
 // ==========================================
 
 // 1. 기본 설정
-const POINT_COUNT = 6000;        // 파티클 개수 (성능에 따라 조절: 4000 ~ 10000)
-const BG_ALPHA = 30;             // 배경의 잔상 농도 (낮을수록 긴 잔상, 0~255)
+const POINT_COUNT = 6000; // 파티클 개수 (성능에 따라 조절: 4000 ~ 10000)
+const BG_ALPHA = 30;     // 배경의 잔상 농도 (낮을수록 긴 잔상, 0~255)
 
 // 2. 크기 및 노이즈 설정
-let BASE_RADIUS_RATIO = 0.4;     // 화면 대비 파티클 분포 반지름 비율 (0.1 ~ 0.5)
-let NOISE_SCALE = 0.01;          // 노이즈의 텍스처 크기 (작을수록 부드러움)
-let NOISE_STRENGTH = 300;        // 노이즈가 위치에 미치는 영향력 (픽셀 단위)
-let TIME_SPEED = 0.003;          // 노이즈 변화 속도
+let BASE_RADIUS_RATIO = 0.4; // 화면 대비 파티클 분포 반지름 비율 (0.1 ~ 0.5)
+let NOISE_SCALE = 0.01;      // 노이즈의 텍스처 크기 (작을수록 부드러움)
+let NOISE_STRENGTH = 300;    // 노이즈가 위치에 미치는 영향력 (픽셀 단위)
+let TIME_SPEED = 0.003;      // 노이즈 변화 속도
 
 // 3. 움직임 설정
-let ROTATION_SPEED_MIN = 0.006;  // 최소 회전 속도
-let ROTATION_SPEED_MAX = 0.012;  // 최대 회전 속도
-let EXPLOSION_FORCE_MIN = 20;    // 폭발 시 최소 힘
-let EXPLOSION_FORCE_MAX = 35;    // 폭발 시 최대 힘
-let DRAG = 0.91;                  // 폭발 후 감속 비율 (1에 가까울수록 미끄러짐)
+let ROTATION_SPEED_MIN = 0.006; // 최소 회전 속도
+let ROTATION_SPEED_MAX = 0.012; // 최대 회전 속도
+let EXPLOSION_FORCE_MIN = 20;   // 폭발 시 최소 힘
+let EXPLOSION_FORCE_MAX = 35;   // 폭발 시 최대 힘
+let DRAG = 0.91; // 폭발 후 감속 비율 (1에 가까울수록 미끄러짐)
 
 // 4. 색상 설정 (RGB)
 // 중심부/저속일 때 색상 (Deep Blue-Purple)
@@ -30,7 +30,7 @@ const COLOR_OUTER = [100, 255, 200];
 // ==========================================
 
 let points = [];
-let state = "normal";  // 'normal' | 'explode'
+let state = "normal"; // 'normal' | 'explode'
 let resetFrame = 0;
 let cCore, cOuter;
 
@@ -85,9 +85,9 @@ function initParticles() {
 // ==========================================
 class Particle {
   constructor(r, angle) {
-    this.baseR = r;      // 원래 궤도 반지름
-    this.r = r;          // 현재 반지름
-    this.angle = angle;  // 현재 각도
+    this.baseR = r;     // 원래 궤도 반지름
+    this.r = r;         // 현재 반지름
+    this.angle = angle; // 현재 각도
 
     // 개별 속성 랜덤화
     this.angSpeed = random(ROTATION_SPEED_MIN, ROTATION_SPEED_MAX);
@@ -152,20 +152,12 @@ class Particle {
 // [이벤트] 사용자 입력 처리
 // ==========================================
 
-function keyPressed() {
-  if (key === " ") {
-    state = "explode";
-    resetFrame = frameCount;
+function mousePressed() {
+  state = "explode";
+  resetFrame = frameCount;
 
-    // 모든 파티클에 폭발 힘 전달
-    for (let p of points) {
-      p.explode();
-    }
+  // 모든 파티클에 폭발 힘 전달
+  for (let p of points) {
+    p.explode();
   }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  // 화면 크기가 바뀌면 파티클 위치 재계산
-  initParticles();
 }

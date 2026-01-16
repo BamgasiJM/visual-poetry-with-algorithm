@@ -1,35 +1,37 @@
 // w02_example_04.js
 
-// Motif 클래스 정의
-class Motif {
-  constructor(r) {
-    this.a = r; // 내부 반지름
-    this.b = r * (sin(135) / sin(15)); // 외부 반지름
+class Shape {
+  constructor(innerRadius) {
+    this.innerRadius = innerRadius;                        // 내부 반지름
+    this.outerRadius = innerRadius * (sin(135) / sin(15)); // 외부 반지름
   }
 
   display() {
-    const angle = 30;
+    const stepAngle = 30;
     beginShape();
-    for (let i = 0; i < 12; i++) {
-      let sx, sy;
-      if (i % 2 === 0) {
-        sx = cos(i * angle) * this.b;
-        sy = sin(i * angle) * this.b;
-      } else {
-        sx = cos(i * angle) * this.a;
-        sy = sin(i * angle) * this.a;
-      }
-      vertex(sx, sy);
+    for (let index = 0; index < 12; index++) {
+      let vertexX, vertexY;
+
+      const currentRadius =
+        index % 2 === 0 ? this.outerRadius : this.innerRadius;
+
+      vertexX = cos(index * stepAngle) * currentRadius;
+      vertexY = sin(index * stepAngle) * currentRadius;
+
+      vertex(vertexX, vertexY);
     }
     endShape(CLOSE);
   }
 }
 
-let a = 24; // 내부 반지름, 스케일 팩터
-let b; // 외부 반지름
-let dx, dy;
-let nRow;
-let nCol;
+let innerRadius = 24; // 내부 반지름, 스케일 팩터
+let outerRadius;      // 외부 반지름
+
+let columnSpacing;    // 가로 간격
+let rowSpacing;       // 세로 간격
+
+let rowCount;         // 행 개수
+let columnCount;      // 열 개수
 
 function setup() {
   createCanvas(800, 800);
@@ -39,31 +41,37 @@ function setup() {
   strokeWeight(5);
   noLoop();
 
-  b = a * (sin(135) / sin(15));
-  dx = 2 * b;
-  dy = 2 * b * cos(30);
+  outerRadius = innerRadius * (sin(135) / sin(15));
+
+  columnSpacing = 2 * outerRadius;
+  rowSpacing = 2 * outerRadius * cos(30);
 
   // 행과 열 개수 계산
-  nRow = ceil(height / dy) + 1;
-  nCol = ceil(width / dx) + 1;
+  rowCount = ceil(height / rowSpacing) + 1;
+  columnCount = ceil(width / columnSpacing) + 1;
 }
 
 function draw() {
   background(220);
 
-  const motif = new Motif(a);
+  const shape = new Shape(innerRadius);
 
-  for (let r = 0; r < nRow; r++) {
-    for (let c = 0; c < nCol; c++) {
+  for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+    for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       push();
-      if (r % 2 === 0) {
-        // 짝수 행: 0, 2, 4, 6
-        translate(c * dx, r * dy);
+
+      if (rowIndex % 2 === 0) {
+        // 짝수 행
+        translate(columnIndex * columnSpacing, rowIndex * rowSpacing);
       } else {
-        // 홀수 행: 1, 3, 5, 7
-        translate(c * dx + b, r * dy);
+        // 홀수 행
+        translate(
+          columnIndex * columnSpacing + outerRadius,
+          rowIndex * rowSpacing
+        );
       }
-      motif.display();
+
+      shape.display();
       pop();
     }
   }

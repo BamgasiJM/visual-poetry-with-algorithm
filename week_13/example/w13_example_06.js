@@ -1,3 +1,5 @@
+// w13_example_06.js
+
 let words = [
   "affection", "hug", "care", "touch", "bond", "trust", "warmth",
   "heart", "connection", "embrace", "devotion", "intimacy", "memory",

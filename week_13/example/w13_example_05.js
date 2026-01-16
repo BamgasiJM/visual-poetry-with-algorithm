@@ -1,3 +1,5 @@
+// w13_example_05.js
+
 let words = [
   "connection", "distance", "trust", "silence", "empathy", "conflict",
   "affection", "memory", "absence", "presence", "bond", "fragile",

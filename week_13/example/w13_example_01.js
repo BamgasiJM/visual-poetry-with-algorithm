@@ -1,3 +1,5 @@
+// w13_example_01.js
+
 let cols = 8;
 let rows = 8;
 let cellW, cellH;

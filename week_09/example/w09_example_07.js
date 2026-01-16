@@ -1,10 +1,11 @@
 // w09_example_07.js
 
+const NUM_BOIDS = 1000;
 let flock = [];
 
 function setup() {
-  createCanvas(800, 400);
-  for (let i = 0; i < 250; i++) {
+  createCanvas(800, 800);
+  for (let i = 0; i < NUM_BOIDS; i++) {
     flock.push(new Boid());
   }
 }
@@ -123,7 +124,7 @@ class Boid {
 
   show() {
     strokeWeight(6);
-    stroke(150, 255, 30);
+    stroke(150, 210, 60);
     point(this.pos.x, this.pos.y);
   }
 }
