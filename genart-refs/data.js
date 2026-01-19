@@ -3,7 +3,7 @@ const RESOURCES = [
     id: 1,
     title: "BamgasiJM",
     description:
-      "BamgasiJM이 스터디한 자료를 모아놓은 블로그. p5.js와 nannou, openFrameworks의 자료가 계속 추가됨. Blender의 Python API를 사용한 아트워크도 많이 선보이고 있습니다.",
+      "p5.js와 nannou, openFrameworks의 스터디 자료모음. Blender의 Python API를 사용한 아트워크도 많이 선보이고 있습니다.",
     url: "https://velog.io/@ryoong1125/series",
     imageUrl: "./images/bamgasijm.jpg",
   },
@@ -197,23 +197,23 @@ const RESOURCES = [
     description:
       "Processing을 기반으로 한 초기 제너레이티브 아트의 대표적인 작가. 알고리즘 드로잉과 시스템적 조형을 오랜 기간 탐구해왔습니다.",
     url: "https://www.liaworks.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/lia.jpg",
   },
   {
     id: 26,
-    title: "Mario Klingemann",
+    title: "Gorilla Sun",
     description:
-      "코드 기반 생성 시스템과 인공지능을 결합한 작업으로 유명한 아티스트. 초기에는 Processing 기반의 제너레이티브 드로잉을 다수 제작했습니다.",
-    url: "https://quasimondo.com/",
-    imageUrl: "./images/dummy.jpg",
+      "크리에이티브 코딩의 개념과 예시 작품을 블로그와 튜토리얼로 쉽게 설명해주는 작가.",
+    url: "https://www.gorillasun.de//",
+    imageUrl: "./images/gorillasun.jpg",
   },
   {
     id: 27,
     title: "Julien Gachadoat",
     description:
       "Processing과 p5.js를 활용한 기하학적 패턴과 대규모 플로터 드로잉 작업으로 잘 알려진 제너레이티브 아티스트입니다.",
-    url: "https://www.juliensimshd.com/",
-    imageUrl: "./images/dummy.jpg",
+    url: "https://www.v3ga.net/",
+    imageUrl: "./images/juliengachhhadoat.jpg",
   },
   {
     id: 28,
@@ -221,7 +221,7 @@ const RESOURCES = [
     description:
       "베를린 기반 스튜디오로, Processing, openFrameworks, WebGL을 활용한 데이터 기반 제너레이티브 비주얼 작업을 다수 선보입니다.",
     url: "https://onformative.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/onformative.jpg",
   },
   {
     id: 29,
@@ -229,31 +229,7 @@ const RESOURCES = [
     description:
       "Processing, openFrameworks, 커스텀 툴을 활용한 제너레이티브 및 데이터 시각화 작업을 진행하는 런던 기반 크리에이티브 스튜디오입니다.",
     url: "https://field.io/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 30,
-    title: "Karsten Schmidt (Toxi)",
-    description:
-      "toxiclibs 라이브러리의 제작자. Processing과 openFrameworks 생태계에서 수학적 구조와 시스템 디자인을 연구해온 개발자이자 아티스트입니다.",
-    url: "https://postspectacular.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 31,
-    title: "Paul Prudence",
-    description:
-      "사운드와 제너레이티브 비주얼을 결합한 작업을 진행하는 아티스트. Processing과 커스텀 알고리즘 기반 그래픽을 다룹니다.",
-    url: "https://www.paulprudence.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 32,
-    title: "Marius Watz",
-    description:
-      "Processing과 openFrameworks를 활용한 제너레이티브 아트의 대표 작가 중 한 명. 기하학과 색채 시스템에 기반한 작품을 다수 제작했습니다.",
-    url: "https://mariuswatz.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/field.jpg",
   },
   {
     id: 33,
@@ -261,7 +237,7 @@ const RESOURCES = [
     description:
       "Processing과 JavaScript 기반 제너레이티브 아트 연구자. 알고리즘적 드로잉과 타이포그래피를 중심으로 작업합니다.",
     url: "https://runemadsen.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/rune.jpg",
   },
   {
     id: 34,
@@ -269,7 +245,7 @@ const RESOURCES = [
     description:
       "코드 기반 시각 시스템과 설치 작업을 병행하는 아티스트. Processing과 openFrameworks를 활용한 구조적 애니메이션이 특징입니다.",
     url: "https://www.andreasgysin.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/andreas.jpg",
   },
   {
     id: 35,
@@ -277,31 +253,15 @@ const RESOURCES = [
     description:
       "R과 제너레이티브 시각화로 잘 알려져 있지만, 알고리즘 기반 그래픽 사고를 바탕으로 다양한 코드 아트 작업을 병행합니다.",
     url: "https://www.data-imaginist.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/di.jpg",
   },
   {
     id: 36,
-    title: "Elliot Woods (Kimchi and Chips)",
+    title: "Kimchi and Chips",
     description:
-      "openFrameworks 기반의 대형 설치 작업과 제너레이티브 시스템으로 유명한 아티스트 겸 스튜디오 Kimchi and Chips의 공동 설립자입니다.",
+      "openFrameworks 기반의 대형 설치 작업과 제너레이티브 시스템으로 유명한 스튜디오입니다.",
     url: "https://www.kimchiandchips.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 37,
-    title: "Sougwen Chung",
-    description:
-      "로봇과 함께 그리는 제너레이티브 드로잉 작업으로 잘 알려진 아티스트. Processing 기반 알고리즘 드로잉을 주요 방법론으로 사용합니다.",
-    url: "https://sougwen.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 38,
-    title: "Anders Hoff (Instruments)",
-    description:
-      "Inconvergent와는 별도로 음악과 시각 시스템을 결합한 실험적 프로젝트를 진행하는 사이트. 코드 기반 구조 연구가 중심입니다.",
-    url: "https://instruments.inconvergent.net/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/kimchi.jpg",
   },
   {
     id: 39,
@@ -309,23 +269,24 @@ const RESOURCES = [
     description:
       "GLSL, WebGL, p5.js 기반 시각 시스템을 연구하는 아티스트이자 개발자. 제너레이티브 셰이더 작업이 중심입니다.",
     url: "https://patriciogonzalezvivo.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/vivo.jpg",
   },
   {
     id: 40,
-    title: "Studio Moniker",
+    title: "Mikhail Mansion",
     description:
-      "코드 기반 인터랙티브 설치와 제너레이티브 그래픽을 제작하는 스튜디오. Processing과 WebGL을 혼합한 프로젝트가 다수입니다.",
-    url: "https://studiomoniker.com/",
-    imageUrl: "./images/dummy.jpg",
+      "뉴미디어 아티스트이자 엔지니어. 자연과 사람을 잇는 경험을 공유하고자 인터랙티브 아트워크를 제작하고 있습니다.",
+    url: "https://mikhailmansion.art/",
+    url: "https://observablehq.com/@mmansion",
+    imageUrl: "./images/mansion.jpg",
   },
   {
     id: 41,
     title: "JunKiyoshi",
     description:
-      "Processing과 openFrameworks를 기반으로 한 미니멀한 제너레이티브 조형 작업으로 잘 알려진 일본의 제너레이티브 아티스트입니다.",
+      "openFrameworks를 기반으로 하여 매일 아트워크를 업데이트하고 있는 일본의 제너레이티브 아티스트입니다.",
     url: "https://junkiyoshi.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/kiyoshi.jpg",
   },
   {
     id: 42,
@@ -333,7 +294,7 @@ const RESOURCES = [
     description:
       "Processing과 Java 기반 커스텀 시스템으로 대규모 플로터 드로잉과 제너레이티브 프린트 작업을 제작하는 아티스트입니다.",
     url: "https://larswander.com/art/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/lars.jpg",
   },
   {
     id: 43,
@@ -341,7 +302,7 @@ const RESOURCES = [
     description:
       "코드, 사운드, 시각 시스템을 결합한 작업을 진행하는 아티스트. Processing과 SuperCollider 기반 생성 시스템을 주로 사용합니다.",
     url: "https://selcukartut.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/artut.jpg",
   },
   {
     id: 44,
@@ -349,7 +310,7 @@ const RESOURCES = [
     description:
       "R과 수학적 모델을 기반으로 한 제너레이티브 아트 작업을 진행하는 작가. 데이터 기반 조형 연구가 특징입니다.",
     url: "https://art.djnavarro.net/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/navarro.jpg",
   },
   {
     id: 45,
@@ -357,7 +318,7 @@ const RESOURCES = [
     description:
       "Processing과 WebGL을 활용한 고해상도 제너레이티브 이미지 및 애니메이션 작업을 선보이는 디지털 아티스트입니다.",
     url: "https://www.patrik-huebner.com/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/hubner.jpg",
   },
   {
     id: 46,
@@ -365,7 +326,7 @@ const RESOURCES = [
     description:
       "Processing과 p5.js를 활용해 기하학적 패턴과 색채 시스템을 연구하는 제너레이티브 아티스트입니다.",
     url: "https://www.amacodingart.com/galleries",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/ama.jpg",
   },
   {
     id: 47,
@@ -373,7 +334,7 @@ const RESOURCES = [
     description:
       "WebGL과 커스텀 셰이더 기반으로 대규모 생성 시스템을 구축하는 디지털 아티스트. 알고리즘적 구조와 공간 표현이 특징입니다.",
     url: "https://andreion.com/amazon-conflux",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/ion.jpg",
   },
   {
     id: 48,
@@ -384,44 +345,12 @@ const RESOURCES = [
     imageUrl: "./images/andrew_wulf.jpg",
   },
   {
-    id: 49,
-    title: "Reza Ali",
-    description:
-      "openFrameworks와 Processing을 활용한 복잡한 제너레이티브 시스템과 플로터 드로잉으로 유명한 아티스트입니다.",
-    url: "https://www.syedrezaali.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
     id: 50,
     title: "Joanie Lemercier",
     description:
       "프로젝션 기반 제너레이티브 설치 작업으로 잘 알려진 아티스트. openFrameworks와 커스텀 툴을 활용합니다.",
     url: "https://joanielemercier.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 51,
-    title: "Memo Akten",
-    description:
-      "자연 현상과 알고리즘을 결합한 제너레이티브 아트 작업을 진행하는 작가. Processing과 openFrameworks를 폭넓게 사용합니다.",
-    url: "https://www.memo.tv/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 52,
-    title: "Bridget Riley (Algorithmic Studies)",
-    description:
-      "전통적 옵아트 연구를 알고리즘적으로 재해석한 디지털 프로젝트 아카이브. 생성 규칙 기반 시각 연구에 참고 가치가 높습니다.",
-    url: "https://www.generativehut.com/",
-    imageUrl: "./images/dummy.jpg",
-  },
-  {
-    id: 53,
-    title: "Tyson Ibele",
-    description:
-      "WebGL과 JavaScript 기반 제너레이티브 실험을 다수 공개한 크리에이티브 코더. 실시간 그래픽 실험에 강점이 있습니다.",
-    url: "https://codepen.io/spark",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/lemercier.jpg",
   },
   {
     id: 54,
@@ -429,7 +358,7 @@ const RESOURCES = [
     description:
       "다양한 스타일의 크리에이티브 코더와 아티스트가 만든 아트웍을 올리는 플랫폼.",
     url: "https://neort.io/",
-    imageUrl: "./images/dummy.jpg",
+    imageUrl: "./images/neort.jpg",
   },
   {
     id: 55,

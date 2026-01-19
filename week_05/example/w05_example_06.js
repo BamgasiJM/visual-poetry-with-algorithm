@@ -1,31 +1,68 @@
-// 대각선 라인 애니메이션
+// w05_example_06.js
 
-let frame = 0;
+const CANVAS_SIZE = 800;
+
+const TIME_SPEED = 0.005;
+const RADIUS_SCALE = 3.5;
+
+const RADIAL_DIVISION = 10;
+const ANGLE_DIVISION = 12;
+
+const POSITION_WAVE_SCALE = 0.25;
+
+const DOT_SIZE_BASE = 40;
+const DOT_SIZE_VARIATION = 40;
+
+let PHASE;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+  noStroke();
+  background(0);
 }
 
 function draw() {
-  background(28, 30, 36);
+  background(0, 10);
 
-  const lineCount = 20;
+  translate(CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.5);
 
-  strokeWeight(2);
-  colorMode(HSB, 360, 100, 100);
+  PHASE = frameCount * TIME_SPEED * TAU;
 
-  for (let i = 0; i < lineCount; i++) {
-    const x1 = (i / lineCount) * width;
-    const y1 = 0;
-    const x2 = width - (i / lineCount) * width;
-    const y2 = height;
+  const MAX_RADIUS = CANVAS_SIZE / RADIUS_SCALE;
 
-    const offset = sin(frame * 0.02 + i * 0.5) * 50;
+  for (
+    let radius = MAX_RADIUS * 0.5;
+    radius < MAX_RADIUS;
+    radius += MAX_RADIUS / RADIAL_DIVISION
+  ) {
+    for (
+      let angle = PHASE * 0.25;
+      angle < TAU + PHASE * 0.25;
+      angle += TAU / ANGLE_DIVISION
+    ) {
+      const WAVE = POSITION_WAVE_SCALE * radius * sin(PHASE + radius + angle);
 
-    stroke(180 + i * 10, 100, 60);
-    line(x1 + offset, y1, x2 + offset, y2);
+      const X =
+        radius * cos(angle + radius) +
+        WAVE +
+        POSITION_WAVE_SCALE * radius * sin(PHASE + radius);
+
+      const Y =
+        radius * sin(angle + radius) +
+        WAVE +
+        POSITION_WAVE_SCALE * radius * cos(PHASE + radius);
+
+      fill(
+        127.5 + 127.5 * sin(PHASE + radius + angle),
+        127.5 + 127.5 * cos(PHASE + radius + angle),
+        127.5 - 127.5 * cos(PHASE + radius + angle)
+      );
+
+      const DOT_SIZE =
+        CANVAS_SIZE / DOT_SIZE_BASE +
+        (CANVAS_SIZE / DOT_SIZE_VARIATION) * sin(PHASE + radius + angle);
+
+      ellipse(X, Y, DOT_SIZE);
+    }
   }
-
-  colorMode(RGB, 255);
-  frame++;
 }

@@ -1,4 +1,4 @@
-// 파티클 애니메이션
+// w05_example_03.js
 
 function setup() {
   createCanvas(800, 800);

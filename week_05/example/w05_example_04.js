@@ -1,4 +1,4 @@
-// 나선 애니메이션
+// w05_example_04.js
 
 let frame = 0;
 
@@ -15,7 +15,7 @@ function draw() {
   const spiralTurns = 5;
 
   noFill();
-  strokeWeight(3);
+  strokeWeight(30);
   colorMode(HSB, 360, 100, 100);
 
   for (let i = 0; i < 999; i++) {
