@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마음을 그리는 알고리즘 물감</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: '#050505',
+              surface: '#121212',
+              primary: '#ec4899', // Pink-500
+              primaryGlow: '#be185d', // Pink-700
+              textMain: '#f8fafc',
+              textMuted: '#94a3b8',
+            },
+            fontFamily: {
+              sans: ['Noto Sans KR', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #050505;
+        color: #f8fafc;
+        font-family: 'Noto Sans KR', sans-serif;
+        overflow-x: hidden;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ec4899; 
+      }
+      /* Material Symbols Adjustment */
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="selection:bg-primary selection:text-white">
+    
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-4 sm:px-6">
+      <!-- Left: Logo Section -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#5c2b4f]/60 text-pink-400">
+          <span class="material-symbols-outlined text-[24px]">heart_smile</span>
+        </div>
+        <h2 class="text-lg font-bold text-gray-100 tracking-tight">
+          마음을 그리는 알고리즘 물감
+        </h2>
+      </div>
+
+      <!-- Right: Navigation & Actions -->
+      <div class="flex items-center gap-6 sm:gap-8">
+        <!-- Nav Links -->
+        <nav class="hidden md:flex items-center gap-6 text-[15px]">
+          <a href="../index.html" class="text-white font-bold border-b-2 border-primary/80 pb-0.5">
+            주차별 계획
+          </a>
+          <a 
+            href="https://velog.io/@ryoong1125/%EB%A7%88%EC%9D%8C%EC%9D%84-%EA%B7%B8%EB%A6%AC%EB%8A%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EB%AC%BC%EA%B0%90-%EC%A3%BC%EC%B0%A8%EB%B3%84-%EA%B3%84%ED%9A%8D" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            강의계획서
+          </a>
+          <a 
+            href="../genart-refs/index.html" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-gray-400 hover:text-white transition-colors"
+          >
+            자료실
+          </a>
+        </nav>
+
+        <!-- Divider -->
+        <div class="hidden md:block w-px h-4 bg-white/10"></div>
+
+        <!-- Action Icons -->
+        <div class="flex items-center gap-3">
+          <a 
+            href="https://p5js.org/reference/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-all"
+            title="p5.js Reference"
+          >
+            <span class="material-symbols-outlined text-[22px]">code_blocks</span>
+          </a>
+          <a 
+            href="https://editor.p5js.org/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="flex items-center justify-center w-9 h-9 rounded-full border border-pink-500/30 text-pink-500 font-mono text-sm font-bold hover:bg-pink-500 hover:text-white transition-all"
+          >
+            p5
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-16">
+      <!-- Hero Section -->
+      <div class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        <!-- Background Gradient Blurs -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] pointer-events-none mix-blend-screen animate-pulse"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-900/20 rounded-full blur-[128px] pointer-events-none mix-blend-screen"></div>
+  
+        <div class="container mx-auto px-6 relative z-10 text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
+            <span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+            <span class="text-sm text-gray-300 font-medium">Visual Poetry with Algorithm</span>
+          </div>
+  
+          <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6">
+            마음을 그리는<br class="hidden md:block" /> 알고리즘 물감
+          </h1>
+  
+          <p class="text-lg md:text-xl text-textMuted max-w-2xl mx-auto leading-relaxed mb-10">
+            나의 내면을 알고리즘으로 시각화하는 AI x p5.js 아트워크 창작 가이드.<br />
+            추상적인 감정을 구체적인 코드와 예술로 표현해보세요.
+          </p>
+  
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button 
+              onclick="document.getElementById('timeline').scrollIntoView({ behavior: 'smooth' })"
+              class="px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-pink-600 transition-colors shadow-[0_0_20px_rgba(236,72,153,0.4)] flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined">code</span>
+              창작 과정 시작하기
+            </button>
+          </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-gray-500">
+            <span class="material-symbols-outlined">keyboard_arrow_down</span>
+        </div>
+      </div>
+
+      <!-- Timeline Section -->
+      <section id="timeline" class="py-20 container mx-auto px-6 md:px-12 relative">
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Workflow Process</h2>
+            <div class="w-20 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+            <p class="text-textMuted max-w-2xl mx-auto">
+              AI와 코딩을 결합하여 창의적인 결과물을 만들어내는 6단계 과정을 순서대로 따라가 보세요.
+            </p>
+          </div>
+
+          <!-- Dynamic Steps Container -->
+          <div id="steps-container" class="relative">
+            <!-- Steps will be injected here by JavaScript -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-background py-12 mt-20">
+      <div class="container mx-auto px-6 text-center">
+        <p class="text-2xl font-bold text-white mb-2">
+          Start Your <span class="text-primary">Art Journey</span>
+        </p>
+        <p class="text-textMuted text-sm mb-8">
+          Code is your canvas, AI is your brush.
+        </p>
+        <div class="text-gray-600 text-xs">
+          &copy; <span id="year"></span> AI Creative Lab. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+      // Update Year
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Workflow Data
+      const WORKFLOW_STEPS = [
+        {
+          id: 1,
+          title: "주제 탐구",
+          subtitle: "Topic Exploration",
+          description: "나만의 예술적 표현을 위한 첫 걸음입니다. 무엇을 표현하고 싶은지, 어떤 감정을 전달하고 싶은지 깊이 고민합니다. 추상적인 아이디어를 구체적인 키워드로 정리해보세요.",
+          icon: "search",
+          tags: ["Ideation", "Brainstorming", "Keywords"]
+        },
+        {
+          id: 2,
+          title: "참고 아트워크 서치",
+          subtitle: "Reference Research",
+          description: "Pinterest, Behance, OpenProcessing 등을 통해 영감을 주는 레퍼런스를 수집합니다. 시각적 스타일, 색감, 움직임의 패턴을 분석하여 나의 프로젝트에 어떻게 적용할지 구상합니다.",
+          icon: "image",
+          tags: ["Pinterest", "Moodboard", "Visual Analysis"]
+        },
+        {
+          id: 3,
+          title: "알고리즘 선정",
+          subtitle: "Algorithm Selection",
+          description: "표현하고자 하는 주제에 적합한 제너레이티브 아트 알고리즘을 선택합니다. Perlin Noise, Fractal, Particle System 등 다양한 수학적 모델 중 가장 효과적인 방식을 결정합니다.",
+          icon: "data_object",
+          tags: ["Noise", "Fractals", "Particles", "Math"]
+        },
+        {
+          id: 4,
+          title: "AI 바이브 코딩",
+          subtitle: "AI-Assisted Vibe Coding",
+          description: "Gemini나 ChatGPT와 같은 AI에게 자연어로 코드를 요청합니다. '분홍색 네온 느낌으로 파티클이 흩어지는 p5.js 코드 짜줘'와 같이 대화하듯 코드를 생성하고 다듬어 나갑니다.",
+          icon: "auto_awesome",
+          tags: ["Gemini", "Prompt Engineering", "Copilot"]
+        },
+        {
+          id: 5,
+          title: "p5.js 실행 및 디버깅",
+          subtitle: "Execution & Debugging",
+          description: "AI가 생성한 코드를 p5.js Web Editor에 적용합니다. 변수를 조절하고, 오류를 수정하며 실시간으로 렌더링되는 결과를 확인합니다. 코드를 직접 수정하며 완성도를 높입니다.",
+          icon: "play_circle",
+          tags: ["Web Editor", "Rendering", "Interaction"]
+        },
+        {
+          id: 6,
+          title: "프로젝트 보고서 작성",
+          subtitle: "Documentation",
+          description: "제작 과정과 결과물, 그리고 그 과정에서 느낀 점을 기록합니다. 사용한 프롬프트, 알고리즘의 원리, 최종 아트워크의 의미를 정리하여 포트폴리오를 완성합니다.",
+          icon: "description",
+          tags: ["Reflection", "Portfolio", "Storytelling"]
+        }
+      ];
+
+      // Render Steps
+      const stepsContainer = document.getElementById('steps-container');
+
+      WORKFLOW_STEPS.forEach((step, index) => {
+        const isEven = index % 2 === 0;
+        const isLast = index === WORKFLOW_STEPS.length - 1;
+
+        // Connector Line Logic
+        let connectorLine = '';
+        if (!isLast) {
+          connectorLine = `
+            <!-- Desktop Line -->
+            <div class="hidden md:block absolute left-1/2 top-16 bottom-[-6rem] w-px bg-gradient-to-b from-primary/50 to-transparent -translate-x-1/2 z-0"></div>
+            <!-- Mobile Line -->
+            <div class="md:hidden absolute left-8 top-16 bottom-[-4rem] w-px bg-gradient-to-b from-primary/50 to-transparent z-0"></div>
+          `;
+        }
+
+        // Layout Classes
+        const alignmentClass = isEven ? 'md:text-right md:pr-16' : 'md:order-last md:text-left md:pl-16';
+        const headerFlexClass = isEven ? 'md:justify-end' : 'md:justify-start';
+
+        // Tags HTML
+        const tagsHtml = step.tags.map(tag => 
+          `<span class="px-3 py-1 text-xs rounded-full bg-white/5 text-gray-400 border border-white/5">#${tag}</span>`
+        ).join('');
+
+        const cardHtml = `
+          <div class="relative flex flex-col md:flex-row gap-8 items-center md:items-stretch mb-16 md:mb-24 group">
+            ${connectorLine}
+
+            <!-- Step Number Badge -->
+            <div class="absolute md:left-1/2 left-8 -translate-x-1/2 flex items-center justify-center w-12 h-12 rounded-full bg-background border-2 border-primary text-primary font-bold z-10 shadow-[0_0_15px_rgba(236,72,153,0.5)] group-hover:scale-110 transition-transform duration-300">
+              ${step.id}
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 w-full md:w-auto pl-20 md:pl-0 ${alignmentClass}">
+              <div class="relative p-6 rounded-2xl bg-surface border border-white/5 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.1)] group-hover:-translate-y-1">
+                <div class="flex items-center gap-3 mb-3 ${headerFlexClass}">
+                  <span class="material-symbols-outlined text-primary text-[24px]">${step.icon}</span>
+                  <span class="text-xs font-semibold tracking-wider text-primary uppercase">Step ${step.id}</span>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-1">${step.title}</h3>
+                <p class="text-sm text-pink-400/80 font-medium mb-4">${step.subtitle}</p>
+                
+                <p class="text-textMuted leading-relaxed mb-6">
+                  ${step.description}
+                </p>
+
+                <div class="flex flex-wrap gap-2 ${headerFlexClass}">
+                  ${tagsHtml}
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty space for balance -->
+            <div class="flex-1 hidden md:block"></div>
+          </div>
+        `;
+
+        stepsContainer.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
