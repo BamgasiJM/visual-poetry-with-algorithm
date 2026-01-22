@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>마음을 그리는 알고리즘 물감</title>
+    <title>마음 갤러리</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -14,7 +14,7 @@
             colors: {
               background: '#050505',
               surface: '#121212',
-              primary: '#ec4899', // Pink-500
+              primary: '#ec4899',     // Pink-500
               primaryGlow: '#be185d', // Pink-700
               textMain: '#f8fafc',
               textMuted: '#94a3b8',
@@ -56,28 +56,17 @@
         justify-content: center;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body class="selection:bg-primary selection:text-white">
     
     <!-- Navigation Bar -->
     <header class="fixed top-0 w-full z-50 bg-[#050505]/90 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-4 sm:px-6">
       <!-- Left: Logo Section -->
       <div class="flex items-center gap-3">
-        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-[#5c2b4f]/60 text-pink-400">
+        <div class="flex items-center justify-center w-8 h-8 rounded-xl bg-[#5c2b4f]/60 text-pink-400">
           <span class="material-symbols-outlined text-[24px]">heart_smile</span>
         </div>
-        <h2 class="text-lg font-bold text-gray-100 tracking-tight">
+        <h2 class="text-sm font-bold text-gray-100 tracking-tight">
           마음을 그리는 알고리즘 물감
         </h2>
       </div>
@@ -147,12 +136,12 @@
           </div>
   
           <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6">
-            마음을 그리는<br class="hidden md:block" /> 알고리즘 물감
+            마음 갤러리
           </h1>
   
           <p class="text-lg md:text-xl text-textMuted max-w-2xl mx-auto leading-relaxed mb-10">
-            나의 내면을 알고리즘으로 시각화하는 AI x p5.js 아트워크 창작 가이드.<br />
-            추상적인 감정을 구체적인 코드와 예술로 표현해보세요.
+            나의 마음을 알고리즘으로 시각화하기 위한 제작 가이드입니다.<br />
+            아래의 과정을 따라가며 감정을 코딩 아트로 표현해보세요.
           </p>
   
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -175,7 +164,7 @@
       <section id="timeline" class="py-20 container mx-auto px-6 md:px-12 relative">
         <div class="max-w-5xl mx-auto">
           <div class="text-center mb-24">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Workflow Process</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Workflow</h2>
             <div class="w-20 h-1 bg-primary mx-auto rounded-full mb-6"></div>
             <p class="text-textMuted max-w-2xl mx-auto">
               AI와 코딩을 결합하여 창의적인 결과물을 만들어내는 6단계 과정을 순서대로 따라가 보세요.
@@ -194,13 +183,13 @@
     <footer class="border-t border-white/5 bg-background py-12 mt-20">
       <div class="container mx-auto px-6 text-center">
         <p class="text-2xl font-bold text-white mb-2">
-          Start Your <span class="text-primary">Art Journey</span>
+          Paint your emotions <span class="text-primary">with Algorithms</span>
         </p>
         <p class="text-textMuted text-sm mb-8">
-          Code is your canvas, AI is your brush.
+          당신의 감정을 알고리즘으로 칠해보세요.
         </p>
         <div class="text-gray-600 text-xs">
-          &copy; <span id="year"></span> AI Creative Lab. All rights reserved.
+          &copy; <span id="year"></span> JaiKim & Semyung Univ. All rights reserved
         </div>
       </div>
     </footer>
@@ -306,7 +295,7 @@
                   <span class="text-xs font-semibold tracking-wider text-primary uppercase">Step ${step.id}</span>
                 </div>
                 
-                <h3 class="text-2xl font-bold text-white mb-1">${step.title}</h3>
+                <h3 class="text-3xl font-bold text-white mb-1">${step.title}</h3>
                 <p class="text-sm text-pink-400/80 font-medium mb-4">${step.subtitle}</p>
                 
                 <p class="text-textMuted leading-relaxed mb-6">
@@ -327,6 +316,5 @@
         stepsContainer.insertAdjacentHTML('beforeend', cardHtml);
       });
     </script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
