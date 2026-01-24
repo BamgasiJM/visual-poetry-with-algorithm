@@ -3,9 +3,9 @@
 // setup() : 캔버스를 처음 만들 때 한 번 실행됩니다.
 function setup() {
   createCanvas(1000, 1000);   // 캔버스 가로 세로 크기
-  background(30);              // 배경 검은색
+  background(20);             // 배경 거의 검정
   noStroke();                 // 테두리 없음
-  fill(220);                  // 도형 색상 하얀색
+  fill(220);                  // 도형 거의 흰색
 }
 
 // draw() : 그림을 그리는 부분
@@ -59,14 +59,5 @@ function draw() {
     vertex(x, y);
   }
 
-  endShape(CLOSE); // 자동으로 닫힌 6각형 완성!
-
-  noLoop(); // 한 번만 그리고 멈춤
-}
-
-// 창 크기 바뀔 때 다시 그리기
-function windowResized() {
-  resizeCanvas(1000, 1000);
-  background(0);
-  redraw();
+  endShape(CLOSE); // 닫힌 6각형
 }

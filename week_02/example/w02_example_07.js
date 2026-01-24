@@ -1,76 +1,78 @@
 // w02_example_07.js
 
-let angle = 0;
+let circles = [];
+let numAttempts = 10000;
+
+let canvas_width = 800;
+let canvas_height = 800;
+let padding = 50;
 
 function setup() {
-  createCanvas(800, 800, WEBGL);
-  colorMode(RGB, 255);
-  smooth();
-}
+  createCanvas(canvas_width, canvas_height);
 
-function draw() {
-  // 짙은 회색 배경
-  background(20);
+  background(0);
+  stroke(255);
 
-  // 조명 설정 - 순수 흰색 환경광
-  ambientLight(150, 150, 150);
-  directionalLight(200, 200, 200, 0, 1, 0);
-  pointLight(255, 255, 255, 300, -300, 300);
-  pointLight(100, 100, 100, -300, -200, -300);
+  noFill();
+  rect(
+    padding,
+    padding,
+    canvas_width - padding * 2,
+    canvas_height - padding * 2,
+    10
+  );
 
-  // 카메라 회전
-  angle += 0.002;
-  const camX = sin(angle) * 600;
-  const camZ = cos(angle) * 600;
-  camera(camX, -500, camZ, 0, 0, 0, 0, 1, 0);
+  for (let n = 0; n < numAttempts; n++) {
+    let randX = random(padding, canvas_width - padding);
+    let randY = random(padding, canvas_height - padding);
+    let randR = random(5, 120);
 
-  // 중앙 축 주변으로 원형 배치 - 샹들리에 형태
-  const rings = 8;
-  const itemsPerRing = 12;
+    let placeable = true;
+    for (let circle of circles) {
+      let d = dist(randX, randY, circle.x, circle.y);
 
-  for (let ring = 0; ring < rings; ring++) {
-    const radius = 120 + ring * 50;
-    const baseHeight = -150 + ring * 50;
-
-    for (let i = 0; i < itemsPerRing; i++) {
-      const theta = (TWO_PI / itemsPerRing) * i + angle * 0.3;
-      const x = cos(theta) * radius;
-      const z = sin(theta) * radius;
-
-      // 사인파로 위아래 움직임 생성
-      const waveOffset = sin(angle * 10 + ring * 0.8 + i * 0.5) * 30;
-      const yPos = baseHeight + waveOffset;
-
-      push();
-      translate(x, yPos, z);
-
-      // 중심을 향하도록 회전
-      rotateY(-theta);
-
-      // 화이트 색상
-      fill(255, 255, 255);
-      noStroke();
-
-      // 작은 육면체와 원기둥을 번갈아 배치
-      if ((ring + i) % 2 === 0) {
-        box(15, 40, 15);
-      } else {
-        cylinder(8, 40, 24);
+      if (d < randR + circle.r + 5) {
+        placeable = false;
       }
+    }
 
-      pop();
+    if (
+      randX + randR > canvas_width - padding - 15 ||
+      randX - randR < padding + 15 ||
+      randY + randR > canvas_height - padding - 15 ||
+      randY - randR < padding + 15
+    ) {
+      placeable = false;
+    }
+
+    if (placeable) {
+      circles.push({
+        x: randX,
+        y: randY,
+        r: randR,
+      });
     }
   }
 
-  // 중앙 코어 - 샹들리에 중심축
-  for (let i = 0; i < 12; i++) {
-    const coreWave = sin(angle * 2.5 + i * 0.4) * 20;
+  strokeWeight(2);
+  for (let circle of circles) {
     push();
-    translate(0, -200 + i * 60 + coreWave, 0);
-    rotateY(angle * 2 + i * 0.3);
-    fill(255, 255, 255);
-    noStroke();
-    torus(30, 7, 24, 16);
+    strokeWeight(4);
+    point(circle.x, circle.y);
     pop();
+
+    ellipse(circle.x, circle.y, circle.r * 2);
+
+    for (let otherCircle of circles) {
+      let d = dist(circle.x, circle.y, otherCircle.x, otherCircle.y);
+      if (d < 50) {
+        line(circle.x, circle.y, otherCircle.x, otherCircle.y);
+      }
+    }
   }
+
+  noLoop();
 }
+
+// by Ahmad Moussa || Gorilla Sun 
+// https://openprocessing.org/sketch/2319478

@@ -1,19 +1,21 @@
 // w02_example_02.js
 
 function setup() {
-  createCanvas(1280, 720);
+  createCanvas(800, 500);
   background(220, 220, 220);
   noStroke();
-  fill(30);
 
   const leftX = width * 0.25;
   const middleX = width * 0.5;
   const rightX = width * 0.75;
   const centerY = height / 2;
   const baseSize = height * 0.3;
-
+  
+  fill(random(10, 100));
   drawSpikyBurst(leftX, centerY, baseSize * 0.9);
+  fill(random(10, 100));
   drawDistortedBlob(middleX, centerY, baseSize * 0.9);
+  fill(random(10, 100));
   drawHeavyLayers(rightX, centerY, baseSize * 0.7);
 
   noLoop();

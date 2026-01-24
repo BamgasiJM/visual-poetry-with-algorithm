@@ -79,7 +79,7 @@ function draw() {
   translate(width / 2, height / 2);
 
   // 닫힌 곡선 그리기
-  fill(50, 210, 200);
+  fill(220);
   noStroke();
 
   beginShape();
