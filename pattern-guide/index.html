@@ -367,14 +367,15 @@ function drawInterface() {
                 ><code class="language-javascript">let palette = ['#FF6138', '#FFFF9D', '#BEEB9F', '#79BD8F', '#00A388'];
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   // HSB 모드 설정: Hue(0~360), Saturation(0~100), Brightness(0~100), Alpha(0~1)
   colorMode(HSB, 360, 100, 100, 1);
+  frameRate(5);  // 초당 5장 그리도록 제한     
   noStroke();
 }
 
 function draw() {
-  background(0, 0, 10); // 아주 어두운 회색 (Brightness: 10)
+  background(0, 0, 10, 0.1); // 어두운 회색 + 10% 알파값
   
   // 1. 팔레트에서 랜덤 색상 추출 패턴
   let hexColor = random(palette); 
@@ -385,7 +386,7 @@ function draw() {
   let s = saturation(c);   // 원래 채도값
   let b = brightness(c);   // 원래 명도값
   
-  // 채도와 명도를 랜덤하게 흔들어 텍스처감 부여
+  // 채도와 명도를 약간 랜덤하게 부여
   fill(h, s + random(-10, 10), b + random(-10, 10), 0.8);
   
   circle(random(width), random(height), random(10, 50));
@@ -426,7 +427,7 @@ function draw() {
                 <pre
                   class="!my-0 !border-0"
                 ><code class="language-javascript">function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   rectMode(CENTER); // 사각형을 중심 기준으로 그리기
   
   let cols = 10;
@@ -496,7 +497,7 @@ function draw() {
                 ><code class="language-javascript">let scale = 0.02; // 노이즈의 '줌 레벨' (작을수록 완만하게 변화)
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   background(0);
   stroke(255, 100);
   
@@ -542,7 +543,7 @@ function setup() {
 const scale = 0.01;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   background(0);
   
   // 100개의 파티클을 랜덤 위치에 생성
@@ -612,7 +613,7 @@ function draw() {
                 ><code class="language-javascript">let pos, vel, acc;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   pos = createVector(width/2, height/2);
   vel = createVector(0, 0);
   acc = createVector(0, 0);
@@ -645,7 +646,7 @@ function mousePressed() {
                 5-2. 충돌과 반사, 거리 계산
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                물체가 벽에 닿았을 때 속도의 방향을 반대로(`vel.x *= -1`)
+                물체가 벽에 닿았을 때 속도의 방향을 반대로<code class="text-teal-400">(vel.x *= -1)</code>
                 뒤집으면 튕겨 나가는 효과를 낼 수 있습니다. 객체 간의 충돌은
                 <code class="text-teal-400">dist(x1, y1, x2, y2)</code> 함수로
                 거리를 계산하여, 두 물체의 반지름 합보다 거리가 가까워졌을 때를
@@ -659,6 +660,10 @@ function mousePressed() {
                 ><code class="language-javascript">let x = 200, y = 200;
 let vx = 3, vy = 2;
 let r = 20;
+
+function setup() {
+  createCanvas(800, 800);
+}
 
 function draw() {
   background(0);
@@ -686,7 +691,8 @@ function draw() {
   
   // 마우스 커서 (장애물 역할)
   noFill();
-  stroke(255);
+  stroke(210, 180, 80);
+  strokeWeight(3);
   circle(mouseX, mouseY, 60);
 }</code></pre>
               </div>
@@ -695,14 +701,14 @@ function draw() {
             <!-- 5-3 Forces -->
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                5-3. 인력, 척력, 그리고 스프링 (Attraction & Spring)
+                5-3. 인력, 척력, 그리고 스프링 (Attraction, Repulsion & Spring)
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <strong>인력(Attraction)</strong>은 목표 지점에서 현재 위치를 뺀
-                벡터(`target - pos`)를 힘으로 사용합니다.
+                벡터(target - position)를 힘으로 사용합니다.
                 <strong>스프링(Spring)</strong>은 훅의 법칙(Hooke's Law)을
                 따르며, 늘어난 거리만큼 강한 힘으로 돌아오려 하고 거기에
-                댐핑(Damping)을 주어 진동을 서서히 멈추게 합니다. 탄력 있는
+                댐핑(damping)을 주어 진동을 서서히 멈추게 합니다. 탄력 있는
                 인터랙션의 핵심입니다.
               </p>
               <div
@@ -748,7 +754,8 @@ function draw() {
   // 그리기
   stroke(255);
   line(anchor.x, anchor.y, pos.x, pos.y); // 스프링 줄
-  fill(255);
+  noStroke();
+  fill(210, 180, 80);
   circle(pos.x, pos.y, 40); // 물체
   circle(anchor.x, anchor.y, 10); // 손잡이
 }</code></pre>
@@ -784,6 +791,10 @@ function draw() {
                 <pre
                   class="!my-0 !border-0"
                 ><code class="language-javascript">let particles = [];
+
+function setup() {
+  createCanvas(800, 800);
+}
 
 function draw() {
   background(0);
@@ -840,7 +851,8 @@ class Particle {
                 "의지"를 가집니다. Craig Reynolds의
                 <strong>Steering Behaviors</strong> 알고리즘을 사용하면, 목표를
                 추적(Seek)하거나, 장애물을 피하거나, 무리(Flocking)를 짓는
-                복잡한 생명체의 움직임을 구현할 수 있습니다. 핵심 공식:
+                복잡한 생명체의 움직임을 구현할 수 있습니다. </p>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">핵심 공식:
                 <code class="text-teal-400"
                   >Steering Force = Desired Velocity - Current Velocity</code
                 >
@@ -850,7 +862,44 @@ class Particle {
               >
                 <pre
                   class="!my-0 !border-0"
-                ><code class="language-javascript">class Agent {
+                ><code class="language-javascript">let agents = [];
+let target;
+
+function setup() {
+  createCanvas(800, 800);
+
+  // 여러 에이전트 생성
+  for (let i = 0; i < 30; i++) {
+    agents.push(new Agent(random(width), random(height)));
+  }
+
+  // 초기 타겟 위치
+  target = createVector(width / 2, height / 2);
+}
+
+function draw() {
+  background(0);
+
+  // 마우스가 캔버스 안에 있을 때 타겟 업데이트
+  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+    target.x = mouseX;
+    target.y = mouseY;
+  }
+
+  // 타겟 표시
+  fill(255, 100, 100);
+  noStroke();
+  circle(target.x, target.y, 20);
+
+  // 에이전트 업데이트 및 표시
+  for (let agent of agents) {
+    agent.seek(target);
+    agent.update();
+    agent.show();
+  }
+}
+
+class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
@@ -862,20 +911,25 @@ class Particle {
   // 목표 추적 행동 (Seek)
   seek(target) {
     let desired = p5.Vector.sub(target, this.pos);
-    
+
     // 도착 지점에 가까워지면 속도 줄이기 (Arrive Behavior)
     let d = desired.mag();
-    if (d < 100) {
-      let m = map(d, 0, 100, 0, this.maxSpeed);
+
+    // 타겟으로부터 60픽셀 이내로는 들어가지 않도록 제한
+    if (d < 60) {
+      // 30픽셀 밖으로 밀어내기
+      desired.setMag(-this.maxSpeed);
+    } else if (d < 100) {
+      let m = map(d, 30, 100, 0, this.maxSpeed);
       desired.setMag(m);
     } else {
       desired.setMag(this.maxSpeed);
     }
-    
+
     // 조향력 공식
     let steer = p5.Vector.sub(desired, this.vel);
     steer.limit(this.maxForce);
-    
+
     this.acc.add(steer);
   }
 
@@ -888,7 +942,7 @@ class Particle {
 
   show() {
     // 진행 방향으로 회전해서 그리기
-    let theta = this.vel.heading() + PI/2;
+    let theta = this.vel.heading() + PI / 2;
     push();
     translate(this.pos.x, this.pos.y);
     rotate(theta);
@@ -897,7 +951,8 @@ class Particle {
     triangle(0, -10, -5, 10, 5, 10); // 화살표 모양
     pop();
   }
-}</code></pre>
+}
+</code></pre>
               </div>
             </div>
           </div>
@@ -935,11 +990,11 @@ class Particle {
 
 function preload() {
   // 이미지는 무거우므로 preload에서 미리 불러옵니다.
-  img = loadImage('assets/sample.jpg'); 
+  img = loadImage('image.jpg'); 
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   img.resize(width, height); // 이미지를 캔버스 크기에 맞춤
   background(0);
   noStroke();
@@ -1000,35 +1055,36 @@ function draw() {
                 ><code class="language-javascript">let font;
 let points = [];
 
+let txt = "SMU";
+let fontSize = 320;
+
 function preload() {
-  font = loadFont('assets/Roboto-Bold.ttf');
+  font = loadFont("NotoSans-Black.ttf");
 }
 
 function setup() {
-  createCanvas(400, 200);
-  
-  // 텍스트를 점들의 좌표 배열로 변환
-  // sampleFactor: 점의 밀도 (높을수록 정밀하지만 느려짐)
-  points = font.textToPoints('ART', 50, 150, 150, {
-    sampleFactor: 0.1
+  createCanvas(800, 800);
+
+  let bounds = font.textBounds(txt, 0, 0, fontSize);
+
+  // 시각적 중심 기준 정확한 중앙 정렬
+  let x = width / 2 - (bounds.x + bounds.w / 2);
+  let y = height / 2 - (bounds.y + bounds.h / 2);
+
+  points = font.textToPoints(txt, x, y, fontSize, {
+    sampleFactor: 0.08,
   });
 }
 
 function draw() {
-  background(0);
+  background(10);
   noStroke();
   fill(255, 0, 100);
 
   for (let p of points) {
-    // 각 점의 원래 좌표(p.x, p.y)를 기준으로 노이즈를 더해 흔들림 효과 구현
-    // frameCount를 더해 시간이 지남에 따라 노이즈가 흐르게 함
     let n = noise(p.x * 0.01, p.y * 0.01, frameCount * 0.05);
-    
-    // 노이즈 값(0~1)을 -5~5 픽셀 이동값으로 변환
-    let xOffset = map(n, 0, 1, -5, 5);
-    let yOffset = map(n, 0, 1, -5, 5);
-    
-    circle(p.x + xOffset, p.y + yOffset, 3);
+    let offset = map(n, 0, 1, -6, 6);
+    circle(p.x + offset, p.y + offset, 5);
   }
 }</code></pre>
               </div>
@@ -1067,15 +1123,19 @@ function draw() {
               >
                 <pre
                   class="!my-0 !border-0"
-                ><code class="language-javascript">function draw() {
+                ><code class="language-javascript">function setup() {
+  createCanvas(800, 800);
+}
+  
+function draw() {
   background(0);
   translate(width/2, height/2);
 
   // 시간 변수 (프레임마다 증가)
   let t = frameCount * 0.05;
 
-  // 1. 크기의 진동: sin(t)는 -1~1 -> map을 통해 50~200 픽셀로 변환
-  let r = map(sin(t), -1, 1, 50, 200);
+  // 1. 크기의 진동: sin(t)는 -1~1 -> map을 통해 100~400 픽셀로 변환
+  let r = map(sin(t), -1, 1, 100, 400);
   
   // 2. 색상의 진동: cos(t)를 이용해 엇박자로 색상 변화
   let g = map(cos(t), -1, 1, 100, 255);
@@ -1108,6 +1168,10 @@ function draw() {
                 ><code class="language-javascript">let x = 0;
 let y = 0;
 
+function setup() {
+  createCanvas(800, 800);
+}
+  
 function draw() {
   background(0, 20); // 잔상을 남기기 위해 투명도 있는 배경
   
@@ -1118,7 +1182,7 @@ function draw() {
   
   fill(255);
   noStroke();
-  circle(x, y, 30);
+  circle(x, y, 100);
 }</code></pre>
               </div>
             </div>
@@ -1155,15 +1219,16 @@ function draw() {
                 <pre
                   class="!my-0 !border-0"
                 ><code class="language-javascript">function setup() {
-  createCanvas(400, 400);
-  background(20);
+  createCanvas(800, 800);
+  background(10);
   noStroke();
+
+  fill(255);
+  text("드래그: 그리기 / 클릭: 원형 장식 / 키보드: 지우기", 10, 20);
 }
 
 function draw() {
   // draw 루프는 비워두거나 UI 그리는 용도로 사용
-  fill(255);
-  text("드래그: 그리기 / 클릭: 원형 장식 / 키보드: 지우기", 10, 20);
 }
 
 // 1. 마우스를 누른 채 움직일 때 -> 선 그리기
@@ -1190,7 +1255,8 @@ function mouseReleased() {
 
 function keyPressed() {
   background(20); // 화면 초기화
-}</code></pre>
+}
+</code></pre>
               </div>
             </div>
 
@@ -1213,8 +1279,12 @@ function keyPressed() {
                   class="!my-0 !border-0"
                 ><code class="language-javascript">let state = "INTRO"; // 가능한 상태: "INTRO", "PLAY", "GAME_OVER"
 
+function setup() {
+  createCanvas(800, 800);
+}
+
 function draw() {
-  background(0);
+  background(10);
   
   // 상태에 따라 다른 화면 그리기
   if (state === "INTRO") {
@@ -1298,29 +1368,54 @@ function keyPressed() {
               >
                 <pre
                   class="!my-0 !border-0"
-                ><code class="language-javascript">function draw() {
+                ><code class="language-javascript">function setup() {
+  createCanvas(800, 800);
+}
+
+function draw() {
   background(0);
-  
-  // 1. 빛 효과 켜기
-  blendMode(ADD); 
-  
+
+  blendMode(ADD);
   noStroke();
-  let t = frameCount * 0.02;
-  
-  // RGB 색상의 원들을 겹치게 그림
+
+  const cx = width / 2;
+  const cy = height / 2;
+
+  const radius = 120;   // 삼각형 중심에서 꼭짓점까지 거리
+  const circleSize = 400;
+
+  // 각 꼭짓점의 각도 (라디안)
+  const angles = [
+    -HALF_PI,                 // 위
+    -HALF_PI + TWO_PI / 3,    // 왼쪽 아래
+    -HALF_PI + TWO_PI * 2 / 3 // 오른쪽 아래
+  ];
+
+  // 빨강
   fill(255, 0, 0);
-  circle(width/2 - 20, height/2, 100); // 빨강
-  
+  circle(
+    cx + radius * cos(angles[0]),
+    cy + radius * sin(angles[0]),
+    circleSize
+  );
+
+  // 초록
   fill(0, 255, 0);
-  circle(width/2 + 20, height/2 - 30, 100); // 초록
-  
+  circle(
+    cx + radius * cos(angles[1]),
+    cy + radius * sin(angles[1]),
+    circleSize
+  );
+
+  // 파랑
   fill(0, 0, 255);
-  circle(width/2 + 20, height/2 + 30, 100); // 파랑
-  
-  // 결과: 세 원이 겹치는 중앙은 빛의 삼원색 원리에 의해 흰색으로 빛남
-  
-  // 2. 중요: 다음 프레임이나 다른 요소를 위해 모드 초기화
-  blendMode(BLEND); 
+  circle(
+    cx + radius * cos(angles[2]),
+    cy + radius * sin(angles[2]),
+    circleSize
+  );
+
+  blendMode(BLEND);
 }</code></pre>
               </div>
             </div>
@@ -1343,7 +1438,7 @@ function keyPressed() {
                 <pre
                   class="!my-0 !border-0"
                 ><code class="language-javascript">function setup() {
-  createCanvas(400, 400);
+  createCanvas(800, 800);
   background(0); // 처음에만 완전 검은색
 }
 
@@ -1355,10 +1450,10 @@ function draw() {
   fill(0, 255, 255);
   noStroke();
   
-  let x = width/2 + cos(frameCount*0.1) * 100;
-  let y = height/2 + sin(frameCount*0.1) * 100;
+  let x = width/2 + cos(frameCount*0.04) * 250;
+  let y = height/2 + sin(frameCount*0.04) * 250;
   
-  circle(x, y, 20);
+  circle(x, y, 100);
 }</code></pre>
               </div>
             </div>
@@ -1381,20 +1476,47 @@ function draw() {
               >
                 <pre
                   class="!my-0 !border-0"
-                ><code class="language-javascript">function draw() {
-  // 랜덤한 도형 그리기
-  fill(random(255), random(255), random(255));
-  circle(random(width), random(height), random(10, 50));
-  
-  // 일정 주기마다 필터 적용
-  if (frameCount % 60 === 0) {
-    filter(INVERT); // 화면 색상 반전
-  }
-  
+                ><code class="language-javascript">function setup() {
+  createCanvas(800, 800);
+  background(0); // 처음에만 초기화
+}
+
+function draw() {
+  // 랜덤 도형 누적 드로잉
+  noStroke();
+  fill(random(255), random(255), random(255), 150);
+  circle(
+    random(width),
+    random(height),
+    random(10, 50)
+  );
+
+  // 120프레임마다 색상 반전
   if (frameCount % 120 === 0) {
-    filter(BLUR, 3); // 화면 뭉개기 (몽환적 효과)
+    filter(INVERT);
   }
-}</code></pre>
+
+  // 180프레임마다 포스터라이즈
+  if (frameCount % 180 === 0) {
+    filter(POSTERIZE, 4);
+  }
+
+  // 240프레임마다 블러
+  if (frameCount % 240 === 0) {
+    filter(BLUR, 3);
+  }
+
+  // 300프레임마다 임계값 처리
+  if (frameCount % 300 === 0) {
+    filter(THRESHOLD, 0.5);
+  }
+
+  // 420프레임마다 흑백 변환
+  if (frameCount % 420 === 0) {
+    filter(GRAY);
+  }
+}
+</code></pre>
               </div>
             </div>
           </div>
