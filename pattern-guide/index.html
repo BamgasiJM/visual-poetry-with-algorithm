@@ -1,182 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>p5.js와 자바스크립트 패턴 가이드</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Prism.js for Syntax Highlighting (Dark Theme) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        p5: {
-                            pink: '#ED225D',
-                            dark: '#1E1E1E',
-                            darker: '#121212',
-                            accent: '#2D2D2D'
-                        }
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              p5: {
+                pink: "#ED225D",
+                dark: "#1E1E1E",
+                darker: "#121212",
+                accent: "#2D2D2D",
+              },
+            },
+          },
+        },
+      };
     </script>
-    
+
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121212; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ED225D; 
-        }
-        
-        /* Code block adjustments */
-        pre[class*="language-"] {
-            border-radius: 0.75rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            background: #1a1a1a !important;
-            border: 1px solid #333;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-        }
+      body {
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #121212;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ed225d;
+      }
 
-        code[class*="language-"] {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-        
-        /* Sticky Sidebar active state styling */
-        .nav-link.active {
-            color: #2dd4bf; /* teal-400 */
-            border-left-color: #2dd4bf;
-            background: linear-gradient(90deg, rgba(45, 212, 191, 0.1) 0%, transparent 100%);
-        }
+      /* Code block adjustments */
+      pre[class*="language-"] {
+        border-radius: 0.75rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: #1a1a1a !important;
+        border: 1px solid #333;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      }
 
-        /* Gradient Text Utility */
-        .text-gradient {
-            background: linear-gradient(to right, #2dd4bf, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      code[class*="language-"] {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+
+      /* Sticky Sidebar active state styling */
+      .nav-link.active {
+        color: #2dd4bf; /* teal-400 */
+        border-left-color: #2dd4bf;
+        background: linear-gradient(
+          90deg,
+          rgba(45, 212, 191, 0.1) 0%,
+          transparent 100%
+        );
+      }
+
+      /* Gradient Text Utility */
+      .text-gradient {
+        background: linear-gradient(to right, #2dd4bf, #3b82f6);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
     </style>
-<link rel="stylesheet" href="/index.css">
-</head>
-<body class="bg-p5-darker text-slate-300 font-sans antialiased selection:bg-teal-500 selection:text-white">
-
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body
+    class="bg-p5-darker text-slate-300 font-sans antialiased selection:bg-teal-500 selection:text-white"
+  >
     <div class="flex flex-col md:flex-row min-h-screen">
-        
-        <!-- Sidebar Navigation (Sticky on Desktop) -->
-        <aside class="w-full md:w-72 bg-p5-dark border-b md:border-b-0 md:border-r border-gray-800 flex-shrink-0 md:h-screen md:sticky md:top-0 overflow-y-auto z-50">
-            <div class="p-6">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-10 h-10 bg-gradient-to-br from-p5-pink to-purple-600 rounded-full flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-pink-500/20">p5</div>
-                    <h1 class="font-bold text-white tracking-tight text-lg">JS Patterns Guide</h1>
-                </div>
-                
-                <nav class="space-y-1">
-                    <a href="#intro" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        들어가며
-                    </a>
-                    <a href="#section-1" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        1. 구조와 캔버스 (Canvas)
-                    </a>
-                    <a href="#section-2" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        2. 컬러 시스템 (Color)
-                    </a>
-                    <a href="#section-3" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        3. 그리드와 반복 (Grids)
-                    </a>
-                    <a href="#section-4" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        4. 노이즈와 필드 (Noise)
-                    </a>
-                    <a href="#section-5" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        5. 물리법칙 (Physics)
-                    </a>
-                    <a href="#section-6" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        6. 파티클과 에이전트 (System)
-                    </a>
-                    <a href="#section-7" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        7. 이미지와 픽셀 (Images)
-                    </a>
-                    <a href="#section-8" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        8. 타이포그래피 (Type)
-                    </a>
-                    <a href="#section-9" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        9. 수학과 알고리즘 (Math)
-                    </a>
-                    <a href="#section-10" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        10. 인터랙션 (Interaction)
-                    </a>
-                    <a href="#section-11" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        11. 효과와 필터 (Effects)
-                    </a>
-                    <a href="#section-12" class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all">
-                        12. 모듈화 (Modularity)
-                    </a>
-                </nav>
+      <!-- Sidebar Navigation (Sticky on Desktop) -->
+      <aside
+        class="w-full md:w-72 bg-p5-dark border-b md:border-b-0 md:border-r border-gray-800 flex-shrink-0 md:h-screen md:sticky md:top-0 overflow-y-auto z-50"
+      >
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-8">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-p5-pink to-purple-600 rounded-full flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-pink-500/20"
+            >
+              p5
             </div>
-            
-            <div class="px-6 py-4 mt-auto border-t border-gray-800 text-xs text-gray-500">
-                <p>:: 자바스크립트의 문법 패턴 가이드 ::</p>
-            </div>
-        </aside>
+            <h1 class="font-bold text-white tracking-tight text-lg">
+              JS Patterns Guide
+            </h1>
+          </div>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-6 md:p-12 lg:p-20 max-w-6xl mx-auto w-full">
-            
-            <!-- Hero / Intro -->
-            <section id="intro" class="mb-32 scroll-mt-32 pt-10">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight">
-                    p5.js <br>
-                    <span class="text-gradient">Creative Coding Patterns</span>
-                </h1>
-                <p class="text-xl text-slate-400 leading-relaxed max-w-3xl border-l-4 border-p5-pink pl-6">
-                    이 문서는 p5.js를 사용하여 시각 예술을 만들 때 자주 사용되는 자바스크립트 문법과 디자인 패턴을 정리한 가이드입니다.
-                    단순한 문법 설명을 넘어, <strong>실제 작품에 바로 쓰이는 코드 패턴</strong> 위주로 구성했습니다.
-                </p>
-            </section>
+          <nav class="space-y-1">
+            <a
+              href="#intro"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              들어가며
+            </a>
+            <a
+              href="#section-1"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              1. 구조와 캔버스 (Canvas)
+            </a>
+            <a
+              href="#section-2"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              2. 컬러 시스템 (Color)
+            </a>
+            <a
+              href="#section-3"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              3. 그리드와 반복 (Grids)
+            </a>
+            <a
+              href="#section-4"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              4. 노이즈와 필드 (Noise)
+            </a>
+            <a
+              href="#section-5"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              5. 물리법칙 (Physics)
+            </a>
+            <a
+              href="#section-6"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              6. 파티클과 에이전트 (System)
+            </a>
+            <a
+              href="#section-7"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              7. 이미지와 픽셀 (Images)
+            </a>
+            <a
+              href="#section-8"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              8. 타이포그래피 (Type)
+            </a>
+            <a
+              href="#section-9"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              9. 수학과 알고리즘 (Math)
+            </a>
+            <a
+              href="#section-10"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              10. 인터랙션 (Interaction)
+            </a>
+            <a
+              href="#section-11"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              11. 효과와 필터 (Effects)
+            </a>
+            <a
+              href="#section-12"
+              class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
+            >
+              12. 모듈화 (Modularity)
+            </a>
+          </nav>
+        </div>
 
-            <!-- 1. 스케치 구조 -->
-            <section id="section-1" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">01</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">스케치 구조와 캔버스</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">1-1. 반응형 풀스크린 캔버스 (Responsive)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            모던 웹 환경에서 아트워크는 다양한 화면 크기에 유연하게 대응해야 합니다. 
-                            <code class="text-teal-400">windowWidth</code>와 <code class="text-teal-400">windowHeight</code> 시스템 변수를 사용하여 캔버스를 꽉 채우고, 
-                            <code class="text-teal-400">windowResized()</code> 이벤트 함수 안에서 <code class="text-teal-400">resizeCanvas()</code>를 호출하여 브라우저 크기 변경 시 캔버스도 함께 조절하는 패턴은 필수적입니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function setup() {
+        <div
+          class="px-6 py-4 mt-auto border-t border-gray-800 text-xs text-gray-500"
+        >
+          <p>:: 자바스크립트의 문법 패턴 가이드 ::</p>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 p-6 md:p-12 lg:p-20 max-w-6xl mx-auto w-full">
+        <!-- Hero / Intro -->
+        <section id="intro" class="mb-32 scroll-mt-32 pt-10">
+          <h1
+            class="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight"
+          >
+            p5.js <br />
+            <span class="text-gradient">Creative Coding Patterns</span>
+          </h1>
+          <p
+            class="text-xl text-slate-400 leading-relaxed max-w-3xl border-l-4 border-p5-pink pl-6"
+          >
+            이 문서는 p5.js를 사용하여 시각 예술을 만들 때 자주 사용되는
+            자바스크립트 문법과 디자인 패턴을 정리한 가이드입니다. 단순한 문법
+            설명을 넘어,
+            <strong>실제 작품에 바로 쓰이는 코드 패턴</strong> 위주로
+            구성했습니다.
+          </p>
+        </section>
+
+        <!-- 1. 스케치 구조 -->
+        <section id="section-1" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">01</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              스케치 구조와 캔버스
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                1-1. 반응형 풀스크린 캔버스 (Responsive)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                모던 웹 환경에서 아트워크는 다양한 화면 크기에 유연하게 대응해야
+                합니다.
+                <code class="text-teal-400">windowWidth</code>와
+                <code class="text-teal-400">windowHeight</code> 시스템 변수를
+                사용하여 캔버스를 꽉 채우고,
+                <code class="text-teal-400">windowResized()</code> 이벤트 함수
+                안에서 <code class="text-teal-400">resizeCanvas()</code>를
+                호출하여 브라우저 크기 변경 시 캔버스도 함께 조절하는 패턴은
+                필수적입니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function setup() {
   // 처음 실행 시 브라우저 크기만큼 캔버스 생성
   createCanvas(windowWidth, windowHeight);
   background(0);
@@ -197,18 +281,26 @@ function windowResized() {
   // 리사이즈 직후 배경을 다시 그리지 않으면 이전 그림이 깨져 보일 수 있음
   background(0); 
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">1-2. 사용자 정의 함수 (Clean Code)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            <code class="text-teal-400">draw()</code> 함수는 오케스트라의 지휘자와 같습니다. 
-                            모든 세세한 그리기 명령을 직접 내리기보다는, "배경 그려", "캐릭터 그려", "UI 그려"와 같이 
-                            <strong>의도가 드러나는 이름의 함수</strong>를 호출하는 방식으로 구조를 짜야 코드가 복잡해져도 길을 잃지 않습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function draw() {
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                1-2. 사용자 정의 함수 (Clean Code)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                <code class="text-teal-400">draw()</code> 함수는 오케스트라의
+                지휘자와 같습니다. 모든 세세한 그리기 명령을 직접 내리기보다는,
+                "배경 그려", "캐릭터 그려", "UI 그려"와 같이
+                <strong>의도가 드러나는 이름의 함수</strong>를 호출하는 방식으로
+                구조를 짜야 코드가 복잡해져도 길을 잃지 않습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function draw() {
   // 1. 배경 처리
   drawDynamicBackground();
   
@@ -237,29 +329,42 @@ function drawInterface() {
   fill(255);
   text("FPS: " + floor(frameRate()), 10, 20);
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 2. 컬러 시스템 -->
-            <section id="section-2" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">02</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">컬러 시스템</h2>
-                </div>
+        <!-- 2. 컬러 시스템 -->
+        <section id="section-2" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">02</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              컬러 시스템
+            </h2>
+          </div>
 
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">2-1. HSB 모드의 직관성</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            디지털 아트에서 RGB(빛의 삼원색)는 직관적으로 다루기 어렵습니다. 
-                            대신 <strong>HSB(Hue:색상, Saturation:채도, Brightness:명도)</strong> 모드를 사용하세요.
-                            <code class="text-teal-400">Hue</code> 값만 0에서 360까지 반복문으로 돌리면 손쉽게 무지개색 그라데이션을 만들 수 있습니다.
-                            또한 <code class="text-teal-400">random(palette)</code> 패턴을 사용해 미리 정의된 색 조합만 사용하도록 제한하면 세련된 디자인을 얻을 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let palette = ['#FF6138', '#FFFF9D', '#BEEB9F', '#79BD8F', '#00A388'];
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                2-1. HSB 모드의 직관성
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                디지털 아트에서 RGB(빛의 삼원색)는 직관적으로 다루기 어렵습니다.
+                대신
+                <strong>HSB(Hue:색상, Saturation:채도, Brightness:명도)</strong>
+                모드를 사용하세요. <code class="text-teal-400">Hue</code> 값만
+                0에서 360까지 반복문으로 돌리면 손쉽게 무지개색 그라데이션을
+                만들 수 있습니다. 또한
+                <code class="text-teal-400">random(palette)</code> 패턴을 사용해
+                미리 정의된 색 조합만 사용하도록 제한하면 세련된 디자인을 얻을
+                수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let palette = ['#FF6138', '#FFFF9D', '#BEEB9F', '#79BD8F', '#00A388'];
 
 function setup() {
   createCanvas(400, 400);
@@ -285,29 +390,42 @@ function draw() {
   
   circle(random(width), random(height), random(10, 50));
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 3. 그리드 -->
-            <section id="section-3" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">03</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">그리드와 반복</h2>
-                </div>
+        <!-- 3. 그리드 -->
+        <section id="section-3" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">03</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              그리드와 반복
+            </h2>
+          </div>
 
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">3-1. 이중 루프와 좌표 격리 (Matrix Transformation)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            화면을 격자(Grid)로 나누는 것은 제너레이티브 아트의 가장 기초적인 패턴입니다. 
-                            <code class="text-teal-400">for</code> 반복문을 중첩하여 가로(cols)와 세로(rows)를 순회합니다. 
-                            이때 중요한 것은 <code class="text-teal-400">push()</code>, <code class="text-teal-400">translate()</code>, <code class="text-teal-400">pop()</code>을 사용하는 것입니다. 
-                            각 칸(Cell)의 시작점을 (0, 0)으로 기준 잡으면, 칸 내부의 도형을 그릴 때 복잡한 좌표 계산 없이 직관적으로 그릴 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function setup() {
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                3-1. 이중 루프와 좌표 격리 (Matrix Transformation)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                화면을 격자(Grid)로 나누는 것은 제너레이티브 아트의 가장
+                기초적인 패턴입니다.
+                <code class="text-teal-400">for</code> 반복문을 중첩하여
+                가로(cols)와 세로(rows)를 순회합니다. 이때 중요한 것은
+                <code class="text-teal-400">push()</code>,
+                <code class="text-teal-400">translate()</code>,
+                <code class="text-teal-400">pop()</code>을 사용하는 것입니다. 각
+                칸(Cell)의 시작점을 (0, 0)으로 기준 잡으면, 칸 내부의 도형을
+                그릴 때 복잡한 좌표 계산 없이 직관적으로 그릴 수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function setup() {
   createCanvas(400, 400);
   rectMode(CENTER); // 사각형을 중심 기준으로 그리기
   
@@ -340,29 +458,42 @@ function draw() {
     }
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 4. 노이즈 -->
-            <section id="section-4" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">04</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">노이즈와 벡터 필드</h2>
-                </div>
+        <!-- 4. 노이즈 -->
+        <section id="section-4" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">04</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              노이즈와 벡터 필드
+            </h2>
+          </div>
 
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">4-1. Perlin Noise의 연속성</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            <code class="text-teal-400">random()</code>은 주사위처럼 예측 불가능하게 튀는 값을 주지만, 
-                            <code class="text-teal-400">noise()</code>(Perlin Noise)는 구름이나 산맥처럼 <strong>부드럽게 이어지는 연속적인 값</strong>을 반환합니다.
-                            이 성질을 이용해 화면 전체의 픽셀마다 각도를 부여하면, 물이 흐르는 듯한 <strong>Flow Field</strong>를 만들 수 있습니다. 
-                            입력값(x, y 좌표)에 작은 배율(scale)을 곱해서 노이즈 함수에 넣는 것이 패턴의 핵심입니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let scale = 0.02; // 노이즈의 '줌 레벨' (작을수록 완만하게 변화)
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                4-1. Perlin Noise의 연속성
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                <code class="text-teal-400">random()</code>은 주사위처럼 예측
+                불가능하게 튀는 값을 주지만,
+                <code class="text-teal-400">noise()</code>(Perlin Noise)는
+                구름이나 산맥처럼
+                <strong>부드럽게 이어지는 연속적인 값</strong>을 반환합니다. 이
+                성질을 이용해 화면 전체의 픽셀마다 각도를 부여하면, 물이 흐르는
+                듯한 <strong>Flow Field</strong>를 만들 수 있습니다. 입력값(x, y
+                좌표)에 작은 배율(scale)을 곱해서 노이즈 함수에 넣는 것이 패턴의
+                핵심입니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let scale = 0.02; // 노이즈의 '줌 레벨' (작을수록 완만하게 변화)
 
 function setup() {
   createCanvas(400, 400);
@@ -389,18 +520,25 @@ function setup() {
     }
   }
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">4-2. 노이즈 필드 위를 떠다니는 파티클</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            이제 벡터 필드를 눈에 보이지 않게 하고, 그 힘을 따라 움직이는 파티클을 띄워봅시다. 
-                            각 파티클은 자신의 현재 위치(x, y)에 해당하는 노이즈 값을 읽어와서 이동 방향을 결정합니다.
-                            이 기법은 반 고흐의 "별이 빛나는 밤" 같은 유려한 텍스처를 만듭니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let particles = [];
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                4-2. 노이즈 필드 위를 떠다니는 파티클
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                이제 벡터 필드를 눈에 보이지 않게 하고, 그 힘을 따라 움직이는
+                파티클을 띄워봅시다. 각 파티클은 자신의 현재 위치(x, y)에
+                해당하는 노이즈 값을 읽어와서 이동 방향을 결정합니다. 이 기법은
+                반 고흐의 "별이 빛나는 밤" 같은 유려한 텍스처를 만듭니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let particles = [];
 const scale = 0.01;
 
 function setup() {
@@ -440,29 +578,38 @@ function draw() {
     circle(p.x, p.y, 2);
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-             <!-- 5. 물리법칙 (Renamed & Refactored) -->
-             <section id="section-5" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">05</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">물리법칙과 운동</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <!-- 5-1 Velocity & Acceleration -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">5-1. 속도와 가속도 (Velocity & Acceleration)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            자연스러운 움직임의 핵심은 "위치를 직접 바꾸지 않는 것"입니다. 
-                            가속도가 속도를 바꾸고, 속도가 위치를 바꿉니다. 
-                            마우스 클릭 시 가속도를 추가하여 속도를 높이고, 마찰력(friction)을 곱해 서서히 멈추게 하는 기본 패턴입니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let pos, vel, acc;
+        <!-- 5. 물리법칙 (Renamed & Refactored) -->
+        <section id="section-5" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">05</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              물리법칙과 운동
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <!-- 5-1 Velocity & Acceleration -->
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                5-1. 속도와 가속도 (Velocity & Acceleration)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                자연스러운 움직임의 핵심은 "위치를 직접 바꾸지 않는 것"입니다.
+                가속도가 속도를 바꾸고, 속도가 위치를 바꿉니다. 마우스 클릭 시
+                가속도를 추가하여 속도를 높이고, 마찰력(friction)을 곱해 서서히
+                멈추게 하는 기본 패턴입니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let pos, vel, acc;
 
 function setup() {
   createCanvas(400, 400);
@@ -489,19 +636,27 @@ function mousePressed() {
   force.mult(5);
   acc.add(force);
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <!-- 5-2 Collisions -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">5-2. 충돌과 반사, 거리 계산</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            물체가 벽에 닿았을 때 속도의 방향을 반대로(`vel.x *= -1`) 뒤집으면 튕겨 나가는 효과를 낼 수 있습니다. 
-                            객체 간의 충돌은 <code class="text-teal-400">dist(x1, y1, x2, y2)</code> 함수로 거리를 계산하여, 
-                            두 물체의 반지름 합보다 거리가 가까워졌을 때를 감지합니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let x = 200, y = 200;
+            <!-- 5-2 Collisions -->
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                5-2. 충돌과 반사, 거리 계산
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                물체가 벽에 닿았을 때 속도의 방향을 반대로(`vel.x *= -1`)
+                뒤집으면 튕겨 나가는 효과를 낼 수 있습니다. 객체 간의 충돌은
+                <code class="text-teal-400">dist(x1, y1, x2, y2)</code> 함수로
+                거리를 계산하여, 두 물체의 반지름 합보다 거리가 가까워졌을 때를
+                감지합니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let x = 200, y = 200;
 let vx = 3, vy = 2;
 let r = 20;
 
@@ -534,19 +689,28 @@ function draw() {
   stroke(255);
   circle(mouseX, mouseY, 60);
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <!-- 5-3 Forces -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">5-3. 인력, 척력, 그리고 스프링 (Attraction & Spring)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            <strong>인력(Attraction)</strong>은 목표 지점에서 현재 위치를 뺀 벡터(`target - pos`)를 힘으로 사용합니다.
-                            <strong>스프링(Spring)</strong>은 훅의 법칙(Hooke's Law)을 따르며, 늘어난 거리만큼 강한 힘으로 돌아오려 하고 
-                            거기에 댐핑(Damping)을 주어 진동을 서서히 멈추게 합니다. 탄력 있는 인터랙션의 핵심입니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let pos, vel; // 물체
+            <!-- 5-3 Forces -->
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                5-3. 인력, 척력, 그리고 스프링 (Attraction & Spring)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                <strong>인력(Attraction)</strong>은 목표 지점에서 현재 위치를 뺀
+                벡터(`target - pos`)를 힘으로 사용합니다.
+                <strong>스프링(Spring)</strong>은 훅의 법칙(Hooke's Law)을
+                따르며, 늘어난 거리만큼 강한 힘으로 돌아오려 하고 거기에
+                댐핑(Damping)을 주어 진동을 서서히 멈추게 합니다. 탄력 있는
+                인터랙션의 핵심입니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let pos, vel; // 물체
 let restLength = 100; // 스프링 기본 길이
 let k = 0.1; // 스프링 강도 (탄성 계수)
 let damping = 0.9; // 저항 (감쇠)
@@ -588,28 +752,38 @@ function draw() {
   circle(pos.x, pos.y, 40); // 물체
   circle(anchor.x, anchor.y, 10); // 손잡이
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-             <!-- 6. 파티클과 에이전트 (New Chapter) -->
-             <section id="section-6" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">06</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">파티클 시스템과 에이전트</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">6-1. 파티클 시스템 관리 (Lifecycle)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            단일 물체가 아니라 수백 개의 파티클을 다룰 때는 <strong>배열(Array)</strong>을 사용합니다. 
-                            중요한 것은 "생명 주기"입니다. 화면 밖으로 나가거나 수명이 다한(Alpha < 0) 파티클을 
-                            배열에서 제거(<code class="text-teal-400">splice</code>)해야 메모리 누수 없이 무한히 솟아나는 효과를 만들 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let particles = [];
+        <!-- 6. 파티클과 에이전트 (New Chapter) -->
+        <section id="section-6" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">06</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              파티클 시스템과 에이전트
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                6-1. 파티클 시스템 관리 (Lifecycle)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                단일 물체가 아니라 수백 개의 파티클을 다룰 때는
+                <strong>배열(Array)</strong>을 사용합니다. 중요한 것은 "생명
+                주기"입니다. 화면 밖으로 나가거나 수명이 다한(Alpha < 0)
+                파티클을 배열에서 제거(<code class="text-teal-400">splice</code
+                >)해야 메모리 누수 없이 무한히 솟아나는 효과를 만들 수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let particles = [];
 
 function draw() {
   background(0);
@@ -654,19 +828,29 @@ class Particle {
     return this.lifespan < 0;
   }
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">6-2. 자율 에이전트 (Autonomous Agents)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            에이전트는 단순히 물리 법칙에 따르는 것을 넘어, 스스로의 "의지"를 가집니다. 
-                            Craig Reynolds의 <strong>Steering Behaviors</strong> 알고리즘을 사용하면, 
-                            목표를 추적(Seek)하거나, 장애물을 피하거나, 무리(Flocking)를 짓는 복잡한 생명체의 움직임을 구현할 수 있습니다.
-                            핵심 공식: <code class="text-teal-400">Steering Force = Desired Velocity - Current Velocity</code>
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">class Agent {
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                6-2. 자율 에이전트 (Autonomous Agents)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                에이전트는 단순히 물리 법칙에 따르는 것을 넘어, 스스로의
+                "의지"를 가집니다. Craig Reynolds의
+                <strong>Steering Behaviors</strong> 알고리즘을 사용하면, 목표를
+                추적(Seek)하거나, 장애물을 피하거나, 무리(Flocking)를 짓는
+                복잡한 생명체의 움직임을 구현할 수 있습니다. 핵심 공식:
+                <code class="text-teal-400"
+                  >Steering Force = Desired Velocity - Current Velocity</code
+                >
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
@@ -714,29 +898,40 @@ class Particle {
     pop();
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 7. 이미지와 픽셀 (Renumbered from 6) -->
-            <section id="section-7" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">07</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">이미지와 픽셀 조작</h2>
-                </div>
+        <!-- 7. 이미지와 픽셀 (Renumbered from 6) -->
+        <section id="section-7" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">07</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              이미지와 픽셀 조작
+            </h2>
+          </div>
 
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">7-1. 픽셀 샘플링 (Pointillism Effect)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            이미지를 있는 그대로 보여주는 것이 아니라, <strong>색상 데이터의 원천</strong>으로 활용하는 패턴입니다.
-                            <code class="text-teal-400">img.get(x, y)</code> 함수로 특정 좌표의 색상을 추출한 뒤, 
-                            그 색으로 원이나 도형을 그리면 점묘화(Pointillism) 효과를 낼 수 있습니다.
-                            이때 원의 크기를 색상의 밝기(<code class="text-teal-400">brightness()</code>)에 비례하게 하면 더욱 입체적인 표현이 가능합니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let img;
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                7-1. 픽셀 샘플링 (Pointillism Effect)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                이미지를 있는 그대로 보여주는 것이 아니라,
+                <strong>색상 데이터의 원천</strong>으로 활용하는 패턴입니다.
+                <code class="text-teal-400">img.get(x, y)</code> 함수로 특정
+                좌표의 색상을 추출한 뒤, 그 색으로 원이나 도형을 그리면
+                점묘화(Pointillism) 효과를 낼 수 있습니다. 이때 원의 크기를
+                색상의 밝기(<code class="text-teal-400">brightness()</code>)에
+                비례하게 하면 더욱 입체적인 표현이 가능합니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let img;
 
 function preload() {
   // 이미지는 무거우므로 preload에서 미리 불러옵니다.
@@ -770,28 +965,39 @@ function draw() {
     circle(x, y, dia);
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 8. 타이포그래피 (Renumbered from 7) -->
-            <section id="section-8" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">08</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">키네틱 타이포그래피</h2>
-                </div>
+        <!-- 8. 타이포그래피 (Renumbered from 7) -->
+        <section id="section-8" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">08</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              키네틱 타이포그래피
+            </h2>
+          </div>
 
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">8-1. 텍스트를 데이터로 변환 (textToPoints)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            글자를 이미지로 취급하지 않고, 글자를 구성하는 <strong>외곽선 점들의 좌표 배열</strong>로 변환하여 다루는 고급 기법입니다.
-                            <code class="text-teal-400">font.textToPoints()</code> 함수를 사용하면 글자의 형상을 유지하면서도 
-                            각 점(Point)들을 파티클처럼 흩뿌리거나 흔드는 등 자유로운 변형이 가능해집니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let font;
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                8-1. 텍스트를 데이터로 변환 (textToPoints)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                글자를 이미지로 취급하지 않고, 글자를 구성하는
+                <strong>외곽선 점들의 좌표 배열</strong>로 변환하여 다루는 고급
+                기법입니다.
+                <code class="text-teal-400">font.textToPoints()</code> 함수를
+                사용하면 글자의 형상을 유지하면서도 각 점(Point)들을 파티클처럼
+                흩뿌리거나 흔드는 등 자유로운 변형이 가능해집니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let font;
 let points = [];
 
 function preload() {
@@ -825,30 +1031,43 @@ function draw() {
     circle(p.x + xOffset, p.y + yOffset, 3);
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 9. 수학과 알고리즘 (Renumbered from 8) -->
-            <section id="section-9" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">09</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">수학과 알고리즘</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    
-                    <!-- 9-1 Trig -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">9-1. 삼각함수 (Oscillation Principles)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            크리에이티브 코딩에서 <code class="text-teal-400">sin()</code>과 <code class="text-teal-400">cos()</code>은 단순히 삼각형 변을 구하는 도구가 아닙니다.
-                            이 함수들은 입력값(시간, 각도)이 계속 증가하더라도 결과값은 항상 <strong>-1과 1 사이를 부드럽게 오가는 파동(Wave)</strong>을 만들어냅니다.
-                            이를 <code class="text-teal-400">map()</code> 함수와 결합하면 투명도, 크기, 위치, 회전 등 모든 속성에 "숨쉬는 듯한" 주기적인 리듬감을 부여할 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function draw() {
+        <!-- 9. 수학과 알고리즘 (Renumbered from 8) -->
+        <section id="section-9" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">09</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              수학과 알고리즘
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <!-- 9-1 Trig -->
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                9-1. 삼각함수 (Oscillation Principles)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                크리에이티브 코딩에서 <code class="text-teal-400">sin()</code>과
+                <code class="text-teal-400">cos()</code>은 단순히 삼각형 변을
+                구하는 도구가 아닙니다. 이 함수들은 입력값(시간, 각도)이 계속
+                증가하더라도 결과값은 항상
+                <strong>-1과 1 사이를 부드럽게 오가는 파동(Wave)</strong>을
+                만들어냅니다. 이를
+                <code class="text-teal-400">map()</code> 함수와 결합하면 투명도,
+                크기, 위치, 회전 등 모든 속성에 "숨쉬는 듯한" 주기적인 리듬감을
+                부여할 수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function draw() {
   background(0);
   translate(width/2, height/2);
 
@@ -864,20 +1083,29 @@ function draw() {
   fill(255, g, 150);
   circle(0, 0, r);
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <!-- 9-2 Lerp -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">9-2. Lerp (선형 보간법)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            <code class="text-teal-400">lerp(current, target, amount)</code> 함수는 "현재 값"에서 "목표 값"으로 "비율(amount)"만큼 이동한 값을 반환합니다.
-                            예를 들어 비율이 0.1(10%)이라면, 매 프레임마다 남은 거리의 10%씩만 이동하므로 
-                            처음에는 빠르게 출발했다가 목표에 가까워질수록 아주 부드럽게 감속하며 도착하는(Ease-out) 효과를 냅니다.
-                            딱딱한 기계적 움직임을 유기적인 움직임으로 바꾸는 마법의 함수입니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let x = 0;
+            <!-- 9-2 Lerp -->
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                9-2. Lerp (선형 보간법)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                <code class="text-teal-400">lerp(current, target, amount)</code>
+                함수는 "현재 값"에서 "목표 값"으로 "비율(amount)"만큼 이동한
+                값을 반환합니다. 예를 들어 비율이 0.1(10%)이라면, 매 프레임마다
+                남은 거리의 10%씩만 이동하므로 처음에는 빠르게 출발했다가 목표에
+                가까워질수록 아주 부드럽게 감속하며 도착하는(Ease-out) 효과를
+                냅니다. 딱딱한 기계적 움직임을 유기적인 움직임으로 바꾸는 마법의
+                함수입니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let x = 0;
 let y = 0;
 
 function draw() {
@@ -892,29 +1120,41 @@ function draw() {
   noStroke();
   circle(x, y, 30);
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <!-- 10. 인터랙션 (Renumbered from 9) -->
-            <section id="section-10" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">10</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">인터랙션 심화</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">10-1. 다양한 마우스 이벤트 활용</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            단순히 `mouseX`, `mouseY`를 읽는 것을 넘어, 사용자의 행동 시점에 따라 정확히 반응해야 합니다.
-                            <code class="text-teal-400">mouseMoved()</code>(단순 이동), <code class="text-teal-400">mouseDragged()</code>(클릭 후 이동), 
-                            <code class="text-teal-400">mousePressed()</code>(누르는 순간), <code class="text-teal-400">mouseReleased()</code>(떼는 순간) 
-                            각각의 이벤트를 조합하여 드로잉 툴이나 인터랙티브 버튼을 만들 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function setup() {
+        <!-- 10. 인터랙션 (Renumbered from 9) -->
+        <section id="section-10" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">10</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              인터랙션 심화
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                10-1. 다양한 마우스 이벤트 활용
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                단순히 `mouseX`, `mouseY`를 읽는 것을 넘어, 사용자의 행동 시점에
+                따라 정확히 반응해야 합니다.
+                <code class="text-teal-400">mouseMoved()</code>(단순 이동),
+                <code class="text-teal-400">mouseDragged()</code>(클릭 후 이동),
+                <code class="text-teal-400">mousePressed()</code>(누르는 순간),
+                <code class="text-teal-400">mouseReleased()</code>(떼는 순간)
+                각각의 이벤트를 조합하여 드로잉 툴이나 인터랙티브 버튼을 만들 수
+                있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function setup() {
   createCanvas(400, 400);
   background(20);
   noStroke();
@@ -951,18 +1191,27 @@ function mouseReleased() {
 function keyPressed() {
   background(20); // 화면 초기화
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">10-2. 상태 머신 (State Machine) 패턴</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            복잡한 인터랙티브 아트워크나 게임을 만들 때는 "지금 어떤 장면인가?"를 관리하는 <strong>상태 변수(State Variable)</strong>가 필수입니다.
-                            `switch` 문이나 `if-else` 문을 사용하여 상태에 따라 전혀 다른 `draw` 함수를 실행함으로써, 
-                            하나의 캔버스에서 인트로, 메인 인터랙션, 엔딩 화면 등을 전환할 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">let state = "INTRO"; // 가능한 상태: "INTRO", "PLAY", "GAME_OVER"
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                10-2. 상태 머신 (State Machine) 패턴
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                복잡한 인터랙티브 아트워크나 게임을 만들 때는 "지금 어떤
+                장면인가?"를 관리하는
+                <strong>상태 변수(State Variable)</strong>가 필수입니다.
+                `switch` 문이나 `if-else` 문을 사용하여 상태에 따라 전혀 다른
+                `draw` 함수를 실행함으로써, 하나의 캔버스에서 인트로, 메인
+                인터랙션, 엔딩 화면 등을 전환할 수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">let state = "INTRO"; // 가능한 상태: "INTRO", "PLAY", "GAME_OVER"
 
 function draw() {
   background(0);
@@ -1011,33 +1260,45 @@ function keyPressed() {
     state = "INTRO";
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-             <!-- 11. 효과와 필터 (Renumbered from 10) -->
-             <section id="section-11" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">11</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">효과와 필터</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <p class="text-lg leading-relaxed text-slate-300 mb-4">
-                        그림을 그리는 것(Drawing)만큼이나 이미 그려진 픽셀을 조작하는 것(Post-processing)도 중요합니다. 
-                        빛을 표현하거나 잔상을 남기는 등 시각적 완성도를 높이는 기법들입니다.
-                    </p>
+        <!-- 11. 효과와 필터 (Renumbered from 10) -->
+        <section id="section-11" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">11</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              효과와 필터
+            </h2>
+          </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">11-1. 블렌드 모드 (빛의 합성)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            기본적으로 p5는 물감을 덮어쓰듯 그림을 그립니다(BLEND 모드). 
-                            하지만 <code class="text-teal-400">blendMode(ADD)</code>를 사용하면 빛을 섞는 것처럼 동작합니다. 
-                            색이 겹칠수록 점점 밝아져서 흰색이 되며, 이를 통해 네온 사인, 불꽃, 레이저 같은 <strong>발광체 효과(Glow)</strong>를 극적으로 표현할 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function draw() {
+          <div class="space-y-12">
+            <p class="text-lg leading-relaxed text-slate-300 mb-4">
+              그림을 그리는 것(Drawing)만큼이나 이미 그려진 픽셀을 조작하는
+              것(Post-processing)도 중요합니다. 빛을 표현하거나 잔상을 남기는 등
+              시각적 완성도를 높이는 기법들입니다.
+            </p>
+
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                11-1. 블렌드 모드 (빛의 합성)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                기본적으로 p5는 물감을 덮어쓰듯 그림을 그립니다(BLEND 모드).
+                하지만 <code class="text-teal-400">blendMode(ADD)</code>를
+                사용하면 빛을 섞는 것처럼 동작합니다. 색이 겹칠수록 점점
+                밝아져서 흰색이 되며, 이를 통해 네온 사인, 불꽃, 레이저 같은
+                <strong>발광체 효과(Glow)</strong>를 극적으로 표현할 수
+                있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function draw() {
   background(0);
   
   // 1. 빛 효과 켜기
@@ -1061,19 +1322,27 @@ function keyPressed() {
   // 2. 중요: 다음 프레임이나 다른 요소를 위해 모드 초기화
   blendMode(BLEND); 
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">11-2. 잔상 효과 (Alpha Feedback)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            가장 간단하면서도 효과적인 트릭입니다. 
-                            매 프레임 <code class="text-teal-400">background(0)</code>으로 화면을 완전히 지우는 대신, 
-                            투명도가 있는 배경 <code class="text-teal-400">background(0, 10)</code>을 덮어씌웁니다. 
-                            이렇게 하면 이전 프레임의 그림이 희미하게 남으면서 <strong>움직임의 궤적(Trail)</strong>이 자연스럽게 생성됩니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function setup() {
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                11-2. 잔상 효과 (Alpha Feedback)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                가장 간단하면서도 효과적인 트릭입니다. 매 프레임
+                <code class="text-teal-400">background(0)</code>으로 화면을
+                완전히 지우는 대신, 투명도가 있는 배경
+                <code class="text-teal-400">background(0, 10)</code>을
+                덮어씌웁니다. 이렇게 하면 이전 프레임의 그림이 희미하게 남으면서
+                <strong>움직임의 궤적(Trail)</strong>이 자연스럽게 생성됩니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function setup() {
   createCanvas(400, 400);
   background(0); // 처음에만 완전 검은색
 }
@@ -1091,18 +1360,28 @@ function draw() {
   
   circle(x, y, 20);
 }</code></pre>
-                        </div>
-                    </div>
+              </div>
+            </div>
 
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">11-3. 전체 필터 (Global Filters)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            <code class="text-teal-400">filter()</code> 함수는 캔버스 전체의 픽셀을 한 번에 변형합니다. 
-                            <code class="text-teal-400">BLUR</code>(흐림), <code class="text-teal-400">THRESHOLD</code>(임계값 흑백), <code class="text-teal-400">INVERT</code>(색반전) 등이 자주 쓰입니다.
-                            다만 연산량이 많아 속도가 느려질 수 있으므로 주의해서 사용해야 합니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                            <pre class="!my-0 !border-0"><code class="language-javascript">function draw() {
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                11-3. 전체 필터 (Global Filters)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                <code class="text-teal-400">filter()</code> 함수는 캔버스 전체의
+                픽셀을 한 번에 변형합니다.
+                <code class="text-teal-400">BLUR</code>(흐림),
+                <code class="text-teal-400">THRESHOLD</code>(임계값 흑백),
+                <code class="text-teal-400">INVERT</code>(색반전) 등이 자주
+                쓰입니다. 다만 연산량이 많아 속도가 느려질 수 있으므로 주의해서
+                사용해야 합니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">function draw() {
   // 랜덤한 도형 그리기
   fill(random(255), random(255), random(255));
   circle(random(width), random(height), random(10, 50));
@@ -1116,28 +1395,40 @@ function draw() {
     filter(BLUR, 3); // 화면 뭉개기 (몽환적 효과)
   }
 }</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-             <!-- 12. 모듈화 (Renumbered from 11) -->
-             <section id="section-12" class="mb-32 scroll-mt-24">
-                <div class="flex items-baseline gap-4 mb-8">
-                    <span class="text-slate-600 font-mono text-xl font-bold">12</span>
-                    <h2 class="text-3xl md:text-5xl font-bold text-gradient">모듈화 (Instance Mode)</h2>
-                </div>
-                
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-100 mb-4">12-1. 전역 오염 방지 (Namespace)</h3>
-                        <p class="text-lg leading-relaxed mb-6 text-slate-300">
-                            일반적인 p5.js 방식(Global Mode)은 변수들이 전역 공간에 노출되어, React/Vue 같은 프레임워크나 여러 개의 스케치를 한 페이지에 띄울 때 충돌이 발생합니다.
-                            <strong>Instance Mode</strong>는 <code class="text-teal-400">p</code>라는 객체 안에 p5의 모든 기능(setup, draw, circle 등)을 가두어 두는 패턴입니다.
-                            이를 통해 코드를 안전하게 모듈화하고 재사용할 수 있습니다.
-                        </p>
-                        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-700">
-<pre class="!my-0 !border-0"><code class="language-javascript">import p5 from 'p5';
+        <!-- 12. 모듈화 (Renumbered from 11) -->
+        <section id="section-12" class="mb-32 scroll-mt-24">
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-slate-600 font-mono text-xl font-bold">12</span>
+            <h2 class="text-3xl md:text-5xl font-bold text-gradient">
+              모듈화 (Instance Mode)
+            </h2>
+          </div>
+
+          <div class="space-y-12">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-100 mb-4">
+                12-1. 전역 오염 방지 (Namespace)
+              </h3>
+              <p class="text-lg leading-relaxed mb-6 text-slate-300">
+                일반적인 p5.js 방식(Global Mode)은 변수들이 전역 공간에
+                노출되어, React/Vue 같은 프레임워크나 여러 개의 스케치를 한
+                페이지에 띄울 때 충돌이 발생합니다.
+                <strong>Instance Mode</strong>는
+                <code class="text-teal-400">p</code>라는 객체 안에 p5의 모든
+                기능(setup, draw, circle 등)을 가두어 두는 패턴입니다. 이를 통해
+                코드를 안전하게 모듈화하고 재사용할 수 있습니다.
+              </p>
+              <div
+                class="bg-gray-900 rounded-xl overflow-hidden border border-gray-700"
+              >
+                <pre
+                  class="!my-0 !border-0"
+                ><code class="language-javascript">import p5 from 'p5';
 
 // 스케치를 하나의 함수로 감쌉니다. (Closure)
 const sketch = (p) => {
@@ -1159,58 +1450,63 @@ const sketch = (p) => {
 // 새로운 p5 인스턴스 생성 (특정 div에 붙일 수도 있음)
 // new p5(sketch, document.getElementById('canvas-container'));
 new p5(sketch);</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <footer class="text-center text-slate-500 pb-20 pt-10 border-t border-gray-800">
-                <p>ⓒ 2026 JaiKim & Semyung Univ. All rights reserved</p>
-            </footer>
-
-        </main>
+        <footer
+          class="text-center text-slate-500 pb-20 pt-10 border-t border-gray-800"
+        >
+          <p>ⓒ 2026 JaiKim & Semyung Univ. All rights reserved</p>
+        </footer>
+      </main>
     </div>
 
     <!-- Scripts -->
     <!-- Prism JS for Syntax Highlighting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    
+
     <!-- Simple Scroll Spy Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
+      document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
 
-            const observerOptions = {
-                root: null,
-                rootMargin: '-20% 0px -60% 0px', // Adjusted trigger point
-                threshold: 0
-            };
+        const observerOptions = {
+          root: null,
+          rootMargin: "-20% 0px -60% 0px", // Adjusted trigger point
+          threshold: 0,
+        };
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Remove active class from all
-                        navLinks.forEach(link => link.classList.remove('active'));
-                        
-                        // Add active class to corresponding link
-                        const id = entry.target.getAttribute('id');
-                        const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
-                        if (activeLink) {
-                            activeLink.classList.add('active');
-                            // Scroll sidebar link into view if needed
-                            activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    }
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Remove active class from all
+              navLinks.forEach((link) => link.classList.remove("active"));
+
+              // Add active class to corresponding link
+              const id = entry.target.getAttribute("id");
+              const activeLink = document.querySelector(
+                `.nav-link[href="#${id}"]`,
+              );
+              if (activeLink) {
+                activeLink.classList.add("active");
+                // Scroll sidebar link into view if needed
+                activeLink.scrollIntoView({
+                  behavior: "smooth",
+                  block: "nearest",
                 });
-            }, observerOptions);
+              }
+            }
+          });
+        }, observerOptions);
 
-            sections.forEach(section => {
-                observer.observe(section);
-            });
+        sections.forEach((section) => {
+          observer.observe(section);
         });
+      });
     </script>
-<script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
