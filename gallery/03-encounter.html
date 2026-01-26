@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Encounter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Modern Serif -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- p5 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/addons/p5.sound.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f2f2f2;
+      --muted: #9a9a9a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Playfair Display", serif;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* TEXT OVERLAY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      padding: 72px;
+      z-index: 2;
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+    }
+
+    .overlay.hidden {
+      opacity: 0;
+    }
+
+    .title {
+      grid-column: 1 / 10;
+      align-self: center;
+    }
+
+    h1 {
+      font-size: clamp(72px, 11vw, 180px);
+      font-weight: 100;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+    }
+
+    .subtitle {
+      margin-top: 28px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--fg);
+    }
+
+    .divider {
+      opacity: 0.5;
+    }
+
+    .description {
+      margin-top: 40px;
+      max-width: 520px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    /* SOUND BUTTON */
+    .controls {
+      position: fixed;
+      bottom: 48px;
+      left: 72px;
+      z-index: 3;
+      pointer-events: auto;
+    }
+
+    button {
+      background: transparent;
+      border: 1px solid var(--fg);
+      color: var(--fg);
+      padding: 12px 22px;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    button:hover {
+      background: var(--fg);
+      color: var(--bg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay" id="overlay">
+    <div class="title">
+      <h1>ENCOUNTER</h1>
+
+      <div class="subtitle">
+        <span>조우</span>
+        <span class="divider">|</span>
+        <span>遭遇</span>
+      </div>
+
+      <div class="description">
+        우리는 스쳐가듯 만나고, 머무르지 못한 채 흘러간다.<br>
+        같은 시간 위를 걷고 있으나, 각자의 속도로 지나가며<br>
+        어떤 만남은 소리를 남기고, 어떤 헤어짐은 침묵으로 사라진다.
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="soundToggle">SOUND ON</button>
+  </div>
+
+  <script>
+    let playX;
+    let tracks = [];
+    let synths = [];
+    let started = false;
+    let muted = true;
+
+    const trackCount = 5;
+    const trackH = 230;
+    const connectDist = 160;
+
+    function setup() {
+      createCanvas(windowWidth, trackCount * trackH);
+      playX = width / 2;
+
+      synths = [
+        new p5.Oscillator("sine"),
+        new p5.Oscillator("triangle"),
+        new p5.Oscillator("sawtooth"),
+        new p5.Oscillator("square"),
+      ];
+
+      synths.forEach(s => {
+        s.start();
+        s.amp(0);
+      });
+
+      for (let t = 0; t < trackCount; t++) {
+        let row = [];
+        let count = t === 3 ? 20 : 12;
+        for (let i = 0; i < count; i++) {
+          row.push(makeNote(t));
+        }
+        tracks.push(row);
+      }
+    }
+
+    function makeNote(track) {
+      let dir = track % 2 === 0 ? -1 : 1;
+      return {
+        track,
+        dir,
+        baseSpeed: random(0.4, 1.2),
+        x: dir === -1 ? random(width, width * 1.5) : random(-width * 0.5, 0),
+        y: track * trackH + random(40, trackH - 40),
+        r: random(2, 8),
+        played: false,
+      };
+    }
+
+    function draw() {
+      background(10);
+
+      stroke(50);
+      for (let i = 1; i < trackCount; i++) {
+        line(0, i * trackH, width, i * trackH);
+      }
+
+      stroke(255);
+      strokeWeight(2);
+      line(playX, 0, playX, height);
+
+      let allNotes = tracks.flat();
+      drawConnections(allNotes);
+
+      for (let t = 0; t < trackCount; t++) {
+        updateAndDrawTrack(tracks[t], t);
+      }
+    }
+
+    function updateAndDrawTrack(arr, track) {
+      noStroke();
+      fill(255);
+      for (let n of arr) {
+        n.x += n.baseSpeed * n.dir;
+        ellipse(n.x, n.y, n.r * 2);
+
+        if (!n.played && abs(n.x - playX) < 1) {
+          playSound(n);
+          n.played = true;
+        }
+
+        if ((n.dir === -1 && n.x < -80) || (n.dir === 1 && n.x > width + 80)) {
+          Object.assign(n, makeNote(track));
+        }
+      }
+    }
+
+    function drawConnections(arr) {
+      strokeWeight(1.5);
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          let d = dist(arr[i].x, arr[i].y, arr[j].x, arr[j].y);
+          if (d < connectDist) {
+            stroke(255, map(d, 0, connectDist, 120, 0));
+            line(arr[i].x, arr[i].y, arr[j].x, arr[j].y);
+          }
+        }
+      }
+    }
+
+    function playSound(n) {
+      if (!started || muted) return;
+      let s = synths[n.track % synths.length];
+      let freq = map(n.y, 0, height, 1600, 200);
+      s.freq(freq, 0.05);
+      s.amp(0.2, 0.02);
+      s.amp(0, 0.3);
+    }
+
+const overlay = document.getElementById("overlay");
+
+let autoHidden = false;
+let hideTimer = null;
+
+function startAutoHide() {
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => {
+    overlay.classList.add("hidden");
+    autoHidden = true;
+  }, 5000);
+}
+
+// 최초 실행
+startAutoHide();
+
+window.addEventListener("mousemove", () => {
+  if (autoHidden) {
+    overlay.classList.remove("hidden");
+    autoHidden = false;
+    startAutoHide();
+  }
+});
+
+
+    document.getElementById("soundToggle").onclick = () => {
+      userStartAudio();
+      started = true;
+      muted = !muted;
+      document.getElementById("soundToggle").innerText = muted ? "SOUND ON" : "SOUND OFF";
+    };
+
+    function windowResized() {
+      resizeCanvas(windowWidth, trackCount * trackH);
+      playX = width / 2;
+    }
+  </script>
+
+</body>
+</html>
