@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shape of My Heart</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+
+    <style>
+      body {
+        font-family: 'Playfair Display', 'Noto Serif KR', serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #FAFAF9; /* stone-50 */
+      }
+
+      /* Animation for text */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 40px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out forwards;
+      }
+
+      /* Custom Slider Styling */
+      input[type=range] {
+        -webkit-appearance: none; 
+        background: transparent; 
+        width: 100%;
+        cursor: pointer;
+      }
+      
+      input[type=range]:focus {
+        outline: none;
+      }
+
+      /* Slider Thumb */
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: #44403C; /* stone-700 */
+        cursor: pointer;
+        margin-top: -7px; 
+        position: relative;
+        z-index: 20;
+      }
+
+      input[type=range]::-moz-range-thumb {
+        height: 16px;
+        width: 16px;
+        border: none;
+        border-radius: 50%;
+        background: #44403C;
+        cursor: pointer;
+        z-index: 20;
+      }
+
+      /* Slider Track */
+      input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 2px;
+        background: #D6D3D1; /* stone-300 */
+        cursor: pointer;
+      }
+
+      input[type=range]::-moz-range-track {
+        width: 100%;
+        height: 2px;
+        background: #D6D3D1;
+        cursor: pointer;
+      }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="text-stone-800 selection:bg-rose-200 selection:text-rose-900">
+
+    <!-- Main Container -->
+    <main class="relative w-full h-screen overflow-hidden flex flex-col items-center justify-center">
+      
+      <!-- Generative Art Layer (Background) -->
+      <div id="p5-container" class="absolute inset-0 -z-0 pointer-events-none"></div>
+
+      <!-- Content Layer (Foreground) -->
+      <div class="relative z-10 w-full max-w-2xl px-8 flex flex-col items-center text-center space-y-12 animate-fade-in-up">
+        
+        <!-- Header Text -->
+        <div class="space-y-4">
+          <h1 class="text-5xl md:text-7xl font-serif italic font-light tracking-tight text-stone-800">
+            Shape of My Heart
+          </h1>
+          <p class="text-stone-500 font-serif text-sm md:text-base leading-relaxed max-w-md mx-auto whitespace-pre-line">
+            당신의 마음이 흐르는 모양을 관찰해보세요.
+          </p>
+        </div>
+
+        <!-- Interactive Control -->
+        <div class="w-full pt-8">
+            <div class="w-full max-w-md mx-auto space-y-4">
+                <div class="flex justify-between text-xs sm:text-sm font-serif text-stone-500 tracking-widest uppercase">
+                  <span>Melancholy</span>
+                  <span>Euphoria</span>
+                </div>
+                <div class="relative h-6 flex items-center">
+                  <input
+                    id="emotion-slider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="50"
+                    aria-label="Emotion Slider"
+                  />
+                </div>
+              </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="absolute bottom-8 text-stone-400 text-xs font-serif tracking-widest z-10 opacity-60">
+        INTERACTIVE EMOTION VISUALIZER
+      </div>
+
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // Global State
+        let emotionValue = 50;
+
+        // UI Initialization
+        const slider = document.getElementById('emotion-slider');
+        slider.addEventListener('input', (e) => {
+            emotionValue = Number(e.target.value);
+        });
+
+        // p5.js Sketch
+        const sketch = (p) => {
+            let noiseOffset = 0;
+            
+            // Background blurred shapes
+            const bgShapes = [];
+            // Happy Particles
+            const particles = [];
+            // Sad Satellites
+            const satellites = [];
+
+            p.setup = () => {
+                // Create canvas attached to the #p5-container div
+                const container = document.getElementById('p5-container');
+                p.createCanvas(window.innerWidth, window.innerHeight).parent(container);
+                
+                // Initialize Background Shapes (Blurred blobs)
+                for(let i=0; i<12; i++) {
+                    bgShapes.push({
+                        x: p.random(p.width),
+                        y: p.random(p.height),
+                        r: p.random(50, 150),
+                        color: p.color(p.random(150, 255), p.random(150, 220), p.random(180, 255), 150),
+                        vx: p.random(-0.5, 0.5),
+                        vy: p.random(-0.5, 0.5)
+                    });
+                }
+
+                // Initialize Satellites (Persistent objects for sad state)
+                for(let i=0; i<6; i++) {
+                    satellites.push({
+                        angle: p.random(p.TWO_PI),
+                        distance: p.random(250, 450),
+                        speed: p.random(0.005, 0.02) * (p.random() > 0.5 ? 1 : -1),
+                        size: p.random(8, 20)
+                    });
+                }
+            };
+
+            p.draw = () => {
+                const norm = emotionValue / 100; // 0.0 to 1.0
+
+                p.background(250, 250, 249, 255); 
+
+                // --- 1. Draw Blurred Background Shapes ---
+                p.push();
+                const ctx = p.drawingContext;
+                ctx.save();
+                ctx.filter = 'blur(60px)'; // Heavy blur
+                
+                p.noStroke();
+                bgShapes.forEach(shape => {
+                    shape.x += shape.vx;
+                    shape.y += shape.vy;
+                    
+                    // Wrap around
+                    if(shape.x < -150) shape.x = p.width + 150;
+                    if(shape.x > p.width + 150) shape.x = -150;
+                    if(shape.y < -150) shape.y = p.height + 150;
+                    if(shape.y > p.height + 150) shape.y = -150;
+
+                    p.fill(shape.color);
+                    p.circle(shape.x, shape.y, shape.r * 2);
+                });
+                ctx.restore();
+                p.pop();
+
+
+                p.push();
+                p.translate(p.width / 2, p.height / 2);
+
+                // --- Visual Identity ---
+                const sadColor = p.color(30, 41, 59); // Slate 800
+                const happyColor = p.color(251, 113, 133); // Rose 400
+                const mainColor = p.lerpColor(sadColor, happyColor, norm);
+
+
+                // --- 2. Draw Sad Satellites ---
+                if (norm < 0.6) {
+                    const satelliteAlpha = p.map(norm, 0, 0.6, 255, 0);
+                    p.fill(20, 20, 20, satelliteAlpha);
+                    p.noStroke();
+                    
+                    satellites.forEach(sat => {
+                        sat.angle += sat.speed;
+                        const currentDist = sat.distance * (0.8 + norm * 0.4);
+                        const sx = p.cos(sat.angle) * currentDist;
+                        const sy = p.sin(sat.angle) * currentDist;
+                        p.circle(sx, sy, sat.size);
+                        
+                        if (norm < 0.25) {
+                             p.stroke(0, 0, 0, satelliteAlpha * 0.15);
+                             p.strokeWeight(1);
+                             p.line(0, 0, sx, sy);
+                             p.noStroke();
+                        }
+                    });
+                }
+
+                // --- 3. Happy Particles ---
+                if (norm > 0.4) {
+                    const emissionChance = p.map(norm, 0.4, 1, 0, 0.8); 
+                    if (p.random() < emissionChance) {
+                         const angle = p.random(p.TWO_PI);
+                         const startDist = p.lerp(150, 300, norm); 
+                         particles.push({
+                             x: p.cos(angle) * (startDist * 0.5),
+                             y: p.sin(angle) * (startDist * 0.5),
+                             vx: p.cos(angle) * p.random(2, 6) * norm,
+                             vy: p.sin(angle) * p.random(2, 6) * norm,
+                             size: p.random(4, 12),
+                             life: 255,
+                             color: p.lerpColor(p.color(255, 200, 100), happyColor, p.random())
+                         });
+                    }
+                }
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    let part = particles[i];
+                    part.x += part.vx;
+                    part.y += part.vy;
+                    part.life -= p.random(2, 5);
+                    
+                    if (part.life <= 0) {
+                        particles.splice(i, 1);
+                    } else {
+                        p.noStroke();
+                        part.color.setAlpha(part.life);
+                        p.fill(part.color);
+                        p.circle(part.x, part.y, part.size);
+                    }
+                }
+
+                // --- 4. Main Morphing Shape ---
+                p.stroke(mainColor);
+                p.strokeWeight(p.lerp(1, 4, norm)); 
+                
+                const fillColor = p.color(p.red(mainColor), p.green(mainColor), p.blue(mainColor));
+                fillColor.setAlpha(p.map(norm, 0, 1, 220, 60)); 
+                p.fill(fillColor);
+
+                const currentRadius = p.lerp(150, 380, norm);
+                const noiseMax = p.lerp(2.5, 0.5, norm); 
+                const mutationSpeed = p.lerp(0.002, 0.02, norm);
+                const pulseAmp = p.lerp(0, 30, norm);
+                const pulseFreq = p.lerp(0.02, 0.1, norm);
+                const pulse = p.sin(p.frameCount * pulseFreq) * pulseAmp;
+
+                p.beginShape();
+                for (let a = 0; a < p.TWO_PI; a += 0.05) {
+                    const xoff = p.map(p.cos(a), -1, 1, 0, noiseMax);
+                    const yoff = p.map(p.sin(a), -1, 1, 0, noiseMax);
+                    const n = p.noise(xoff, yoff, noiseOffset);
+                    const rVar = p.map(n, 0, 1, -30, 30);
+                    const r = currentRadius + rVar + pulse;
+                    const x = r * p.cos(a);
+                    const y = r * p.sin(a);
+                    p.curveVertex(x, y);
+                }
+                p.endShape(p.CLOSE);
+
+                p.pop();
+
+                noiseOffset += mutationSpeed;
+            };
+
+            p.windowResized = () => {
+                p.resizeCanvas(window.innerWidth, window.innerHeight);
+            };
+        };
+
+        // Initialize P5
+        new p5(sketch);
+    </script>
+</body>
+</html>
