@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>p5.js + three.js Canvas Overlay</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Lavishly+Yours&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #f2f2f2;
+      }
+
+      #canvas-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* three.js */
+      #three-container {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      /* p5.js */
+      #p5-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* 공통 타이틀 레이어 */
+      .title-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+
+        display: flex;
+        justify-content: center;
+      }
+
+      /* 상단 TURMOIL */
+      #title-top {
+        align-items: flex-start;
+        padding-top: 20vh;
+      }
+
+      #title-top h1 {
+        font-family: "Figtree", sans-serif;
+        font-size: clamp(64px, 15vw, 220px);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: rgba(25, 15, 159, 0.9);
+        margin: 0;
+        line-height: 1;
+      }
+
+      /* 하단 in your mind */
+      #title-bottom {
+        align-items: flex-end;
+        padding-bottom: 20vh;
+      }
+
+      #title-bottom h2 {
+        font-family: "Lavishly Yours", cursive;
+        font-size: clamp(48px, 15vw, 280px);
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.9);
+        margin: 0;
+        line-height: 1;
+      }
+
+      /* 하단 안내 문구 */
+      #instruction-text {
+        position: absolute;
+        bottom: 10vh;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+
+        display: flex;
+        align-items: center;
+      }
+
+      #instruction-text p {
+        margin: 0;
+        font-size: 24px;
+        letter-spacing: 0.05em;
+        color: rgba(25, 15, 159, 0.9);
+        font-family: "Times New Roman", serif;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="canvas-wrapper">
+      <div id="three-container"></div>
+      <div id="p5-container"></div>
+
+      <!-- 상단 타이틀 -->
+      <div id="title-top" class="title-layer">
+        <h1>TURMOIL</h1>
+      </div>
+
+      <!-- 하단 타이틀 -->
+      <div id="title-bottom" class="title-layer">
+        <h2>in your mind</h2>
+      </div>
+
+      <div id="instruction-text">
+        <p>
+          SPACEBAR를 눌러 당신의 감정을 응축해보세요. 그리고 다시 마음을
+          풀어보세요.
+        </p>
+      </div>
+    </div>
+
+    <!-- p5.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@2.2.0/lib/p5.min.js"></script>
+
+    <!-- three.js -->
+    <script type="module" src="js/three-sketch.js"></script>
+
+    <!-- p5.js sketch -->
+    <script src="js/p5-sketch.js"></script>
+  </body>
+</html>
