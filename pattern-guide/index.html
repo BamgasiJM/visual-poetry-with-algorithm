@@ -131,73 +131,73 @@
               href="#section-1"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              1. 구조와 캔버스 (Canvas)
+              1. 스케치 구조와 캔버스
             </a>
             <a
               href="#section-2"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              2. 컬러 시스템 (Color)
+              2. 컬러 시스템
             </a>
             <a
               href="#section-3"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              3. 그리드와 반복 (Grids)
+              3. 반복을 통한 그리드
             </a>
             <a
               href="#section-4"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              4. 노이즈와 필드 (Noise)
+              4. 노이즈와 벡터 필드
             </a>
             <a
               href="#section-5"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              5. 물리법칙 (Physics)
+              5. 물리법칙과 운동
             </a>
             <a
               href="#section-6"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              6. 파티클과 에이전트 (System)
+              6. 파티클 시스템과 에이전트
             </a>
             <a
               href="#section-7"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              7. 이미지와 픽셀 (Images)
+              7. 이미지와 픽셀 다루기
             </a>
             <a
               href="#section-8"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              8. 타이포그래피 (Type)
+              8. 키네틱 타이포그래피
             </a>
             <a
               href="#section-9"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              9. 수학과 알고리즘 (Math)
+              9. 수학과 알고리즘
             </a>
             <a
               href="#section-10"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              10. 인터랙션 (Interaction)
+              10. 인터랙션
             </a>
             <a
               href="#section-11"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              11. 효과와 필터 (Effects)
+              11. 효과와 필터
             </a>
             <a
               href="#section-12"
               class="nav-link block px-4 py-2 text-xs font-medium hover:text-white border-l-2 border-transparent transition-all"
             >
-              12. 모듈화 (Modularity)
+              12. 모듈화
             </a>
           </nav>
         </div>
@@ -242,7 +242,7 @@
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                1-1. 반응형 풀스크린 캔버스 (Responsive)
+                1-1. 반응형 캔버스
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 모던 웹 환경에서 아트워크는 다양한 화면 크기에 유연하게 대응해야
@@ -286,7 +286,7 @@ function windowResized() {
 
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                1-2. 사용자 정의 함수 (Clean Code)
+                1-2. 사용자 정의 함수
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <code class="text-teal-400">draw()</code> 함수는 오케스트라의
@@ -401,14 +401,14 @@ function draw() {
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">03</span>
             <h2 class="text-3xl md:text-5xl font-bold text-gradient">
-              그리드와 반복
+              반복을 통한 그리드
             </h2>
           </div>
 
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                3-1. 이중 루프와 좌표 격리 (Matrix Transformation)
+                3-1. 그리드 만들기
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 화면을 격자(Grid)로 나누는 것은 제너레이티브 아트의 가장
@@ -476,7 +476,7 @@ function draw() {
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                4-1. Perlin Noise의 연속성
+                4-1. Perlin Noise의 기본 원리
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <code class="text-teal-400">random()</code>은 주사위처럼 예측
@@ -584,7 +584,7 @@ function draw() {
           </div>
         </section>
 
-        <!-- 5. 물리법칙 (Renamed & Refactored) -->
+        <!-- 5. 물리법칙 -->
         <section id="section-5" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">05</span>
@@ -597,11 +597,11 @@ function draw() {
             <!-- 5-1 Velocity & Acceleration -->
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                5-1. 속도와 가속도 (Velocity & Acceleration)
+                5-1. 속도와 가속도
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 자연스러운 움직임의 핵심은 "위치를 직접 바꾸지 않는 것"입니다.
-                가속도가 속도를 바꾸고, 속도가 위치를 바꿉니다. 마우스 클릭 시
+                가속도(acceleration)가 속도(velocity)를 바꾸고, 속도가 위치(position)를 바꿉니다. 마우스 클릭 시
                 가속도를 추가하여 속도를 높이고, 마찰력(friction)을 곱해 서서히
                 멈추게 하는 기본 패턴입니다.
               </p>
@@ -701,11 +701,11 @@ function draw() {
             <!-- 5-3 Forces -->
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                5-3. 인력, 척력, 그리고 스프링 (Attraction, Repulsion & Spring)
+                5-3. 인력, 척력, 그리고 스프링
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <strong>인력(Attraction)</strong>은 목표 지점에서 현재 위치를 뺀
-                벡터(target - position)를 힘으로 사용합니다.
+                벡터(target - position)를 힘으로 사용합니다. 이것과 반대되는 개념은 <strong>척력(Repulsion)</strong>입니다.
                 <strong>스프링(Spring)</strong>은 훅의 법칙(Hooke's Law)을
                 따르며, 늘어난 거리만큼 강한 힘으로 돌아오려 하고 거기에
                 댐핑(damping)을 주어 진동을 서서히 멈추게 합니다. 탄력 있는
@@ -764,7 +764,7 @@ function draw() {
           </div>
         </section>
 
-        <!-- 6. 파티클과 에이전트 (New Chapter) -->
+        <!-- 6. 파티클과 에이전트 -->
         <section id="section-6" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">06</span>
@@ -776,12 +776,12 @@ function draw() {
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                6-1. 파티클 시스템 관리 (Lifecycle)
+                6-1. 파티클 시스템 관리
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 단일 물체가 아니라 수백 개의 파티클을 다룰 때는
                 <strong>배열(Array)</strong>을 사용합니다. 중요한 것은 "생명
-                주기"입니다. 화면 밖으로 나가거나 수명이 다한(Alpha < 0)
+                주기(Lifecycle)"입니다. 화면 밖으로 나가거나 수명이 다한(Alpha < 0)
                 파티클을 배열에서 제거(<code class="text-teal-400">splice</code
                 >)해야 메모리 누수 없이 무한히 솟아나는 효과를 만들 수 있습니다.
               </p>
@@ -844,11 +844,11 @@ class Particle {
 
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                6-2. 자율 에이전트 (Autonomous Agents)
+                6-2. 자율 에이전트
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 에이전트는 단순히 물리 법칙에 따르는 것을 넘어, 스스로의
-                "의지"를 가집니다. Craig Reynolds의
+                "의지"를 가집니다. 이것을 자율 에이전트 (Autonomous Agents)라고 부릅니다. Craig Reynolds의
                 <strong>Steering Behaviors</strong> 알고리즘을 사용하면, 목표를
                 추적(Seek)하거나, 장애물을 피하거나, 무리(Flocking)를 짓는
                 복잡한 생명체의 움직임을 구현할 수 있습니다. </p>
@@ -958,19 +958,19 @@ class Agent {
           </div>
         </section>
 
-        <!-- 7. 이미지와 픽셀 (Renumbered from 6) -->
+        <!-- 7. 이미지와 픽셀 -->
         <section id="section-7" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">07</span>
             <h2 class="text-3xl md:text-5xl font-bold text-gradient">
-              이미지와 픽셀 조작
+              이미지와 픽셀 다루기
             </h2>
           </div>
 
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                7-1. 픽셀 샘플링 (Pointillism Effect)
+                7-1. 픽셀 샘플링
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 이미지를 있는 그대로 보여주는 것이 아니라,
@@ -1025,7 +1025,7 @@ function draw() {
           </div>
         </section>
 
-        <!-- 8. 타이포그래피 (Renumbered from 7) -->
+        <!-- 8. 타이포그래피 -->
         <section id="section-8" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">08</span>
@@ -1037,7 +1037,7 @@ function draw() {
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                8-1. 텍스트를 데이터로 변환 (textToPoints)
+                8-1. 텍스트를 데이터로 변환
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 글자를 이미지로 취급하지 않고, 글자를 구성하는
@@ -1092,7 +1092,7 @@ function draw() {
           </div>
         </section>
 
-        <!-- 9. 수학과 알고리즘 (Renumbered from 8) -->
+        <!-- 9. 수학과 알고리즘 -->
         <section id="section-9" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">09</span>
@@ -1105,17 +1105,17 @@ function draw() {
             <!-- 9-1 Trig -->
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                9-1. 삼각함수 (Oscillation Principles)
+                9-1. 삼각함수를 사용한 진동
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 크리에이티브 코딩에서 <code class="text-teal-400">sin()</code>과
                 <code class="text-teal-400">cos()</code>은 단순히 삼각형 변을
                 구하는 도구가 아닙니다. 이 함수들은 입력값(시간, 각도)이 계속
                 증가하더라도 결과값은 항상
-                <strong>-1과 1 사이를 부드럽게 오가는 파동(Wave)</strong>을
+                <strong>-1과 1 사이를 부드럽게 오가는 파동</strong>을
                 만들어냅니다. 이를
                 <code class="text-teal-400">map()</code> 함수와 결합하면 투명도,
-                크기, 위치, 회전 등 모든 속성에 "숨쉬는 듯한" 주기적인 리듬감을
+                크기, 위치, 회전 등 모든 속성에 <strong>"숨쉬는 듯한" 주기적인 리듬감(Oscillation)</strong>을
                 부여할 수 있습니다.
               </p>
               <div
@@ -1149,7 +1149,7 @@ function draw() {
             <!-- 9-2 Lerp -->
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                9-2. Lerp (선형 보간법)
+                9-2. Lerp : 선형 보간법
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <code class="text-teal-400">lerp(current, target, amount)</code>
@@ -1189,19 +1189,19 @@ function draw() {
           </div>
         </section>
 
-        <!-- 10. 인터랙션 (Renumbered from 9) -->
+        <!-- 10. 인터랙션 -->
         <section id="section-10" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">10</span>
             <h2 class="text-3xl md:text-5xl font-bold text-gradient">
-              인터랙션 심화
+              인터랙션
             </h2>
           </div>
 
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                10-1. 다양한 마우스 이벤트 활용
+                10-1. 마우스 이벤트 활용
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 단순히 `mouseX`, `mouseY`를 읽는 것을 넘어, 사용자의 행동 시점에
@@ -1335,7 +1335,7 @@ function keyPressed() {
           </div>
         </section>
 
-        <!-- 11. 효과와 필터 (Renumbered from 10) -->
+        <!-- 11. 효과와 필터 -->
         <section id="section-11" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">11</span>
@@ -1353,7 +1353,7 @@ function keyPressed() {
 
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                11-1. 블렌드 모드 (빛의 합성)
+                11-1. 블렌드 모드
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 기본적으로 p5는 물감을 덮어쓰듯 그림을 그립니다(BLEND 모드).
@@ -1422,7 +1422,7 @@ function draw() {
 
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                11-2. 잔상 효과 (Alpha Feedback)
+                11-2. 잔상 효과
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 가장 간단하면서도 효과적인 트릭입니다. 매 프레임
@@ -1460,7 +1460,7 @@ function draw() {
 
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                11-3. 전체 필터 (Global Filters)
+                11-3. 필터로 후보정하기
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 <code class="text-teal-400">filter()</code> 함수는 캔버스 전체의
@@ -1522,19 +1522,19 @@ function draw() {
           </div>
         </section>
 
-        <!-- 12. 모듈화 (Renumbered from 11) -->
+        <!-- 12. 모듈화 -->
         <section id="section-12" class="mb-32 scroll-mt-24">
           <div class="flex items-baseline gap-4 mb-8">
             <span class="text-slate-600 font-mono text-xl font-bold">12</span>
             <h2 class="text-3xl md:text-5xl font-bold text-gradient">
-              모듈화 (Instance Mode)
+              모듈화
             </h2>
           </div>
 
           <div class="space-y-12">
             <div>
               <h3 class="text-2xl font-bold text-gray-100 mb-4">
-                12-1. 전역 오염 방지 (Namespace)
+                12-1. 인스턴스 모드 (Instance Mode)
               </h3>
               <p class="text-lg leading-relaxed mb-6 text-slate-300">
                 일반적인 p5.js 방식(Global Mode)은 변수들이 전역 공간에
