@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make Your Constellation</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quintessential&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* ===============================
+       Intro Overlay
+    =============================== */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      transition: opacity 1.5s ease;
+      z-index: 10;
+    }
+
+    .overlay.fade-out {
+      opacity: 0;
+    }
+
+    .overlay h1 {
+      font-family: 'Quintessential', serif;
+      font-size: 120px;
+      letter-spacing: 6px;
+      text-align: center;
+      background: linear-gradient(
+        90deg,
+        hsl(53, 79%, 74%),
+        hsl(30, 80%, 80%),
+        hsl(320, 70%, 75%)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 24px;
+    }
+
+    .overlay p {
+      font-family: 'Gowun Dodum', sans-serif;
+      color: #ffffff;
+      font-size: 30px;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    /* ===============================
+       Poem Layer
+    =============================== */
+    #poem {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      z-index: 9;
+      opacity: 0;
+    }
+
+    #poem span {
+      font-family: 'Gowun Dodum', sans-serif;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 22px;
+      line-height: 1.8;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 2.5s ease;
+      white-space: pre-line;
+    }
+
+    #poem span.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="canvas-container">
+    <div class="overlay" id="overlay">
+      <h1>Make Your Constellation</h1>
+      <p>밤하늘을 클릭해서 별자리를 만들어보세요.</p>
+    </div>
+
+    <div id="poem">
+      <span id="poem-line"></span>
+    </div>
+  </div>
+
+  <script>
+    let particles = [];
+    let grid = {};
+    let cellSize = 150;
+    let now = 0;
+    let lastTime = 0;
+
+    let overlay;
+    let poemLayer;
+    let poemLine;
+
+    let started = false;
+
+    const poem = [
+      "계절이 지나가는 하늘에는\n가을로 가득 차 있습니다",
+      "나는 아무 걱정도 없이\n가을 속의 별들을 다 헤일 듯합니다",
+      "가슴속에 하나 둘 새겨지는 별을\n이제 다 못 헤는 것은",
+      "쉬이 아침이 오는 까닭이요,\n내일 밤이 남은 까닭이요,\n아직 나의 청춘이 다하지 않은 까닭입니다",
+      "별 하나에 추억과\n별 하나에 사랑과\n별 하나에 쓸쓸함과",
+      "별 하나에 동경과\n별 하나에 시와\n별 하나에 어머니",
+      "이네들은 너무나 멀리 있습니다,\n별이 아슬히 멀 듯이",
+      "나는 무엇인지 그리워\n이 많은 별빛이 나린 언덕 우에\n내 이름자를 써 보고\n흙으로 덮어 버리었습니다",
+      "딴은 밤을 새워 우는 벌레는\n부끄러운 이름을 슬퍼하는 까닭입니다",
+      "그러나 겨울이 지나고\n나의 별에도 봄이 오면",
+      "무덤 우에 파란 잔디가 피어나듯이",
+      "내 이름자 묻힌 언덕 우에도\n자랑처럼 풀이 무성할 게외다",
+    ];
+
+    let poemIndex = 0;
+
+    function setup() {
+      const canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('canvas-container');
+      colorMode(HSB, 1.0);
+      frameRate(60);
+      noLoop();
+
+      overlay = document.getElementById('overlay');
+      poemLayer = document.getElementById('poem');
+      poemLine = document.getElementById('poem-line');
+    }
+
+    function draw() {
+      let t = millis() / 1000;
+      let dt = t - lastTime;
+      lastTime = t;
+      now = t;
+
+      background(0);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update(dt);
+        if (!particles[i].alive(now)) particles.splice(i, 1);
+      }
+
+      noStroke();
+      for (let p of particles) {
+        let lr = p.lifeRatio(now);
+        if (lr <= 0) continue;
+        fill(p.color[0], p.color[1], p.color[2], lr);
+        ellipse(p.pos.x, p.pos.y, p.size * 2);
+      }
+
+      drawConnections();
+    }
+
+    function mousePressed() {
+      if (!started) {
+        started = true;
+        overlay.classList.add('fade-out');
+        startPoem();
+        loop();
+      }
+
+      for (let i = 0; i < random(10, 20); i++) {
+        particles.push(new Particle(createVector(mouseX, mouseY), now));
+      }
+      updateGrid();
+    }
+
+    /* ===============================
+       Poem Control
+    =============================== */
+    function startPoem() {
+      poemLayer.style.opacity = 1;
+      showNextLine();
+    }
+
+    function showNextLine() {
+      if (poemIndex >= poem.length) {
+        poemLayer.style.opacity = 0;
+        return;
+      }
+
+      poemLine.textContent = poem[poemIndex];
+      poemLine.classList.add('show');
+
+      setTimeout(() => {
+        poemLine.classList.remove('show');
+        poemIndex++;
+        setTimeout(showNextLine, 2000);
+      }, 3500);
+    }
+
+    /* ===============================
+       Particle System
+    =============================== */
+    function drawConnections() {
+      for (let key in grid) {
+        let indices = grid[key];
+        let [cx, cy] = key.split(",").map(Number);
+
+        for (let i of indices) {
+          let a = particles[i];
+          if (!a || !a.alive(now)) continue;
+
+          for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+              let nk = `${cx + dx},${cy + dy}`;
+              let others = grid[nk];
+              if (!others) continue;
+
+              for (let j of others) {
+                if (j <= i) continue;
+                let b = particles[j];
+                if (!b || !b.alive(now)) continue;
+
+                let d = p5.Vector.dist(a.pos, b.pos);
+                if (d < cellSize) {
+                  let alpha = (1 - d / cellSize) * a.lifeRatio(now) * b.lifeRatio(now);
+                  stroke(a.color[0], a.color[1], a.color[2], alpha);
+                  line(a.pos.x, a.pos.y, b.pos.x, b.pos.y);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    class Particle {
+      constructor(pos, born) {
+        this.pos = pos.copy();
+        this.born = born;
+        this.lifetime = random(7, 10);
+        this.size = random(1, 4);
+
+        let a = random(TWO_PI);
+        let s = random(10, 70);
+        this.vel = createVector(cos(a), sin(a)).mult(s);
+
+        this.color = [random(0.0, 0.4), 0.4, 0.8];
+      }
+
+      age(t) {
+        return t - this.born;
+      }
+
+      lifeRatio(t) {
+        return 1 - constrain(this.age(t) / this.lifetime, 0, 1);
+      }
+
+      alive(t) {
+        return this.age(t) < this.lifetime;
+      }
+
+      update(dt) {
+        this.pos.add(p5.Vector.mult(this.vel, dt));
+        this.vel.mult(0.995);
+      }
+    }
+
+    function updateGrid() {
+      grid = {};
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        let x = floor(p.pos.x / cellSize);
+        let y = floor(p.pos.y / cellSize);
+        let k = `${x},${y}`;
+        if (!grid[k]) grid[k] = [];
+        grid[k].push(i);
+      }
+    }
+  </script>
+</body>
+</html>
