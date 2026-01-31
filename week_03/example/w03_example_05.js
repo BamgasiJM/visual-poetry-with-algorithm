@@ -1,105 +1,123 @@
 // w03_example_05.js
 
-let state = 0;
+let baseColorA;
+let baseColorB;
+let currentColorA;
+let currentColorB;
 
-const CANVAS_SIZE = 800;
-const GRID_COUNT = 8;
-const MAX_STATE = 11;
-
-// 감정 단어 세트
-const EMOTIONS = [
-  { en: "Depressed", kr: "우울한" },
-  { en: "Gloomy", kr: "침울한" },
-  { en: "Low", kr: "가라앉은" },
-  { en: "Lethargic", kr: "무기력한" },
-  { en: "Neutral", kr: "중립적인" },
-  { en: "Okay", kr: "괜찮은" },
-  { en: "Calm", kr: "편안한" },
-  { en: "Pleasant", kr: "기분 좋은" },
-  { en: "Happy", kr: "즐거운" },
-  { en: "Excited", kr: "신나는" },
-  { en: "Joyful", kr: "매우 즐거운" },
-  { en: "Euphoric", kr: "황홀한" },
-];
+let particles = [];
+const PARTICLE_COUNT = 8000;
 
 function setup() {
-  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
-  colorMode(HSB, 360, 100, 100, 1);
-  textAlign(CENTER, CENTER);
-  noLoop();
+  createCanvas(800, 800);
+  colorMode(RGB, 255);
+  noStroke();
+
+  // 그라데이션 초기 색
+  baseColorA = color(40, 60, 90);
+  baseColorB = color(220, 200, 180);
+
+  currentColorA = baseColorA;
+  currentColorB = baseColorB;
+
+  // 파티클 생성
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new BirdParticle());
+  }
 }
 
 function draw() {
-  // 배경 색상 (우울 → 오렌지)
-  let bgHue = map(state, 0, MAX_STATE, 210, 30);
-  let bgSat = map(state, 0, MAX_STATE, 20, 85);
-  let bgBri = map(state, 0, MAX_STATE, 15, 95);
-  background(bgHue, bgSat, bgBri);
+  drawGradientBackground();
 
-  let cellSize = width / GRID_COUNT;
+  for (let p of particles) {
+    p.update();
+    p.display();
+  }
+}
 
-  // 그리드 도형
-  for (let y = 0; y < GRID_COUNT; y++) {
-    for (let x = 0; x < GRID_COUNT; x++) {
-      drawEmotionShape(x * cellSize, y * cellSize, cellSize, state);
-    }
+/* ------------------------------
+   Gradient Background
+-------------------------------- */
+
+function drawGradientBackground() {
+  let t = frameCount * 0.005;
+
+  let targetColorA = color(
+    40 + noise(t) * 80,
+    60 + noise(t + 10) * 80,
+    90 + noise(t + 20) * 80
+  );
+
+  let targetColorB = color(
+    180 + noise(t + 30) * 60,
+    170 + noise(t + 40) * 60,
+    160 + noise(t + 50) * 60
+  );
+
+  currentColorA = lerpColor(currentColorA, targetColorA, 0.01);
+  currentColorB = lerpColor(currentColorB, targetColorB, 0.01);
+
+  for (let y = 0; y < height; y++) {
+    let distanceFactor = dist(mouseX, mouseY, width / 2, y) / width;
+
+    let verticalFactor = map(y, 0, height, 0, 1);
+    let blendFactor = lerp(verticalFactor, distanceFactor, 0.3);
+
+    let c = lerpColor(
+      currentColorA,
+      currentColorB,
+      constrain(blendFactor, 0, 1)
+    );
+
+    fill(c);
+    rect(0, y, width, 1);
+  }
+}
+
+/* ------------------------------
+   Bird-like Particles
+-------------------------------- */
+
+class BirdParticle {
+  constructor() {
+    this.position = createVector(random(width), random(height));
+
+    this.velocity = p5.Vector.random2D();
+    this.velocity.mult(random(0.3, 0.8));
+
+    this.noiseOffset = random(1000);
+    this.size = random(0.5, 3);
   }
 
-  drawCenterLabel();
-}
+  update() {
+    let angle =
+      noise(
+        this.position.x * 0.02,
+        this.position.y * 0.02,
+        frameCount * 3.02 + this.noiseOffset
+      ) *
+      TWO_PI *
+      2;
 
-function drawEmotionShape(x, y, size, state) {
-  push();
-  translate(x + size / 2, y + size / 2);
+    let flowVector = p5.Vector.fromAngle(angle);
+    flowVector.mult(0.05);
 
-  let hue = map(state, 0, MAX_STATE, 210, 30);
-  let sat = map(state, 0, MAX_STATE, 30, 90);
-  let bri = map(state, 0, MAX_STATE, 35, 95);
-  fill(hue, sat, bri, 0.75);
-  noStroke();
+    this.velocity.add(flowVector);
+    this.velocity.limit(1);
 
-  // 3각형 → 16각형
-  let sides = floor(map(state, 0, MAX_STATE, 3, 16));
-  let radius = size * 0.4;
-
-  beginShape();
-  for (let i = 0; i < sides; i++) {
-    let angle = (i / sides) * TWO_PI;
-    vertex(cos(angle) * radius, sin(angle) * radius);
+    this.position.add(this.velocity);
+    this.wrapEdges();
   }
-  endShape(CLOSE);
 
-  pop();
-}
+  wrapEdges() {
+    if (this.position.x < 0) this.position.x = width;
+    if (this.position.x > width) this.position.x = 0;
+    if (this.position.y < 0) this.position.y = height;
+    if (this.position.y > height) this.position.y = 0;
+  }
 
-function drawCenterLabel() {
-  let boxW = 360;
-  let boxH = 140;
-
-  push();
-  translate(width / 2, height / 2);
-
-  // 화이트 박스
-  rectMode(CENTER);
-  noStroke();
-  fill(0, 0, 100, 0.85);
-  rect(0, 0, boxW, boxH, 16);
-
-  // 영어 텍스트
-  fill(0, 0, 10);
-  textSize(36);
-  textStyle(BOLD);
-  text(EMOTIONS[state].en, 0, -15);
-
-  // 한국어 텍스트
-  textSize(20);
-  textStyle(NORMAL);
-  text(EMOTIONS[state].kr, 0, 28);
-
-  pop();
-}
-
-function mouseReleased() {
-  state = constrain(state + 1, 0, MAX_STATE);
-  redraw();
+  display() {
+    fill(0, 140);
+    ellipse(this.position.x, this.position.y, this.size, this.size);
+  }
 }
