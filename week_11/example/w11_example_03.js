@@ -1,3 +1,5 @@
+// w11_example_03.js
+
 const WIN_SIZE = 1000;
 const NUM_POINTS = 500;
 const RANGE = 200.0;
@@ -59,7 +61,7 @@ function randomPoint() {
   return {
     pos: createVector(
       random(-WIN_SIZE / 2, WIN_SIZE / 2),
-      random(-WIN_SIZE / 2 - 100, -WIN_SIZE / 2)
+      random(-WIN_SIZE / 2 - 100, -WIN_SIZE / 2),
     ),
     speed: random(0.5, 1.0),
   };
