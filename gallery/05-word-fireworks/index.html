@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Message in the Sky</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hi+Melody&family=Bungee+Shade&display=swap"
+      rel="stylesheet"
+    />
+    rel="stylesheet" />
+
+    <style>
+      /* 1. 화면 꽉 차게 설정 및 스크롤 방지 */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; /* 스크롤바 제거 */
+        background-color: rgb(
+          15,
+          20,
+          30
+        ); /* p5 로딩 전 깜빡임 방지용 어두운 배경 */
+      }
+
+      canvas {
+        display: block; /* 캔버스 하단 여백 제거 */
+      }
+
+      /* 2. 타이틀 화면 오버레이 스타일 */
+      #title-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* 정중앙 정렬 */
+        text-align: center;
+        color: white;
+        pointer-events: none; /* 마우스 클릭이 캔버스로 통과되도록 설정 */
+        transition: opacity 1.5s ease; /* 부드럽게 사라지는 효과 */
+        z-index: 10;
+        width: 100%;
+      }
+
+      /* 제목 스타일 (Lavishly Yours 폰트 사용) */
+      h1 {
+        font-family: "Bungee Shade", cursive;
+        font-size: 6rem;
+        margin: 0;
+        font-weight: 400;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        letter-spacing: 2px;
+      }
+
+      /* 설명 문구 스타일 (Figtree 폰트 사용) */
+      p {
+        font-family: "Hi Melody", sans-serif;
+        font-size: 2.0rem;
+        margin-top: 20px;
+        color: rgba(237, 241, 108, 0.9);
+        font-weight: 100;
+        letter-spacing: -2px;
+      }
+
+      /* 숨김 처리를 위한 클래스 */
+      .hidden {
+        opacity: 0;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+    <script src="./sketch.js"></script>
+  </head>
+  <body>
+    <div id="title-overlay">
+      <h1>Your Message in the Sky</h1>
+      <p>소중한 사람을 위해 밤하늘에 비밀 메시지를 남겨보세요.</p>
+      <p>원하는대로 타이핑하면 불꽃놀이가 펼쳐집니다.</p>
+    </div>
+
+    <script>
+      window.addEventListener("keydown", () => {
+        const overlay = document.getElementById("title-overlay");
+        // 키보드를 한 번이라도 누르면 타이틀을 부드럽게 숨김
+        if (overlay && !overlay.classList.contains("hidden")) {
+          overlay.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
