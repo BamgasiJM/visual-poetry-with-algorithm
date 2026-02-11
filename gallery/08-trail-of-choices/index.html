@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>The Paths We Choose</title>
+
+    <!-- Google Serif Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Intro Overlay -->
+    <div id="intro">
+      <h1>The Paths We Choose</h1>
+      <p>
+        We move forward,<br />
+        guided by invisible branches of possibility.
+      </p>
+    </div>
+
+    <!-- Quote Area -->
+    <div id="quote"></div>
+
+    <!-- p5 -->
+    <script src="script.js"></script>
+
+    <!-- UI Logic -->
+    <script>
+      const quotes = [
+        "Not all who wander are lost.",
+        "Every choice becomes a direction.",
+        "Life is made of small departures.",
+        "You are always becoming.",
+        "The journey shapes the traveler.",
+        "Some paths reveal themselves only after you walk them.",
+        "Forward is the only honest direction.",
+
+        "We arrive at ourselves slowly.",
+        "Each step carries a quiet consequence.",
+        "You are made of every road you refused.",
+        "Time does not rush, we do.",
+        "Even hesitation is movement.",
+        "You are walking through your own future.",
+        "Be gentle with unfinished versions of yourself.",
+        "Nothing changes until you move.",
+        "The present is a crossing.",
+        "All destinations begin as decisions.",
+        "Your pace is part of your story.",
+        "What you seek is often seeking you.",
+        "Becoming is louder than being.",
+        "Every moment leaves a footprint.",
+        "You are never standing still.",
+        "Some doors open inward.",
+        "The long way teaches more.",
+        "You are shaped by what you carry.",
+        "Change does not ask permission.",
+        "Where you pause matters.",
+        "You are already in motion.",
+        "Silence is also a direction.",
+        "Every arrival contains another departure.",
+        "Trust the slow unfolding.",
+        "You learn by continuing.",
+        "The path listens to your feet.",
+        "Growth is rarely dramatic.",
+        "You move, therefore you become.",
+        "What remains is what you chose.",
+        "The future is built quietly.",
+        "You are writing yourself forward.",
+        "Nothing is wasted in walking.",
+        "Time bends around decisions.",
+        "You carry yesterday into tomorrow.",
+        "Every turn changes you.",
+        "Movement is memory.",
+        "You are the sum of crossings.",
+        "Even stillness travels.",
+        "Each direction leaves a trace.",
+        "You inherit every step.",
+        "Life happens between choices.",
+        "Your shadow walks ahead sometimes.",
+        "The road remembers you.",
+        "Be patient with distance.",
+        "You are learning how to arrive.",
+        "Every branch holds a maybe.",
+        "Forward is not always fast.",
+        "You unfold by moving.",
+      ];
+
+      const quoteEl = document.getElementById("quote");
+      let quoteIndex = 0;
+
+      function showNextQuote() {
+        quoteEl.style.opacity = 0;
+
+        setTimeout(() => {
+          quoteEl.textContent = `" ${quotes[quoteIndex]} "`;
+          quoteEl.style.opacity = 1;
+          quoteIndex = (quoteIndex + 1) % quotes.length;
+        }, 1500);
+      }
+
+      // intro fade
+      setTimeout(() => {
+        document.getElementById("intro").classList.add("hide");
+      }, 5000);
+
+      // start quotes after intro
+      setTimeout(() => {
+        showNextQuote();
+        setInterval(showNextQuote, 8000);
+      }, 6000);
+    </script>
+  </body>
+</html>

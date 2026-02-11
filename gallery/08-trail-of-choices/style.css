@@ -1,0 +1,65 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+  font-family: "Cormorant Garamond", serif;
+}
+
+/* p5 canvas */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+/* Intro */
+
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  color: white;
+  transition: opacity 2.5s ease;
+}
+
+#intro.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro h1 {
+  font-size: 56px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+
+#intro p {
+  font-size: 20px;
+  opacity: 0.7;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Quote */
+
+#quote {
+  position: fixed;
+  bottom: 40px;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  color: white;
+  font-size: 30px;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transition: opacity 2s ease;
+  pointer-events: none;
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>The Weight of Gaze</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="ui-layer">
+    <div id="title-screen">
+      <h1 class="main-title">시선의 무게<br><span class="en-title">The Weight of Gaze</span></h1>
+      <p class="sub-text">이 아트웍은 타인에게 쏟아지는 과열된 관심, 그리고 너무나 쉽게 식어버리는 대중의 마음을 표현하고 있습니다.</p>
+      <p class="sub-text">지나친 관심과 참견, 그리고 무심결에 던지는 댓글로 누군가는 고통받을 수 있습니다.</p>
+      <div class="start-prompt">화면을 클릭하여 시작</div>
+    </div>
+
+    <div id="controls-hint" class="hidden">
+      <div class="control-item">
+        <span class="mouse-icon">Left Click</span>
+        <span>관심 집중</span>
+      </div>
+      <div class="control-item">
+        <span class="mouse-icon">Right Click</span>
+        <span>무관심</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+  <script src="sketch.js"></script>
+</body>
+</html>
