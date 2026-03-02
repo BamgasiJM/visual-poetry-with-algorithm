@@ -1,4 +1,4 @@
-const PASSWORDS = ["1111", "1125"];
+const PASSWORDS = ["1125"];
 
 const gate = document.getElementById("password-gate");
 const content = document.getElementById("site-content");
