@@ -100,7 +100,7 @@ function displayCode(type) {
     const iframe = document.createElement("iframe");
     // 구글드라이브 링크 주소 맨 끝을 /preview로 수정해야지 보임.
     iframe.src =
-      "https://drive.google.com/file/d/1d8IILpZTd2GaPKAr_vQp7kPrb-GmQrre/preview";
+      "https://drive.google.com/file/d/1vAOrJ8FaPzIOQaFVJ5RnL-2NRluhLj3T/preview";
     iframe.style.width = "100%";
     iframe.style.height = "100%";
     iframe.style.border = "none";
