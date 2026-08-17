@@ -10,7 +10,7 @@ function setup() {
   const rightX = width * 0.75;
   const centerY = height / 2;
   const baseSize = height * 0.3;
-  
+
   fill(random(10, 100));
   drawSpikyBurst(leftX, centerY, baseSize * 0.9);
   fill(random(10, 100));
@@ -21,7 +21,7 @@ function setup() {
   noLoop();
 }
 
-// 1. 가시 폭발형 - 날카롭게 뻗어나가는 불안
+// 1. 날카롭게 뻗어나가는 불안
 function drawSpikyBurst(cx, cy, size) {
   const points = 18;
   const angleStep = 180 / points;
