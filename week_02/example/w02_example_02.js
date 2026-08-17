@@ -40,7 +40,7 @@ function drawSpikyBurst(cx, cy, size) {
   endShape(CLOSE);
 }
 
-// 2. 왜곡된 blob - 불규칙하게 울퉁불퉁한 걱정
+// 2. 불규칙하게 울퉁불퉁한 걱정
 function drawDistortedBlob(cx, cy, size) {
   const segments = 24;
   const noiseScale = 1.5;
@@ -77,7 +77,7 @@ function drawDistortedBlob(cx, cy, size) {
   endShape(CLOSE);
 }
 
-// 3. 무거운 층 - 쌓이고 가라앉는 절망
+// 3. 쌓이고 가라앉는 마음
 function drawHeavyLayers(cx, cy, size) {
   const layers = 8;
   const baseWidth = size;
